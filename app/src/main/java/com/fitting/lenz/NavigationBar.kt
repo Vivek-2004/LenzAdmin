@@ -16,7 +16,8 @@ fun BottomNavigationBarExample() {
     Scaffold(
         bottomBar = {
             BottomNavigationBar()
-        }
+        },
+
     ) { innerPadding ->
         Column(Modifier.padding(116.dp)) {
             Text(
@@ -42,8 +43,9 @@ fun BottomNavigationBar() {
     )
     val items = listOf("Orders", "History", "Shops", "Edit")
     var selectedItem by remember { mutableStateOf(0) }
+
     NavigationBar(
-        modifier = Modifier.height(76.dp)
+        modifier = Modifier.navigationBarsPadding().height(80.dp)
     ) {
         items.forEachIndexed { index, label ->
             NavigationBarItem(

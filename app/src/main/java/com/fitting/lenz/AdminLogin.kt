@@ -21,6 +21,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun AdminLogin(
@@ -44,6 +48,7 @@ fun AdminLogin(
     val response by lenzViewModel::adminConfirmation
 
     var loginConfirmation by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
     if(response) {
         prefEditor.putBoolean("isLoggedIn", true)
@@ -113,25 +118,44 @@ fun AdminLogin(
             )
 
             Button(
-                onClick = {
-                    Toast.makeText(context,adminId + password, Toast.LENGTH_LONG).show()
-                    lenzViewModel.verifyAdmin(
-                        id = adminId.toInt(),
-                        pass = password
-                    )
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = bgColor),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .padding(top = 12.dp)
+                .fillMaxWidth()
+                .height(64.dp)
+                .padding(top = 12.dp),
+                onClick = {
+                    if(adminId.isNotEmpty() && password.isNotEmpty()) {
+                        lenzViewModel.verifyAdmin(
+                            id = adminId.toInt(),
+                            pass = password
+                        )
+                        isLoading = true
+                        CoroutineScope(Dispatchers.Main).launch {
+                            delay(1200L)
+                            isLoading = false
+                            if (!loginConfirmation) {
+                                Toast.makeText(context,"Incorrect ID or Password", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context,"Enter Details to Continue", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = bgColor)
             ) {
-                Text(
-                    text = "Login",
-                    fontWeight = FontWeight.Black,
-                    color = compColor,
-                    fontSize = 24.sp
-                )
+                if(isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(32.dp),
+                        color = compColor,
+                        strokeWidth = 5.dp
+                    )
+                } else {
+                    Text(
+                        text = "Login",
+                        fontWeight = FontWeight.Black,
+                        color = compColor,
+                        fontSize = 24.sp
+                    )
+                }
             }
         }
     }
