@@ -5,18 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fitting.lenz.models.AdminLoginBody
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class LenzViewModel: ViewModel() {
     private val _lenzService = lenzService
 
-    var showNotification by mutableStateOf(false)
-        private set
-
     var adminConfirmation by mutableStateOf(false)
         private set
-
 
     fun verifyAdmin(
         id: Int,

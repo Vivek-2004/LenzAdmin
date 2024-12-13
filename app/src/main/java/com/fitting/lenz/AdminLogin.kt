@@ -3,14 +3,12 @@ package com.fitting.lenz
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -21,6 +19,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.navigation.MyApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -29,26 +29,20 @@ import kotlinx.coroutines.launch
 @Composable
 fun AdminLogin(
     lenzViewModel: LenzViewModel = viewModel(),
+    colorScheme: ColorSchemeModel,
     sharedPref: SharedPreferences,
     prefEditor: SharedPreferences.Editor
 ) {
     val context = LocalContext.current
-    var bgColor = Color.White
-    var compColor = Color.Black
-
-    if(isSystemInDarkTheme()) {
-        bgColor = Color.Black
-        compColor = Color.White
-    }
+    val response by lenzViewModel::adminConfirmation
 
     var adminId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }
 
-    val response by lenzViewModel::adminConfirmation
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
     var loginConfirmation by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
 
     if(response) {
         prefEditor.putBoolean("isLoggedIn", true)
@@ -57,12 +51,12 @@ fun AdminLogin(
     }
 
     if(loginConfirmation) {
-        BottomNavigationBarExample()
+        MyApp( colorScheme = colorScheme )
     } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(bgColor)
+                .background(colorScheme.bgColor)
                 .padding(30.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -72,7 +66,7 @@ fun AdminLogin(
                     .size(180.dp)
                     .padding(bottom = 12.dp),
                 painter = painterResource(id = R.drawable.app_logo),
-                tint = compColor,
+                tint = colorScheme.compColor,
                 contentDescription = "logo",
             )
 
@@ -80,7 +74,7 @@ fun AdminLogin(
                 text = "Login to Continue",
                 fontStyle = FontStyle.Italic,
                 modifier = Modifier.padding(bottom = 12.dp),
-                color = compColor
+                color = colorScheme.compColor
             )
 
             OutlinedTextField(
@@ -140,19 +134,19 @@ fun AdminLogin(
                         Toast.makeText(context,"Enter Details to Continue", Toast.LENGTH_SHORT).show()
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = bgColor)
+                colors = ButtonDefaults.buttonColors(containerColor = colorScheme.bgColor)
             ) {
                 if(isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(32.dp),
-                        color = compColor,
+                        color = colorScheme.compColor,
                         strokeWidth = 5.dp
                     )
                 } else {
                     Text(
                         text = "Login",
                         fontWeight = FontWeight.Black,
-                        color = compColor,
+                        color = colorScheme.compColor,
                         fontSize = 24.sp
                     )
                 }

@@ -1,4 +1,4 @@
-package com.fitting.lenz
+package com.fitting.lenz.models
 
 data class TestResponse(
     val _id: String,

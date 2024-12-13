@@ -1,5 +1,8 @@
 package com.fitting.lenz
 
+import com.fitting.lenz.models.AdminLoginBody
+import com.fitting.lenz.models.AdminLoginResponse
+import com.fitting.lenz.models.TestResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
