@@ -63,8 +63,7 @@ fun AdminLogin(
         ) {
             Icon(
                 modifier = Modifier
-                    .size(180.dp)
-                    .padding(bottom = 12.dp),
+                    .size(220.dp),
                 painter = painterResource(id = R.drawable.app_logo),
                 tint = colorScheme.compColor,
                 contentDescription = "logo",
@@ -127,7 +126,7 @@ fun AdminLogin(
                             delay(1200L)
                             isLoading = false
                             if (!loginConfirmation) {
-                                Toast.makeText(context,"Incorrect ID or Password", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context,"Incorrect ID or Password", Toast.LENGTH_SHORT).show()
                             }
                         }
                     } else {

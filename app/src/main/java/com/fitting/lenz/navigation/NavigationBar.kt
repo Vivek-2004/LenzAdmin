@@ -33,8 +33,8 @@ fun BottomNavigationBar(
     var selectedItem by remember { mutableStateOf(0) }
 
     NavigationBar(
-        modifier = Modifier.navigationBarsPadding()
-                            .height(80.dp)
+        modifier = Modifier.navigationBarsPadding().height(80.dp),
+        containerColor = colorScheme.bgColor
     ) {
         items.forEachIndexed { index, label ->
             NavigationBarItem(
@@ -60,9 +60,9 @@ fun BottomNavigationBar(
                     ) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = colorScheme.compColor,
-                    unselectedIconColor = Color.Gray.copy(0.3F),
+                    unselectedIconColor = Color.Gray.copy(0.5F),
                     selectedTextColor = colorScheme.compColor,
-                    unselectedTextColor = Color.Gray.copy(0.3F),
+                    unselectedTextColor = Color.Gray.copy(0.5F),
                     indicatorColor = MaterialTheme.colorScheme.background.copy(0.0F)
                 )
             )

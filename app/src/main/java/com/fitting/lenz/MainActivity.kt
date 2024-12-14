@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.navigation.MyApp
 import com.fitting.lenz.ui.theme.LenzTheme
@@ -18,6 +19,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        installSplashScreen()
 
         val sharedPref = getSharedPreferences("LenzPref", Context.MODE_PRIVATE)
         val prefEditor = sharedPref.edit()
