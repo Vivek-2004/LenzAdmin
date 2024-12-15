@@ -32,40 +32,49 @@ fun BottomNavigationBar(
     )
     var selectedItem by remember { mutableStateOf(0) }
 
-    NavigationBar(
-        modifier = Modifier.navigationBarsPadding().height(80.dp),
-        containerColor = colorScheme.bgColor
-    ) {
-        items.forEachIndexed { index, label ->
-            NavigationBarItem(
-                selected = selectedItem == index,
-                onClick = {
-                    selectedItem = index
-                    navController.navigate(label) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                          },
-                icon = {
-                    Icon(
-                        modifier = Modifier.size(28.dp),
-                        imageVector = icons[index],
-                        contentDescription = label,
+    Column( modifier = Modifier.wrapContentSize() ) {
+        HorizontalDivider(
+            color = colorScheme.compColor.copy(alpha = 0.55f),
+            thickness = 2.dp
+        )
+
+        NavigationBar(
+            modifier = Modifier.navigationBarsPadding().height(80.dp),
+            containerColor = colorScheme.bgColor
+        ) {
+            items.forEachIndexed { index, label ->
+                NavigationBarItem(
+                    selected = selectedItem == index,
+                    onClick = {
+                        selectedItem = index
+                        navController.navigate(label) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            modifier = Modifier.size(28.dp),
+                            imageVector = icons[index],
+                            contentDescription = label,
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = label,
+                            fontSize = 14.sp
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = colorScheme.compColor,
+                        unselectedIconColor = Color.Gray.copy(0.5F),
+                        selectedTextColor = colorScheme.compColor,
+                        unselectedTextColor = Color.Gray.copy(0.5F),
+                        indicatorColor = MaterialTheme.colorScheme.background.copy(0.0F)
                     )
-                },
-                label = { Text(
-                    text = label,
-                    fontSize = 14.sp
-                    ) },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = colorScheme.compColor,
-                    unselectedIconColor = Color.Gray.copy(0.5F),
-                    selectedTextColor = colorScheme.compColor,
-                    unselectedTextColor = Color.Gray.copy(0.5F),
-                    indicatorColor = MaterialTheme.colorScheme.background.copy(0.0F)
                 )
-            )
+            }
         }
     }
 }

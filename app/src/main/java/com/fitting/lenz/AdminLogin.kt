@@ -123,9 +123,9 @@ fun AdminLogin(
                         )
                         isLoading = true
                         CoroutineScope(Dispatchers.Main).launch {
-                            delay(1200L)
-                            isLoading = false
+                            delay(2500L)
                             if (!loginConfirmation) {
+                                isLoading = false
                                 Toast.makeText(context,"Incorrect ID or Password", Toast.LENGTH_SHORT).show()
                             }
                         }

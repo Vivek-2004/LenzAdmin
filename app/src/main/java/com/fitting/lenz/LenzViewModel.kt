@@ -1,6 +1,7 @@
 package com.fitting.lenz
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,17 @@ class LenzViewModel: ViewModel() {
     private val _lenzService = lenzService
 
     var adminConfirmation by mutableStateOf(false)
+        private set
+
+    var orderId by mutableIntStateOf(123)
+        private set
+    var shopName by mutableStateOf("ABC Specs")
+        private set
+    var orderType by mutableStateOf("Regular")
+        private set
+    var orderTime by mutableStateOf("09:17 a.m.")
+        private set
+    var paymentStatus by mutableStateOf("COD")
         private set
 
     fun verifyAdmin(
