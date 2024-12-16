@@ -35,7 +35,7 @@ fun Orders(
             val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
             val scrollbarHeight = listState.layoutInfo.visibleItemsInfo.size * elementHeight
             drawRect(
-                color = colorScheme.compColor.copy(alpha = 0.1f),
+                color = colorScheme.compColor.copy(alpha = 0.5f),
                 topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
                 size = Size(scrollBarWidth.toPx(), scrollbarHeight)
             )

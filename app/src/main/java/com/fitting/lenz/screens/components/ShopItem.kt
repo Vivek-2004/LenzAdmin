@@ -12,10 +12,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.models.ColorSchemeModel
@@ -31,15 +34,14 @@ fun ShopItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 14.dp, end = 14.dp, bottom = 6.dp, top = 4.dp)
-            .height(150.dp),
-        elevation = CardDefaults.cardElevation(12.dp)
+            .padding(start = 13.dp, end = 13.dp, bottom = 6.dp, top = 4.dp)
+            .height(130.dp),
+        elevation = CardDefaults.cardElevation(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(colorScheme.bgColor)
-
         ) {
             Row(
                 modifier = Modifier.weight(1f),
@@ -90,34 +92,38 @@ fun ShopItem(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
-                        text = shop.userId.toString(),
+                        text = shop.userId.toString().substring(0,6),
                         color = colorScheme.compColor,
                         fontSize = 16.sp
                     )
                 }
             }
-
             HorizontalDivider(thickness = 0.35.dp)
-
             Row(
-                modifier = Modifier.weight(0.5f),
+                modifier = Modifier
+                    .weight(0.6f)
+                    .background(Color.LightGray.copy(alpha = 0.4f)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
-                    modifier = Modifier.weight(1f).clickable{
+                    modifier = Modifier.weight(1f)
+                        .clickable{
                         Toast.makeText(context, "Orders", Toast.LENGTH_SHORT).show()
                     },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
+                        modifier = Modifier.padding(vertical = 2.dp),
                         text = "Orders",
-                        color = colorScheme.compColor,
+                        fontStyle = FontStyle.Italic,
+                        color = colorScheme.compColor   ,
                         fontSize = 14.sp
                     )
                 }
+                VerticalDivider()
                 Column(
-                    modifier = Modifier.weight(1f).clickable{
+                    modifier = Modifier.weight(1f)
+                        .clickable{
                         Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
                     },
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -125,6 +131,7 @@ fun ShopItem(
                     Text(
                         modifier = Modifier.padding(vertical = 2.dp),
                         text = "History",
+                        fontStyle = FontStyle.Italic,
                         color = colorScheme.compColor,
                         fontSize = 14.sp
                     )

@@ -52,7 +52,7 @@ class LenzViewModel: ViewModel() {
         }
     }
 
-    private fun getShopsList() {
+    fun getShopsList() {
         viewModelScope.launch {
             try {
                 val shopsResponse = _lenzService.getShops()

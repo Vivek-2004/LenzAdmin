@@ -4,11 +4,13 @@ import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -133,19 +135,21 @@ fun AdminLogin(
                         Toast.makeText(context,"Enter Details to Continue", Toast.LENGTH_SHORT).show()
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = colorScheme.bgColor)
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = colorScheme.compColor,
+                    containerColor = Color.Gray.copy(alpha = 0.3f)
+                )
             ) {
                 if(isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(32.dp),
-                        color = colorScheme.compColor,
                         strokeWidth = 5.dp
                     )
                 } else {
                     Text(
                         text = "Login",
                         fontWeight = FontWeight.Black,
-                        color = colorScheme.compColor,
                         fontSize = 24.sp
                     )
                 }
