@@ -1,5 +1,6 @@
 package com.fitting.lenz.navigation
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,25 +11,22 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 
 @Composable
 fun BottomNavigationBar(
     colorScheme: ColorSchemeModel,
-    navController: NavController
+    navController: NavController,
+    onTitleChange: (String) -> Unit
 ) {
-    val icons = listOf(
-        ImageVector.vectorResource(R.drawable.orders),
-        ImageVector.vectorResource(R.drawable.shops),
-        ImageVector.vectorResource(R.drawable.edit)
-    )
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     val items = listOf(
         NavigationDestination.Orders.name,
         NavigationDestination.Shops.name,
         NavigationDestination.Edit.name
     )
-    var selectedItem by remember { mutableIntStateOf(0) }
 
     Column( modifier = Modifier.wrapContentSize() ) {
         HorizontalDivider(
@@ -40,29 +38,38 @@ fun BottomNavigationBar(
             modifier = Modifier.navigationBarsPadding().height(80.dp),
             containerColor = colorScheme.bgColor
         ) {
-            items.forEachIndexed { index, itemLabel ->
+            items.forEach { screen ->
+
+                val icon = when (screen) {
+                    NavigationDestination.Orders.name -> ImageVector.vectorResource(R.drawable.orders)
+                    NavigationDestination.Shops.name -> ImageVector.vectorResource(R.drawable.shops)
+                    NavigationDestination.Edit.name -> ImageVector.vectorResource(R.drawable.edit)
+                    else -> ImageVector.vectorResource(R.drawable.orders)
+                }
+
                 NavigationBarItem(
-                    selected = selectedItem == index,
-                    onClick = {
-                        selectedItem = index
-                        navController.navigate(itemLabel) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
+                    selected = currentDestination?.route == screen,
+                    interactionSource = remember { MutableInteractionSource() },
                     icon = {
                         Icon(
                             modifier = Modifier.size(28.dp),
-                            imageVector = icons[index],
-                            contentDescription = itemLabel,
+                            imageVector = icon,
+                            contentDescription = screen,
                         )
                     },
                     label = {
                         Text(
-                            text = itemLabel,
+                            text = screen,
                             fontSize = 14.sp
                         )
+                    },
+                    onClick = {
+                        onTitleChange(screen)
+                        navController.navigate(screen) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = colorScheme.compColor,
