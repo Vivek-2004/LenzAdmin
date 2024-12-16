@@ -20,17 +20,15 @@ fun BottomNavigationBar(
 ) {
     val icons = listOf(
         ImageVector.vectorResource(R.drawable.orders),
-        ImageVector.vectorResource(R.drawable.history),
         ImageVector.vectorResource(R.drawable.shops),
         ImageVector.vectorResource(R.drawable.edit)
     )
     val items = listOf(
         NavigationDestination.Orders.name,
-        NavigationDestination.History.name,
         NavigationDestination.Shops.name,
         NavigationDestination.Edit.name
     )
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableIntStateOf(0) }
 
     Column( modifier = Modifier.wrapContentSize() ) {
         HorizontalDivider(
@@ -42,12 +40,12 @@ fun BottomNavigationBar(
             modifier = Modifier.navigationBarsPadding().height(80.dp),
             containerColor = colorScheme.bgColor
         ) {
-            items.forEachIndexed { index, label ->
+            items.forEachIndexed { index, itemLabel ->
                 NavigationBarItem(
                     selected = selectedItem == index,
                     onClick = {
                         selectedItem = index
-                        navController.navigate(label) {
+                        navController.navigate(itemLabel) {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
@@ -57,12 +55,12 @@ fun BottomNavigationBar(
                         Icon(
                             modifier = Modifier.size(28.dp),
                             imageVector = icons[index],
-                            contentDescription = label,
+                            contentDescription = itemLabel,
                         )
                     },
                     label = {
                         Text(
-                            text = label,
+                            text = itemLabel,
                             fontSize = 14.sp
                         )
                     },

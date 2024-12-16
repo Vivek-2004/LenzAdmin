@@ -29,11 +29,11 @@ fun Orders(
     LazyColumn(
         state = listState,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().drawBehind {
+        modifier = Modifier.fillMaxSize()
+            .drawBehind {
             val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
             val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
             val scrollbarHeight = listState.layoutInfo.visibleItemsInfo.size * elementHeight
-
             drawRect(
                 color = colorScheme.compColor.copy(alpha = 0.1f),
                 topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
@@ -44,8 +44,7 @@ fun Orders(
         items(25) { index ->
             OrderItem(
                 colorScheme = colorScheme,
-                lenzViewModel = lenzViewModel,
-                testOrderIndex = (index + 1) * 100 + (Math.random()*100.00).toInt()
+                lenzViewModel = lenzViewModel
             )
             HorizontalDivider(
                 modifier = Modifier.width(320.dp),

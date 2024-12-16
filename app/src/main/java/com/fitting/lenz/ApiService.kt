@@ -2,6 +2,7 @@ package com.fitting.lenz
 
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.AdminLoginResponse
+import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.TestResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,6 +26,10 @@ interface ApiService {
     suspend fun getAdminLogin(
         @Body adminLoginBody: AdminLoginBody
     ): AdminLoginResponse
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @GET("shops")
+    suspend fun getShops(): List<ShopDetails>
 
     @GET("test")
     suspend fun getTest(): List<TestResponse>

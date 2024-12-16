@@ -37,15 +37,14 @@ import com.fitting.lenz.models.ColorSchemeModel
 @Composable
 fun OrderItem(
     colorScheme: ColorSchemeModel,
-    lenzViewModel: LenzViewModel,
-    testOrderIndex: Int
+    lenzViewModel: LenzViewModel
 ) {
     val orderStates = listOf("Pending", "Out for Pickup", "Pickup Received", "Out for Delivery", "Delivered")
     var orderSelectedItem by remember { mutableStateOf(orderStates[0]) }
     var expanded by remember { mutableStateOf(false) }
 
     val orderId by lenzViewModel::orderId
-    val shopName by lenzViewModel::shopName
+    val shopName by lenzViewModel::orderedShopName
     val orderType by lenzViewModel::orderType
     val orderTime by lenzViewModel::orderTime
     val paymentStatus by lenzViewModel::paymentStatus
@@ -67,7 +66,7 @@ fun OrderItem(
                     .weight(.5f)
             ) {
                 Text(
-                    text = "#$testOrderIndex - $shopName",
+                    text = "#$orderId - $shopName",
                     fontSize = 12.sp,
                     color = colorScheme.compColor,
                     fontWeight = FontWeight.Bold,

@@ -1,0 +1,135 @@
+package com.fitting.lenz.screens.components
+
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.models.ShopDetails
+
+@Composable
+fun ShopItem(
+    colorScheme: ColorSchemeModel,
+    shop: ShopDetails
+) {
+    val context = LocalContext.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 14.dp, end = 14.dp, bottom = 6.dp, top = 4.dp)
+            .height(150.dp),
+        elevation = CardDefaults.cardElevation(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorScheme.bgColor)
+
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        text = shop.name,
+                        color = colorScheme.compColor,
+                        fontSize = 16.sp
+                    )
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        text = shop.plan,
+                        color = colorScheme.compColor,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        text = shop.phone,
+                        color = colorScheme.compColor,
+                        fontSize = 16.sp
+                    )
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        text = shop.userId.toString(),
+                        color = colorScheme.compColor,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+
+            HorizontalDivider(thickness = 0.35.dp)
+
+            Row(
+                modifier = Modifier.weight(0.5f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f).clickable{
+                        Toast.makeText(context, "Orders", Toast.LENGTH_SHORT).show()
+                    },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        text = "Orders",
+                        color = colorScheme.compColor,
+                        fontSize = 14.sp
+                    )
+                }
+                Column(
+                    modifier = Modifier.weight(1f).clickable{
+                        Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                    },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 2.dp),
+                        text = "History",
+                        color = colorScheme.compColor,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+        }
+    }
+}

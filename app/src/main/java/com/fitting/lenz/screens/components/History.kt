@@ -1,4 +1,4 @@
-package com.fitting.lenz.screens
+package com.fitting.lenz.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,10 +1,5 @@
 package com.fitting.lenz.models
 
-data class TestResponse(
-    val _id: String,
-    val notification: Boolean
-)
-
 data class AdminLoginBody(
     val adminId: Int,
     val password: String
@@ -18,7 +13,7 @@ data class AdminLoginResponse(
 )
 
 data class AdminDetails(
-    val id: String,
+    val _id: String,
     val name: String,
     val email: String,
     val phone: String,
@@ -27,4 +22,22 @@ data class AdminDetails(
     val createdAt: String,
     val updatedAttr: String,
     val __v : Int
+)
+
+data class ShopDetails(
+    val _id: String,
+    val name: String,
+    val email: String,
+    val phone: String,
+    val password: String,
+    val plan: String,
+    val userId: Long,
+    val createdAt: String,
+    val updatedAt: String,
+    val __v: Int
+)
+
+data class TestResponse(
+    val _id: String,
+    val notification: Boolean
 )

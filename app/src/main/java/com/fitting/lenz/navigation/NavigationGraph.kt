@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.Edit
-import com.fitting.lenz.screens.History
+import com.fitting.lenz.screens.components.History
 import com.fitting.lenz.screens.Orders
 import com.fitting.lenz.screens.Shops
 
@@ -35,14 +35,16 @@ fun MyApp(
             composable(NavigationDestination.Orders.name){
                 Orders(colorScheme)
             }
-            composable(NavigationDestination.History.name){
-                History(colorScheme)
-            }
             composable(NavigationDestination.Shops.name){
                 Shops(colorScheme)
             }
             composable(NavigationDestination.Edit.name){
                 Edit(colorScheme)
+            }
+
+
+            composable(NavigationDestination.History.name){
+                History(colorScheme)
             }
         }
     }

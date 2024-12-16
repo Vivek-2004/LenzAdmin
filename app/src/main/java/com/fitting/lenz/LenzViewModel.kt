@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fitting.lenz.models.AdminLoginBody
+import com.fitting.lenz.models.ShopDetails
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -18,7 +19,7 @@ class LenzViewModel: ViewModel() {
 
     var orderId by mutableIntStateOf(123)
         private set
-    var shopName by mutableStateOf("ABC Specs")
+    var orderedShopName by mutableStateOf("ABC Specs")
         private set
     var orderType by mutableStateOf("Regular")
         private set
@@ -26,6 +27,12 @@ class LenzViewModel: ViewModel() {
         private set
     var paymentStatus by mutableStateOf("COD")
         private set
+    var shopsList by mutableStateOf<List<ShopDetails>>(emptyList())
+        private set
+
+    init {
+        getShopsList()
+    }
 
     fun verifyAdmin(
         id: Int,
@@ -41,6 +48,17 @@ class LenzViewModel: ViewModel() {
                 adminConfirmation = adminResponse.confirmation
             } catch (e: HttpException) {
                 adminConfirmation = false
+            }
+        }
+    }
+
+    private fun getShopsList() {
+        viewModelScope.launch {
+            try {
+                val shopsResponse = _lenzService.getShops()
+                shopsList = shopsResponse
+            } catch (e: HttpException) {
+                shopsList = emptyList()
             }
         }
     }
