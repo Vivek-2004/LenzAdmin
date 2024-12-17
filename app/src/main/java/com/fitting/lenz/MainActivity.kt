@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
 //        val serviceIntent = Intent(this, ForegroundService::class.java)
 //        startService(serviceIntent)
     }

@@ -41,7 +41,7 @@ fun Orders(
             )
         }.padding(end = scrollBarWidth)
     ) {
-        items(25) { index ->
+        items(25) {
             OrderItem(
                 colorScheme = colorScheme,
                 lenzViewModel = lenzViewModel

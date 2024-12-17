@@ -107,9 +107,11 @@ fun ShopItem(
             ) {
                 Column(
                     modifier = Modifier.weight(1f)
-                        .clickable{
-                        Toast.makeText(context, "Orders", Toast.LENGTH_SHORT).show()
-                    },
+                        .clickable(
+                            onClick = {
+                                Toast.makeText(context, "Orders", Toast.LENGTH_SHORT).show()
+                            }
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -123,9 +125,11 @@ fun ShopItem(
                 VerticalDivider()
                 Column(
                     modifier = Modifier.weight(1f)
-                        .clickable{
-                        Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
-                    },
+                        .clickable(
+                            onClick = {
+                                Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                            }
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(

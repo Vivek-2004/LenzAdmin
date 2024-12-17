@@ -4,6 +4,8 @@ enum class NavigationDestination {
     Orders,
     Shops,
     Edit,
+    ShiftingEdit,
+    FittingEdit,
 
     History,
 }
