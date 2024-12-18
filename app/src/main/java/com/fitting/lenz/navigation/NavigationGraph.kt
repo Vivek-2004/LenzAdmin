@@ -15,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
@@ -30,6 +32,8 @@ import com.fitting.lenz.screens.details_screen.ShiftingEdit
 fun MyApp(
     colorScheme: ColorSchemeModel
 ) {
+    val lenzViewModelInstance: LenzViewModel = viewModel()
+
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     var currentScreen = currentBackStackEntry?.destination?.route
@@ -84,13 +88,19 @@ fun MyApp(
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-            startDestination = NavigationDestination.Orders.name
+            startDestination = NavigationDestination.Shops.name
         ) {
             composable(NavigationDestination.Orders.name) {
-                Orders(colorScheme = colorScheme)
+                Orders(
+                    colorScheme = colorScheme,
+                    lenzViewModel = lenzViewModelInstance
+                )
             }
             composable(NavigationDestination.Shops.name) {
-                Shops(colorScheme = colorScheme)
+                Shops(
+                    colorScheme = colorScheme,
+                    lenzViewModel = lenzViewModelInstance
+                )
             }
             composable(NavigationDestination.Edit.name) {
                 Edit(
@@ -99,10 +109,16 @@ fun MyApp(
                 )
             }
             composable(NavigationDestination.ShiftingEdit.name) {
-                ShiftingEdit(colorScheme = colorScheme)
+                ShiftingEdit(
+                    colorScheme = colorScheme,
+                    lenzViewModel = lenzViewModelInstance
+                )
             }
             composable(NavigationDestination.FittingEdit.name) {
-                FittingEdit(colorScheme = colorScheme)
+                FittingEdit(
+                    colorScheme = colorScheme,
+                    lenzViewModel = lenzViewModelInstance
+                )
             }
         }
     }

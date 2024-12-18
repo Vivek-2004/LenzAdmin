@@ -25,7 +25,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.ShopItem
@@ -35,13 +34,13 @@ import kotlinx.coroutines.delay
 @Composable
 fun Shops(
     colorScheme: ColorSchemeModel,
-    lenzViewModel: LenzViewModel = viewModel()
+    lenzViewModel: LenzViewModel
 ) {
     val shopsList by lenzViewModel::shopsList
     val lazyListState = rememberLazyListState()
     val pullToRefreshState = rememberPullToRefreshState()
     val scrollBarWidth = 5.dp
-    var isRefreshing by remember { mutableStateOf(true) }
+    var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(isRefreshing) {
         lenzViewModel.getShopsList()

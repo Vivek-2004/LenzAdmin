@@ -7,5 +7,5 @@ enum class NavigationDestination {
     ShiftingEdit,
     FittingEdit,
 
-    History,
+    History
 }

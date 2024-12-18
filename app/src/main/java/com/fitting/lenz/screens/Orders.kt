@@ -13,7 +13,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.OrderItem
@@ -21,7 +20,7 @@ import com.fitting.lenz.screens.components.OrderItem
 @Composable
 fun Orders(
     colorScheme: ColorSchemeModel,
-    lenzViewModel: LenzViewModel = viewModel()
+    lenzViewModel: LenzViewModel
 ) {
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp

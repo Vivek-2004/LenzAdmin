@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fitting.lenz.models.AdminLoginBody
+import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -15,6 +16,14 @@ class LenzViewModel: ViewModel() {
     private val _lenzService = lenzService
 
     var adminConfirmation by mutableStateOf(false)
+        private set
+    var shopsList by mutableStateOf<List<ShopDetails>>(emptyList())
+        private set
+
+    var shiftingFullFrameCharges by mutableStateOf("0")
+    var shiftingSupraCharges by mutableStateOf("0")
+    var shiftingRimLessCharges by mutableStateOf("0")
+    var shiftingUpdateConfirmation by mutableStateOf(false)
         private set
 
     var orderId by mutableIntStateOf(123)
@@ -27,11 +36,10 @@ class LenzViewModel: ViewModel() {
         private set
     var paymentStatus by mutableStateOf("COD")
         private set
-    var shopsList by mutableStateOf<List<ShopDetails>>(emptyList())
-        private set
 
     init {
         getShopsList()
+        getShiftingCharges()
     }
 
     fun verifyAdmin(
@@ -46,7 +54,7 @@ class LenzViewModel: ViewModel() {
             try {
                 val adminResponse = _lenzService.getAdminLogin(adminVerification)
                 adminConfirmation = adminResponse.confirmation
-            } catch (e: HttpException) {
+            } catch (e: Exception) {
                 adminConfirmation = false
             }
         }
@@ -57,8 +65,43 @@ class LenzViewModel: ViewModel() {
             try {
                 val shopsResponse = _lenzService.getShops()
                 shopsList = shopsResponse
-            } catch (e: HttpException) {
+            } catch (e: Exception) {
                 shopsList = emptyList()
+            }
+        }
+    }
+
+    fun getShiftingCharges() {
+        viewModelScope.launch {
+            try {
+                val shiftingChargesResponse = _lenzService.getShiftingCharges()
+                shiftingFullFrameCharges = shiftingChargesResponse.data.fullFrame.toString()
+                shiftingSupraCharges = shiftingChargesResponse.data.supra.toString()
+                shiftingRimLessCharges = shiftingChargesResponse.data.rimless.toString()
+            } catch (e: HttpException) {
+                shiftingFullFrameCharges = "-1"
+                shiftingSupraCharges = "-1"
+                shiftingRimLessCharges = "-1"
+            }
+        }
+    }
+
+    fun updateShiftingCharges(
+        fullFrame: Int,
+        supra: Int,
+        rimless: Int
+    ){
+        val updatedCharges = ShiftingChargesUpdated(
+            FullFrame = fullFrame,
+            Supra = supra,
+            Rimless = rimless
+        )
+        viewModelScope.launch {
+            try {
+                val shiftingUpdateResponse = _lenzService.updateShiftingCharges(updatedCharges)
+                shiftingUpdateConfirmation = shiftingUpdateResponse.confirmation
+            } catch (e: Exception) {
+                shiftingUpdateConfirmation = false
             }
         }
     }
