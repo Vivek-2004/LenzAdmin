@@ -26,6 +26,7 @@ import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
 import com.fitting.lenz.screens.Shops
 import com.fitting.lenz.screens.details_screen.FittingEdit
+import com.fitting.lenz.screens.details_screen.History
 import com.fitting.lenz.screens.details_screen.ShiftingEdit
 
 @Composable
@@ -107,6 +108,11 @@ fun MyApp(
                     colorScheme = colorScheme,
                     lenzViewModel = lenzViewModelInstance
                 )
+            }
+            composable(NavigationDestination.History.name) {
+                History(
+                    colorScheme = colorScheme,
+                    lenzViewModel = lenzViewModelInstance)
             }
         }
     }

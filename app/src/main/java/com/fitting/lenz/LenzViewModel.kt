@@ -37,9 +37,12 @@ class LenzViewModel: ViewModel() {
     var paymentStatus by mutableStateOf("COD")
         private set
 
+    var test by mutableStateOf("TEST")
+
     init {
         getShopsList()
         getShiftingCharges()
+        getFittingCharges()
     }
 
     fun verifyAdmin(
@@ -82,6 +85,17 @@ class LenzViewModel: ViewModel() {
                 shiftingFullFrameCharges = "-1"
                 shiftingSupraCharges = "-1"
                 shiftingRimLessCharges = "-1"
+            }
+        }
+    }
+
+    fun getFittingCharges() {
+        viewModelScope.launch {
+            try {
+                val fittingChargesResponse = _lenzService.getFittingCharges()
+                test = fittingChargesResponse.toString()
+            } catch (e:Exception) {
+                test = "An Exception Occurred : $e"
             }
         }
     }

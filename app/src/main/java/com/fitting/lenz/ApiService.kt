@@ -2,6 +2,7 @@ package com.fitting.lenz
 
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.AdminLoginResponse
+import com.fitting.lenz.models.FittingChagresResponse
 import com.fitting.lenz.models.PriceUpdateResponse
 import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
@@ -45,6 +46,9 @@ interface ApiService {
 
     @GET("charges/shiftingCharges")
     suspend fun getShiftingCharges(): ShiftingChargesResponse
+
+    @GET("charges/fittingCharges")
+    suspend fun getFittingCharges(): FittingChagresResponse
 
     @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
     @PUT("charges/update-shifting-charges")
