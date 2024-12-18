@@ -33,13 +33,21 @@ fun TopAppBar(
         "FittingEdit" -> "Edit Price"
         else -> currentScreenName
     }
+    var showNavigationIcon by remember { mutableStateOf(false) }
+    showNavigationIcon = (
+            title != NavigationDestination.Orders.name &&
+                    title != NavigationDestination.Shops.name &&
+                    title != NavigationDestination.Edit.name
+            )
     TopAppBar(
         modifier = Modifier.background(colorScheme.bgColor),
         title = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 50.dp),
+                    .padding(
+                        end = if (showNavigationIcon) 50.dp else 20.dp
+                    ),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -52,16 +60,18 @@ fun TopAppBar(
             }
         },
         navigationIcon = {
-            IconButton(
-                modifier = Modifier.padding(start = 8.dp),
-                onClick = { navController.popBackStack() }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back Button",
-                    tint = colorScheme.compColor,
-                    modifier = Modifier.size(30.dp)
-                )
+            if(showNavigationIcon) {
+                IconButton(
+                    modifier = Modifier.padding(start = 8.dp),
+                    onClick = { navController.popBackStack() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back Button",
+                        tint = colorScheme.compColor,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
             }
         }
     )

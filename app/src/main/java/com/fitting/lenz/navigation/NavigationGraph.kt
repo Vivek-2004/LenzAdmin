@@ -39,29 +39,17 @@ fun MyApp(
     var currentScreen = currentBackStackEntry?.destination?.route
 
     var showBottomBar by remember { mutableStateOf(false) }
-    showBottomBar = currentScreen == NavigationDestination.Shops.name ||
+    showBottomBar = ( currentScreen == NavigationDestination.Shops.name ||
             currentScreen == NavigationDestination.Orders.name ||
-            currentScreen == NavigationDestination.Edit.name
+            currentScreen == NavigationDestination.Edit.name )
 
     Scaffold(
         topBar = {
-            AnimatedVisibility(
-                visible = !showBottomBar,
-                enter = expandVertically(
-                    animationSpec = tween(durationMillis = 500),
-                    expandFrom = Alignment.Top
-                ) + fadeIn(animationSpec = tween(durationMillis = 500)),
-                exit = shrinkVertically(
-                    animationSpec = tween(durationMillis = 500),
-                    shrinkTowards = Alignment.Top
-                ) + fadeOut(animationSpec = tween(durationMillis = 500))
-            ) {
-                TopAppBar(
-                    colorScheme = colorScheme,
-                    navController = navController,
-                    currentScreenName = currentScreen ?: ""
-                )
-            }
+            TopAppBar(
+                colorScheme = colorScheme,
+                navController = navController,
+                currentScreenName = currentScreen ?: ""
+            )
         },
         bottomBar = {
             AnimatedVisibility(
