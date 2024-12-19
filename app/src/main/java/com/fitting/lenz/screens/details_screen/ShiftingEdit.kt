@@ -1,6 +1,5 @@
 package com.fitting.lenz.screens.details_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import kotlinx.coroutines.delay
+import android.widget.Toast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +61,6 @@ fun ShiftingEdit(
     var isUpdating by remember { mutableStateOf(false) }
     var showToast by remember { mutableStateOf(false) }
 
-
     if (isRefreshing) {
         LaunchedEffect(Unit) {
             lenzViewModel.getShiftingCharges()
@@ -72,11 +71,7 @@ fun ShiftingEdit(
 
     if (isUpdating) {
         LaunchedEffect(Unit) {
-            lenzViewModel.updateShiftingCharges(
-                fullFrame = fullFrame.toInt(),
-                supra = supra.toInt(),
-                rimless = rimLess.toInt()
-            )
+            lenzViewModel.updateShiftingCharges()
             delay(1700L)
             isUpdating = false
             isRefreshing = true

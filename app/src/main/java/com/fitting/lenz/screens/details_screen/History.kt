@@ -32,7 +32,7 @@ fun History(
 //        )
 
                 Text(
-            text = lenzViewModel.test,
+            text = lenzViewModel.testResponse,
             color = colorScheme.compColor,
                     fontSize = 12.sp
         )

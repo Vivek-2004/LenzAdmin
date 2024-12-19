@@ -13,22 +13,32 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 
 @Composable
 fun FittingSupra(
-    colorScheme: ColorSchemeModel
+    colorScheme: ColorSchemeModel,
+    lenzViewModel: LenzViewModel
 ) {
-    var supra by remember { mutableStateOf("15") }
+    var fittingSupraNormal_LS by lenzViewModel::fittingSupraNormal_LS
+    var fittingSupraNormal_LD by lenzViewModel::fittingSupraNormal_LD
+    var fittingSupraNormal_HS by lenzViewModel::fittingSupraNormal_HS
+    var fittingSupraNormal_HD by lenzViewModel::fittingSupraNormal_HD
+    var fittingSupraPR_LS by lenzViewModel::fittingSupraPR_LS
+    var fittingSupraPR_LD by lenzViewModel::fittingSupraPR_LD
+    var fittingSupraPR_HS by lenzViewModel::fittingSupraPR_HS
+    var fittingSupraPR_HD by lenzViewModel::fittingSupraPR_HD
+    var fittingSupraSunglass_LS by lenzViewModel::fittingSupraSunglass_LS
+    var fittingSupraSunglass_LD by lenzViewModel::fittingSupraSunglass_LD
+    var fittingSupraSunglass_HS by lenzViewModel::fittingSupraSunglass_HS
+    var fittingSupraSunglass_HD by lenzViewModel::fittingSupraSunglass_HD
+
     Text(
         text = "Supra - Normal",
         color = colorScheme.compColor,
@@ -53,8 +63,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraNormal_LS,
+                onValueChange = { fittingSupraNormal_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -89,8 +99,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraNormal_LD,
+                onValueChange = { fittingSupraNormal_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -125,8 +135,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraNormal_HS,
+                onValueChange = { fittingSupraNormal_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -161,8 +171,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraNormal_HD,
+                onValueChange = { fittingSupraNormal_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -207,8 +217,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraPR_LS,
+                onValueChange = { fittingSupraPR_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -243,8 +253,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraPR_LD,
+                onValueChange = { fittingSupraPR_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -279,8 +289,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraPR_HS,
+                onValueChange = { fittingSupraPR_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -315,8 +325,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraPR_HD,
+                onValueChange = { fittingSupraPR_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -361,8 +371,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraSunglass_LS,
+                onValueChange = { fittingSupraSunglass_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -397,8 +407,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraSunglass_LD,
+                onValueChange = { fittingSupraSunglass_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -433,8 +443,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraSunglass_HS,
+                onValueChange = { fittingSupraSunglass_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -469,8 +479,8 @@ fun FittingSupra(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = supra,
-                onValueChange = { supra = it },
+                value = fittingSupraSunglass_HD,
+                onValueChange = { fittingSupraSunglass_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",

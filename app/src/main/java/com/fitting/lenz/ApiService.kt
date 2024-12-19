@@ -8,6 +8,7 @@ import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.TestResponse
+import com.fitting.lenz.models.UpdatedFittingChargesData
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -54,6 +55,12 @@ interface ApiService {
     @PUT("charges/update-shifting-charges")
     suspend fun updateShiftingCharges(
         @Body shiftingCharges: ShiftingChargesUpdated
+    ): PriceUpdateResponse
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @PUT("charges/update-fitting-charges")
+    suspend fun updateFittingCharges(
+        @Body fittingCharges: UpdatedFittingChargesData
     ): PriceUpdateResponse
 
     @GET("test")

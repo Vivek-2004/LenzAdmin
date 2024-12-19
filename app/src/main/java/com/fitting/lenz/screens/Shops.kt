@@ -3,9 +3,7 @@ package com.fitting.lenz.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -56,12 +54,15 @@ fun Shops(
         onRefresh = {
             isRefreshing = true
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(colorScheme.bgColor.copy(alpha = 0.1f))
     ) {
-        if(shopsList.isEmpty()) {
+        if (shopsList.isEmpty()) {
             Column(
-                modifier = Modifier.fillMaxSize().background(colorScheme.bgColor),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colorScheme.bgColor),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -75,18 +76,23 @@ fun Shops(
             LazyColumn(
                 state = lazyListState,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .background(Color.Gray.copy(alpha = 0.3f))
                     .drawBehind {
-                        val elementHeight = this.size.height / lazyListState.layoutInfo.totalItemsCount
-                        val offset = lazyListState.layoutInfo.visibleItemsInfo.first().index * elementHeight
-                        val scrollbarHeight = lazyListState.layoutInfo.visibleItemsInfo.size * elementHeight
+                        val elementHeight =
+                            this.size.height / lazyListState.layoutInfo.totalItemsCount
+                        val offset =
+                            lazyListState.layoutInfo.visibleItemsInfo.first().index * elementHeight
+                        val scrollbarHeight =
+                            lazyListState.layoutInfo.visibleItemsInfo.size * elementHeight
                         drawRect(
                             color = colorScheme.compColor.copy(alpha = 0.5f),
                             topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
                             size = Size(scrollBarWidth.toPx(), scrollbarHeight)
                         )
-                    }.padding(end = scrollBarWidth)
+                    }
+                    .padding(end = scrollBarWidth)
             ) {
                 items(shopsList) { shop ->
                     ShopItem(

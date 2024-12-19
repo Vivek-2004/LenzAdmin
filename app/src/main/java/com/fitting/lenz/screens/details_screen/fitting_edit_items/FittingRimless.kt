@@ -13,22 +13,40 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 
 @Composable
 fun FittingRimless(
-    colorScheme: ColorSchemeModel
+    colorScheme: ColorSchemeModel,
+    lenzViewModel: LenzViewModel
 ) {
-    var rimLess by remember { mutableStateOf("15") }
+    var fittingRimlessNormal_LS by lenzViewModel::fittingRimlessNormal_LS
+    var fittingRimlessNormal_LD by lenzViewModel::fittingRimlessNormal_LD
+    var fittingRimlessNormal_HS by lenzViewModel::fittingRimlessNormal_HS
+    var fittingRimlessNormal_HD by lenzViewModel::fittingRimlessNormal_HD
+    var fittingRimlessPR_LS by lenzViewModel::fittingRimlessPR_LS
+    var fittingRimlessPR_LD by lenzViewModel::fittingRimlessPR_LD
+    var fittingRimlessPR_HS by lenzViewModel::fittingRimlessPR_HS
+    var fittingRimlessPR_HD by lenzViewModel::fittingRimlessPR_HD
+    var fittingRimlessSunglass_LS by lenzViewModel::fittingRimlessSunglass_LS
+    var fittingRimlessSunglass_LD by lenzViewModel::fittingRimlessSunglass_LD
+    var fittingRimlessSunglass_HS by lenzViewModel::fittingRimlessSunglass_HS
+    var fittingRimlessSunglass_HD by lenzViewModel::fittingRimlessSunglass_HD
+    var fittingRimlessPoly_LS by lenzViewModel::fittingRimlessPoly_LS
+    var fittingRimlessPoly_LD by lenzViewModel::fittingRimlessPoly_LD
+    var fittingRimlessPoly_HS by lenzViewModel::fittingRimlessPoly_HS
+    var fittingRimlessPoly_HD by lenzViewModel::fittingRimlessPoly_HD
+    var fittingRimlessPolyPR_LS by lenzViewModel::fittingRimlessPolyPR_LS
+    var fittingRimlessPolyPR_LD by lenzViewModel::fittingRimlessPolyPR_LD
+    var fittingRimlessPolyPR_HS by lenzViewModel::fittingRimlessPolyPR_HS
+    var fittingRimlessPolyPR_HD by lenzViewModel::fittingRimlessPolyPR_HD
+
     Text(
         text = "Rimless - Normal",
         color = colorScheme.compColor,
@@ -53,8 +71,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessNormal_LS,
+                onValueChange = { fittingRimlessNormal_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -89,8 +107,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessNormal_LD,
+                onValueChange = { fittingRimlessNormal_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -125,8 +143,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessNormal_HS,
+                onValueChange = { fittingRimlessNormal_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -161,8 +179,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessNormal_HD,
+                onValueChange = { fittingRimlessNormal_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -207,8 +225,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPR_LS,
+                onValueChange = { fittingRimlessPR_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -243,8 +261,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPR_LD,
+                onValueChange = { fittingRimlessPR_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -279,8 +297,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPR_HS,
+                onValueChange = { fittingRimlessPR_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -315,8 +333,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPR_HD,
+                onValueChange = { fittingRimlessPR_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -361,8 +379,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessSunglass_LS,
+                onValueChange = { fittingRimlessSunglass_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -397,8 +415,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessSunglass_LD,
+                onValueChange = { fittingRimlessSunglass_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -433,8 +451,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessSunglass_HS,
+                onValueChange = { fittingRimlessSunglass_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -469,8 +487,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessSunglass_HD,
+                onValueChange = { fittingRimlessSunglass_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -515,8 +533,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPoly_LS,
+                onValueChange = { fittingRimlessPoly_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -551,8 +569,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPoly_LD,
+                onValueChange = { fittingRimlessPoly_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -587,8 +605,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPoly_HS,
+                onValueChange = { fittingRimlessPoly_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -623,8 +641,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPoly_HD,
+                onValueChange = { fittingRimlessPoly_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -669,8 +687,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPolyPR_LS,
+                onValueChange = { fittingRimlessPolyPR_LS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -705,8 +723,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPolyPR_LD,
+                onValueChange = { fittingRimlessPolyPR_LD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -741,8 +759,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPolyPR_HS,
+                onValueChange = { fittingRimlessPolyPR_HS = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",
@@ -777,8 +795,8 @@ fun FittingRimless(
         }
         Column(Modifier.weight(1f)) {
             OutlinedTextField(
-                value = rimLess,
-                onValueChange = { rimLess = it },
+                value = fittingRimlessPolyPR_HD,
+                onValueChange = { fittingRimlessPolyPR_HD = it },
                 placeholder = {
                     Text(
                         text = "Enter New Price",

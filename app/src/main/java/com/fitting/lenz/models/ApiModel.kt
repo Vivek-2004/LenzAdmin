@@ -23,7 +23,7 @@ data class AdminDetails(
     val adminId: Int,
     val createdAt: String,
     val updatedAttr: String,
-    val __v : Int
+    val __v: Int
 )
 
 data class ShopDetails(
@@ -58,11 +58,6 @@ data class ShiftingChargesUpdated(
     val FullFrame: Int,
     val Supra: Int,
     val Rimless: Int
-)
-
-data class PriceUpdateResponse(
-    val message: String,
-    val confirmation: Boolean
 )
 
 data class SingleDouble(
@@ -101,6 +96,10 @@ data class FittingChargesData(
     @SerializedName("Rimless") val rimless: FittingDataRimless
 )
 
+data class UpdatedFittingChargesData(
+    @SerializedName("data") val data: FittingChargesData
+)
+
 data class FittingChagresResponse(
     val _id: String,
     val type: String,
@@ -110,6 +109,10 @@ data class FittingChagresResponse(
     val __v: Int
 )
 
+data class PriceUpdateResponse(
+    val message: String,
+    val confirmation: Boolean
+)
 
 data class TestResponse(
     val _id: String,

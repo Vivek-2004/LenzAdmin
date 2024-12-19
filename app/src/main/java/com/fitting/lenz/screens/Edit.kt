@@ -86,27 +86,27 @@ fun Edit(
             )
         }
 
+//        Button(
+//            onClick = {
+//                navController.navigate(NavigationDestination.History.name)
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(60.dp)
+//                .padding(top = 8.dp),
+//            shape = RoundedCornerShape(8.dp),
+//            colors = ButtonDefaults.buttonColors(
+//                contentColor = colorScheme.compColor,
+//                containerColor = Color.Gray.copy(alpha = 0.3f)
+//            )
+//        ) {
+//            Text(
+//                text = "TEST",
+//                fontWeight = FontWeight.Medium,
+//                fontStyle = FontStyle.Italic,
+//                fontSize = 18.sp
+//            )
+//        }
 
-        Button(
-            onClick = {
-                navController.navigate(NavigationDestination.History.name)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .padding(top = 8.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(
-                contentColor = colorScheme.compColor,
-                containerColor = Color.Gray.copy(alpha = 0.3f)
-            )
-        ) {
-            Text(
-                text = "TEST",
-                fontWeight = FontWeight.Medium,
-                fontStyle = FontStyle.Italic,
-                fontSize = 18.sp
-            )
-        }
     }
 }
