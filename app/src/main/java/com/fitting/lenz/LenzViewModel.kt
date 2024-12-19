@@ -32,9 +32,7 @@ class LenzViewModel : ViewModel() {
     var shiftingSupraCharges by mutableStateOf("0")
     var shiftingRimLessCharges by mutableStateOf("0")
     var shiftingUpdateConfirmation by mutableStateOf(false)
-        private set
     var fittingUpdateConfirmation by mutableStateOf(false)
-        private set
     var testResponse by mutableStateOf("VIVEK TEST")
 
 //  -----------------------------------------------------------------

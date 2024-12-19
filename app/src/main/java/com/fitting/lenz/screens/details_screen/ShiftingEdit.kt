@@ -41,6 +41,8 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import kotlinx.coroutines.delay
 import android.widget.Toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,15 +57,16 @@ fun ShiftingEdit(
     var fullFrame by lenzViewModel::shiftingFullFrameCharges
     var supra by lenzViewModel::shiftingSupraCharges
     var rimLess by lenzViewModel::shiftingRimLessCharges
-    val priceUpdateConfirmation by lenzViewModel::shiftingUpdateConfirmation
 
     var isRefreshing by remember { mutableStateOf(false) }
     var isUpdating by remember { mutableStateOf(false) }
-    var showToast by remember { mutableStateOf(false) }
+    var shiftingUpdateConfirmation by lenzViewModel::shiftingUpdateConfirmation
 
     if (isRefreshing) {
         LaunchedEffect(Unit) {
-            lenzViewModel.getShiftingCharges()
+            withContext(Dispatchers.IO) {
+                lenzViewModel.getShiftingCharges()
+            }
             delay(2000L)
             isRefreshing = false
         }
@@ -71,20 +74,18 @@ fun ShiftingEdit(
 
     if (isUpdating) {
         LaunchedEffect(Unit) {
-            lenzViewModel.updateShiftingCharges()
-            delay(1700L)
+            withContext(Dispatchers.IO) {
+                lenzViewModel.updateShiftingCharges()
+            }
+            delay(1500L)
             isUpdating = false
             isRefreshing = true
-            if (priceUpdateConfirmation) {
-                showToast = true
+            if (shiftingUpdateConfirmation) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Update Successful", Toast.LENGTH_SHORT).show()
+                    shiftingUpdateConfirmation = false
+                }
             }
-        }
-    }
-
-    if (showToast) {
-        LaunchedEffect(Unit) {
-            Toast.makeText(context, "Update Successful", Toast.LENGTH_SHORT).show()
-            showToast = false
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -41,7 +43,9 @@ import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.details_screen.fitting_edit_items.FittingFullFrame
 import com.fitting.lenz.screens.details_screen.fitting_edit_items.FittingRimless
 import com.fitting.lenz.screens.details_screen.fitting_edit_items.FittingSupra
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,11 +58,33 @@ fun FittingEdit(
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
     var isUpdating by remember { mutableStateOf(false) }
+    var fittingUpdateConfirmation by lenzViewModel::fittingUpdateConfirmation
 
-    LaunchedEffect(isRefreshing) {
-        lenzViewModel.getFittingCharges()
-        delay(2000L)
-        isRefreshing = false
+    if (isRefreshing) {
+        LaunchedEffect(Unit) {
+            withContext(Dispatchers.IO) {
+                lenzViewModel.getFittingCharges()
+            }
+            delay(2000L)
+            isRefreshing = false
+        }
+    }
+
+    if (isUpdating) {
+        LaunchedEffect(Unit) {
+            withContext(Dispatchers.IO) {
+                lenzViewModel.updateFittingCharges()
+            }
+            delay(1500L)
+            isUpdating = false
+            isRefreshing = true
+            if (fittingUpdateConfirmation) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Update Successful", Toast.LENGTH_SHORT).show()
+                    fittingUpdateConfirmation = false
+                }
+            }
+        }
     }
 
     PullToRefreshBox(
@@ -191,27 +217,32 @@ fun FittingEdit(
             }
             Spacer(modifier = Modifier.height(28.dp))
             Button(
+                onClick = {
+                    isUpdating = true
+                },
+                shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
                     .padding(top = 8.dp),
-                onClick = {
-                    lenzViewModel.updateFittingCharges()
-                    Toast.makeText(context, "Button Pressed", Toast.LENGTH_SHORT).show()
-                },
-                shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     contentColor = colorScheme.compColor,
-                    containerColor = Color.Gray
+                    containerColor = Color.Gray.copy(alpha = 0.5f)
                 )
             ) {
-                Text(
-                    text = "Update Fitting",
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 24.sp,
-                    color = Color.Black
-                )
+                if (isUpdating) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(32.dp),
+                        strokeWidth = 5.dp,
+                    )
+                } else {
+                    Text(
+                        text = "Update Fitting",
+                        fontWeight = FontWeight.Medium,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 24.sp,
+                    )
+                }
             }
         }
     }
