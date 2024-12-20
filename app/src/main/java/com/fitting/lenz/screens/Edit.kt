@@ -39,8 +39,8 @@ fun Edit(
         Text(
             text = "Which Charges do You want to Edit ?",
             fontStyle = FontStyle.Italic,
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 12.dp),
+            fontSize = 21.sp,
+            modifier = Modifier.padding(12.dp),
             color = colorScheme.compColor
         )
         Button(
@@ -85,28 +85,5 @@ fun Edit(
                 fontSize = 18.sp
             )
         }
-
-//        Button(
-//            onClick = {
-//                navController.navigate(NavigationDestination.History.name)
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(60.dp)
-//                .padding(top = 8.dp),
-//            shape = RoundedCornerShape(8.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                contentColor = colorScheme.compColor,
-//                containerColor = Color.Gray.copy(alpha = 0.3f)
-//            )
-//        ) {
-//            Text(
-//                text = "TEST",
-//                fontWeight = FontWeight.Medium,
-//                fontStyle = FontStyle.Italic,
-//                fontSize = 18.sp
-//            )
-//        }
-
     }
 }

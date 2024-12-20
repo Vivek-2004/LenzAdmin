@@ -21,13 +21,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.models.ShopDetails
+import com.fitting.lenz.navigation.NavigationDestination
 
 @Composable
 fun ShopItem(
     colorScheme: ColorSchemeModel,
-    shop: ShopDetails
+    shop: ShopDetails,
+    navController: NavController
 ) {
     val context = LocalContext.current
 
@@ -127,6 +130,7 @@ fun ShopItem(
                     modifier = Modifier.weight(1f)
                         .clickable(
                             onClick = {
+                                navController.navigate(NavigationDestination.History.name)
                                 Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
                             }
                         ),

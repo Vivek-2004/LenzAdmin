@@ -6,7 +6,13 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,84 +42,107 @@ fun MyApp(
 ) {
     val lenzViewModelInstance: LenzViewModel = viewModel()
 
-    val navController = rememberNavController()
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    var currentScreen = currentBackStackEntry?.destination?.route
-
-    var showBottomBar by remember { mutableStateOf(false) }
-    showBottomBar = ( currentScreen == NavigationDestination.Shops.name ||
-            currentScreen == NavigationDestination.Orders.name ||
-            currentScreen == NavigationDestination.Edit.name )
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colorScheme = colorScheme,
-                navController = navController,
-                currentScreenName = currentScreen ?: ""
+    if (lenzViewModelInstance.shopsList.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.bgColor),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(100.dp),
+                strokeWidth = 11.dp,
+                color = colorScheme.compColor.copy(alpha = 0.8f)
             )
-        },
-        bottomBar = {
-            AnimatedVisibility(
-                visible = showBottomBar,
-                enter = expandVertically(
-                    animationSpec = tween(durationMillis = 500),
-                    expandFrom = Alignment.Top
-                ) + fadeIn(animationSpec = tween(durationMillis = 500)),
-                exit = shrinkVertically(
-                    animationSpec = tween(durationMillis = 500),
-                    shrinkTowards = Alignment.Top
-                ) + fadeOut(animationSpec = tween(durationMillis = 500))
-            ) {
-                BottomNavigationBar(
+        }
+    } else {
+        val navController = rememberNavController()
+        val currentBackStackEntry by navController.currentBackStackEntryAsState()
+        var currentScreen = currentBackStackEntry?.destination?.route
+
+        var showBottomBar by remember { mutableStateOf(false) }
+        showBottomBar = (currentScreen == NavigationDestination.Shops.name ||
+                currentScreen == NavigationDestination.Orders.name ||
+                currentScreen == NavigationDestination.Edit.name)
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
                     colorScheme = colorScheme,
                     navController = navController,
-                    onTitleChange = {
-                        currentScreen = it
-                    }
+                    currentScreenName = currentScreen ?: ""
                 )
+            },
+            bottomBar = {
+                AnimatedVisibility(
+                    visible = showBottomBar,
+                    enter = expandVertically(
+                        animationSpec = tween(durationMillis = 500),
+                        expandFrom = Alignment.Top
+                    ) + fadeIn(animationSpec = tween(durationMillis = 500)),
+                    exit = shrinkVertically(
+                        animationSpec = tween(durationMillis = 500),
+                        shrinkTowards = Alignment.Top
+                    ) + fadeOut(animationSpec = tween(durationMillis = 500))
+                ) {
+                    BottomNavigationBar(
+                        colorScheme = colorScheme,
+                        navController = navController,
+                        onTitleChange = {
+                            currentScreen = it
+                        }
+                    )
+                }
             }
-        }
-    ) { innerPadding ->
-        NavHost(
-            modifier = Modifier.padding(innerPadding),
-            navController = navController,
-            startDestination = NavigationDestination.Shops.name
-        ) {
-            composable(NavigationDestination.Orders.name) {
-                Orders(
-                    colorScheme = colorScheme,
-                    lenzViewModel = lenzViewModelInstance
-                )
-            }
-            composable(NavigationDestination.Shops.name) {
-                Shops(
-                    colorScheme = colorScheme,
-                    lenzViewModel = lenzViewModelInstance
-                )
-            }
-            composable(NavigationDestination.Edit.name) {
-                Edit(
-                    colorScheme = colorScheme,
-                    navController = navController
-                )
-            }
-            composable(NavigationDestination.ShiftingEdit.name) {
-                ShiftingEdit(
-                    colorScheme = colorScheme,
-                    lenzViewModel = lenzViewModelInstance
-                )
-            }
-            composable(NavigationDestination.FittingEdit.name) {
-                FittingEdit(
-                    colorScheme = colorScheme,
-                    lenzViewModel = lenzViewModelInstance
-                )
-            }
-            composable(NavigationDestination.History.name) {
-                History(
-                    colorScheme = colorScheme,
-                    lenzViewModel = lenzViewModelInstance)
+        ) { innerPadding ->
+            NavHost(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+                startDestination = NavigationDestination.Shops.name
+            ) {
+                composable(route = NavigationDestination.Orders.name) {
+                    Orders(
+                        colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance
+                    )
+                }
+
+                composable(route = NavigationDestination.Shops.name) {
+                    Shops(
+                        colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance,
+                        navController = navController
+                    )
+                }
+
+                composable(route = NavigationDestination.Edit.name) {
+                    Edit(
+                        colorScheme = colorScheme,
+                        navController = navController
+                    )
+                }
+
+                composable(NavigationDestination.ShiftingEdit.name) {
+                    ShiftingEdit(
+                        colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance
+                    )
+                }
+
+                composable(NavigationDestination.FittingEdit.name) {
+                    FittingEdit(
+                        colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance
+                    )
+                }
+
+                composable(NavigationDestination.History.name) {
+                    History(
+                        colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance
+                    )
+                }
             }
         }
     }

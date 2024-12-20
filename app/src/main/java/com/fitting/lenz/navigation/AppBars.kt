@@ -60,7 +60,7 @@ fun TopAppBar(
             }
         },
         navigationIcon = {
-            if(showNavigationIcon) {
+            if (showNavigationIcon) {
                 IconButton(
                     modifier = Modifier.padding(start = 8.dp),
                     onClick = { navController.popBackStack() }
@@ -131,7 +131,9 @@ fun BottomNavigationBar(
                     onClick = {
                         onTitleChange(screen)
                         navController.navigate(screen) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
                             launchSingleTop = true
                             restoreState = true
                         }

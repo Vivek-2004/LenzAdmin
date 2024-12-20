@@ -25,6 +25,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.ShopItem
@@ -34,7 +35,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun Shops(
     colorScheme: ColorSchemeModel,
-    lenzViewModel: LenzViewModel
+    lenzViewModel: LenzViewModel,
+    navController: NavController
 ) {
     val shopsList by lenzViewModel::shopsList
     val lazyListState = rememberLazyListState()
@@ -97,7 +99,8 @@ fun Shops(
                 items(shopsList) { shop ->
                     ShopItem(
                         colorScheme = colorScheme,
-                        shop = shop
+                        shop = shop,
+                        navController = navController
                     )
                 }
             }
