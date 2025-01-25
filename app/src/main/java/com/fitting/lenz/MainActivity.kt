@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         installSplashScreen()
 
         val sharedPref = getSharedPreferences("LenzPref", Context.MODE_PRIVATE)
