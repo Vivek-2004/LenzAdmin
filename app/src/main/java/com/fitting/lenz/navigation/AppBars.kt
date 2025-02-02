@@ -31,6 +31,8 @@ fun TopAppBar(
     val title = when (currentScreenName) {
         "ShiftingEdit" -> "Edit Price"
         "FittingEdit" -> "Edit Price"
+        "SingleOrderItemHolder/{groupOrderId}" -> "Orders List"
+        "OrderDetails" -> "Order Details"
         else -> currentScreenName
     }
     var showNavigationIcon by remember { mutableStateOf(false) }

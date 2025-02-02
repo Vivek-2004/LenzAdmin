@@ -1,6 +1,5 @@
 package com.fitting.lenz.screens.components
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -17,14 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.models.ShopDetails
-import com.fitting.lenz.navigation.NavigationDestination
 
 @Composable
 fun ShopItem(
@@ -32,8 +29,6 @@ fun ShopItem(
     shop: ShopDetails,
     navController: NavController
 ) {
-    val context = LocalContext.current
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -112,7 +107,7 @@ fun ShopItem(
                     modifier = Modifier.weight(1f)
                         .clickable(
                             onClick = {
-                                Toast.makeText(context, "Orders", Toast.LENGTH_SHORT).show()
+                                TODO()
                             }
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -121,7 +116,7 @@ fun ShopItem(
                         modifier = Modifier.padding(vertical = 2.dp),
                         text = "Orders",
                         fontStyle = FontStyle.Italic,
-                        color = colorScheme.compColor   ,
+                        color = colorScheme.compColor,
                         fontSize = 14.sp
                     )
                 }
@@ -130,8 +125,7 @@ fun ShopItem(
                     modifier = Modifier.weight(1f)
                         .clickable(
                             onClick = {
-                                navController.navigate(NavigationDestination.History.name)
-                                Toast.makeText(context, "History", Toast.LENGTH_SHORT).show()
+                                TODO()
                             }
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally

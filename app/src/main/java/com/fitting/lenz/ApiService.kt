@@ -3,6 +3,7 @@ package com.fitting.lenz
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.AdminLoginResponse
 import com.fitting.lenz.models.FittingChagresResponse
+import com.fitting.lenz.models.GroupOrderResponse
 import com.fitting.lenz.models.PriceUpdateResponse
 import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
@@ -62,6 +63,9 @@ interface ApiService {
     suspend fun updateFittingCharges(
         @Body fittingCharges: UpdatedFittingChargesData
     ): PriceUpdateResponse
+
+    @GET("orders/get-all-group-orders")
+    suspend fun getGroupOrders(): GroupOrderResponse
 
     @GET("test")
     suspend fun getTest(): List<TestResponse>

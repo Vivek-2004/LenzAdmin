@@ -1,5 +1,7 @@
 package com.fitting.lenz.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -29,13 +31,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.orders.OrderDetails
 import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
 import com.fitting.lenz.screens.Shops
+import com.fitting.lenz.screens.components.SingleOrderItemHolder
 import com.fitting.lenz.screens.details_screen.FittingEdit
 import com.fitting.lenz.screens.details_screen.History
 import com.fitting.lenz.screens.details_screen.ShiftingEdit
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyApp(
     colorScheme: ColorSchemeModel
@@ -60,6 +65,7 @@ fun MyApp(
         val navController = rememberNavController()
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         var currentScreen = currentBackStackEntry?.destination?.route
+        println(currentScreen)
 
         var showBottomBar by remember { mutableStateOf(false) }
         showBottomBar = (currentScreen == NavigationDestination.Shops.name ||
@@ -104,7 +110,8 @@ fun MyApp(
                 composable(route = NavigationDestination.Orders.name) {
                     Orders(
                         colorScheme = colorScheme,
-                        lenzViewModel = lenzViewModelInstance
+                        lenzViewModel = lenzViewModelInstance,
+                        navController = navController
                     )
                 }
 
@@ -141,6 +148,21 @@ fun MyApp(
                     History(
                         colorScheme = colorScheme,
                         lenzViewModel = lenzViewModelInstance
+                    )
+                }
+
+                composable(NavigationDestination.SingleOrderItemHolder.name + "/{groupOrderId}" ) { backStackEntry ->
+                    SingleOrderItemHolder(
+                        colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance,
+                        navController = navController,
+                        groupOrderId = backStackEntry.arguments?.getString("groupOrderId") ?: ""
+                    )
+                }
+
+                composable(NavigationDestination.OrderDetails.name) {
+                    OrderDetails(
+                        colorScheme = colorScheme,
                     )
                 }
             }

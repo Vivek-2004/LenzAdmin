@@ -114,9 +114,9 @@ fun AdminLogin(
 
             Button(
                 modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-                .padding(top = 12.dp),
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(top = 12.dp),
                 onClick = {
                     if(adminId.isNotEmpty() && password.isNotEmpty()) {
                         lenzViewModel.verifyAdmin(

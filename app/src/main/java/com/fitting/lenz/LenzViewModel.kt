@@ -1,7 +1,6 @@
 package com.fitting.lenz
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -12,6 +11,7 @@ import com.fitting.lenz.models.FittingChargesData
 import com.fitting.lenz.models.FittingDataFullFrame
 import com.fitting.lenz.models.FittingDataRimless
 import com.fitting.lenz.models.FittingDataSupra
+import com.fitting.lenz.models.GroupOrder
 import com.fitting.lenz.models.LowHigh
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
@@ -27,13 +27,14 @@ class LenzViewModel : ViewModel() {
         private set
     var shopsList by mutableStateOf<List<ShopDetails>>(emptyList())
         private set
+    var groupOrders by mutableStateOf<List<GroupOrder>>(emptyList())
+        private set
 
     var shiftingFullFrameCharges by mutableStateOf("0")
     var shiftingSupraCharges by mutableStateOf("0")
     var shiftingRimLessCharges by mutableStateOf("0")
     var shiftingUpdateConfirmation by mutableStateOf(false)
     var fittingUpdateConfirmation by mutableStateOf(false)
-    var testResponse by mutableStateOf("VIVEK TEST")
 
 //  -----------------------------------------------------------------
     var fittingFullFrameNormal_LS by mutableStateOf("0")
@@ -84,18 +85,6 @@ class LenzViewModel : ViewModel() {
     var fittingRimlessPolyPR_HD by mutableStateOf("0")
 //  -----------------------------------------------------------------
 
-
-    var orderId by mutableIntStateOf(123)
-        private set
-    var orderedShopName by mutableStateOf("ABC Specs")
-        private set
-    var orderType by mutableStateOf("Regular")
-        private set
-    var orderTime by mutableStateOf("09:17 a.m.")
-        private set
-    var paymentStatus by mutableStateOf("COD")
-        private set
-
     var getFittingChargesResponseError by mutableStateOf("TEST")
         private set
 
@@ -106,6 +95,7 @@ class LenzViewModel : ViewModel() {
         getShopsList()
         getShiftingCharges()
         getFittingCharges()
+        getGroupOrders()
     }
 
     fun verifyAdmin(
@@ -363,6 +353,17 @@ class LenzViewModel : ViewModel() {
                 fittingUpdateConfirmation = fittingUpdateResponse.confirmation
             } catch (e: Exception) {
                 fittingUpdateConfirmation = false
+            }
+        }
+    }
+
+    fun getGroupOrders() {
+        viewModelScope.launch {
+            try {
+                val groupsResponse = _lenzService.getGroupOrders()
+                groupOrders = groupsResponse.data
+            } catch (e: Exception) {
+                groupOrders = emptyList()
             }
         }
     }

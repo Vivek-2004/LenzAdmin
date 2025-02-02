@@ -114,6 +114,83 @@ data class PriceUpdateResponse(
     val confirmation: Boolean
 )
 
+data class GroupOrderResponse(
+    val data: List<GroupOrder>
+)
+
+data class GroupOrder(
+    @SerializedName("rider_details") val riderDetails: RiderDetails,
+    val paidAmount: Int,
+    val leftAmount: Int,
+    @SerializedName("tracking_status") val trackingStatus: String,
+    @SerializedName("rider_id") val riderId: String?,
+    @SerializedName("admin_id") val adminId: String?,
+    @SerializedName("_id") val id: String,
+    val userId: String,
+    val orders: List<Order>,
+    val totalAmount: Int,
+    val deliveryCharge: Int,
+    val finalAmount: Int,
+    val paymentStatus: String,
+    val createdAt: String,
+    val updatedAt: String,
+    @SerializedName("__v") val version: Int
+)
+
+data class RiderDetails(
+    val name: String?,
+    val phone: String?
+)
+
+data class Order(
+    val deliveryCharge: Int,
+    @SerializedName("_id") val id: String,
+    val userId: String,
+    val customerDetails: CustomerDetails,
+    val frameOptions: FrameOptions,
+    @SerializedName("shiftingOrFitting") val shiftingOrFitting: String,
+    val purchaseLens: String?,
+    val glassType: String?,
+    val lensDetails: String?,
+    val materialDetails: String?,
+    val coatingDetails: String?,
+    val powerDetails: PowerDetails?,
+    val powerType: String?,
+    val powerEntryType: String?,
+    val fittingCharge: Int,
+    val shiftingCharge: Int,
+    val totalAmount: Int,
+    val paymentType: String?,
+    val orderPlaced: Boolean,
+    @SerializedName("isGroupOrder") val isGroupOrder: Boolean,
+    val paymentStatus: String,
+    val createdAt: String,
+    val updatedAt: String,
+    @SerializedName("__v") val version: Int,
+    @SerializedName("groupOrderId") val groupOrderId: String?
+)
+
+data class CustomerDetails(
+    val name: String,
+    val billNumber: String?
+)
+
+data class FrameOptions(
+    val type: String
+)
+
+data class PowerDetails(
+    val right: PowerDetail,
+    val left: PowerDetail
+)
+
+data class PowerDetail(
+    val spherical: String?,
+    val cylindrical: String?,
+    val axis: String?,
+    val addition: String?
+)
+
 data class TestResponse(
     val _id: String,
     val notification: Boolean

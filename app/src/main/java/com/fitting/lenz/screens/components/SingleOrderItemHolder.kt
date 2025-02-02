@@ -1,4 +1,4 @@
-package com.fitting.lenz.screens
+package com.fitting.lenz.screens.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -20,30 +20,29 @@ import androidx.navigation.NavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.findShopName
 import com.fitting.lenz.formDate
-import com.fitting.lenz.formatPaymentStatus
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.models.Order
 import com.fitting.lenz.navigation.NavigationDestination
-import com.fitting.lenz.screens.components.GroupOrderItem
 import com.fitting.lenz.toIST
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Orders(
+fun SingleOrderItemHolder(
     colorScheme: ColorSchemeModel,
     lenzViewModel: LenzViewModel,
-    navController: NavController
+    navController: NavController,
+    groupOrderId: String
 ) {
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
 
-    val orderGroups by lenzViewModel::groupOrders
+    val orderGroups = lenzViewModel.groupOrders.filter { it.id == groupOrderId }
     val shopsList by lenzViewModel::shopsList
 
     LazyColumn(
         state = listState,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
             .drawBehind {
                 val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
                 val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
@@ -53,21 +52,18 @@ fun Orders(
                     topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
                     size = Size(scrollBarWidth.toPx(), scrollbarHeight)
                 )
-            }
-            .padding(end = scrollBarWidth)
+            }.padding(end = scrollBarWidth)
     ) {
-        itemsIndexed(orderGroups) { index, item->
-            GroupOrderItem(
+        itemsIndexed(orderGroups[0].orders) { index, item->
+            SingleOrderItem(
                 colorScheme = colorScheme,
-                orderId = item.id.takeLast(5),
+                orderId = item.id,
                 shopName = item.userId.findShopName(shopsList),
-                orderValue = item.finalAmount,
-                orderQuantity = item.orders.size,
-                orderTime = item.createdAt.toIST(),
+                orderAmount = item.totalAmount,
                 orderDate = item.createdAt.formDate(),
-                paymentStatus = formatPaymentStatus(item.paymentStatus),
+                orderTime = item.createdAt.toIST(),
                 onClick = {
-                    navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
+                    navController.navigate(NavigationDestination.OrderDetails.name)
                 }
             )
 

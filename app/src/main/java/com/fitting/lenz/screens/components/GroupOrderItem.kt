@@ -2,6 +2,7 @@ package com.fitting.lenz.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,34 +32,36 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 
 @Composable
-fun OrderItem(
+fun GroupOrderItem(
     colorScheme: ColorSchemeModel,
-    lenzViewModel: LenzViewModel
+    orderId: String,
+    shopName: String,
+    orderValue: Int,
+    paymentStatus: String,
+    orderQuantity: Int,
+    orderTime: String,
+    orderDate: String,
+    onClick: () -> Unit
 ) {
     val orderStates = listOf("Pending", "Out for Pickup", "Pickup Received", "Out for Delivery", "Delivered")
     var orderSelectedItem by remember { mutableStateOf(orderStates[0]) }
     var expanded by remember { mutableStateOf(false) }
 
-    val orderId by lenzViewModel::orderId
-    val shopName by lenzViewModel::orderedShopName
-    val orderType by lenzViewModel::orderType
-    val orderTime by lenzViewModel::orderTime
-    val paymentStatus by lenzViewModel::paymentStatus
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .background(colorScheme.bgColor)
-            .height(100.dp)
+            .height(135.dp)
             .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
+                .padding(top = 16.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -67,7 +70,7 @@ fun OrderItem(
             ) {
                 Text(
                     text = "#$orderId - $shopName",
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     color = colorScheme.compColor,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic
@@ -88,14 +91,16 @@ fun OrderItem(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
-                        text = orderType,
+                        text = "$orderValue/- [$orderQuantity']",
                         color = colorScheme.compColor,
                         fontSize = 16.sp
                     )
                     Text(
-                        text = orderTime,
+                        text = paymentStatus,
                         color = colorScheme.compColor,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.Bold
                     )
                 }
 
@@ -107,7 +112,7 @@ fun OrderItem(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
-                        text = paymentStatus,
+                        text = orderTime,
                         color = colorScheme.compColor,
                         fontSize = 16.sp
                     )
