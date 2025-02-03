@@ -33,6 +33,8 @@ fun TopAppBar(
         "FittingEdit" -> "Edit Price"
         "SingleOrderItemHolder/{groupOrderId}" -> "Orders List"
         "OrderDetails" -> "Order Details"
+        "ShopOrdersHolder/{shopId}" -> "Pending Orders"
+        "History/{shopId}" -> "Order History"
         else -> currentScreenName
     }
     var showNavigationIcon by remember { mutableStateOf(false) }

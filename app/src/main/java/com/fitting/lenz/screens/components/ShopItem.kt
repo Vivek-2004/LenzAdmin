@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.models.ShopDetails
 
@@ -27,7 +26,8 @@ import com.fitting.lenz.models.ShopDetails
 fun ShopItem(
     colorScheme: ColorSchemeModel,
     shop: ShopDetails,
-    navController: NavController
+    shopsOnClick: () -> Unit,
+    historyOnClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -107,14 +107,14 @@ fun ShopItem(
                     modifier = Modifier.weight(1f)
                         .clickable(
                             onClick = {
-                                TODO()
+                                shopsOnClick()
                             }
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         modifier = Modifier.padding(vertical = 2.dp),
-                        text = "Orders",
+                        text = "Pending Orders",
                         fontStyle = FontStyle.Italic,
                         color = colorScheme.compColor,
                         fontSize = 14.sp
@@ -125,14 +125,14 @@ fun ShopItem(
                     modifier = Modifier.weight(1f)
                         .clickable(
                             onClick = {
-                                TODO()
+                                historyOnClick()
                             }
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         modifier = Modifier.padding(vertical = 2.dp),
-                        text = "History",
+                        text = "Order History",
                         fontStyle = FontStyle.Italic,
                         color = colorScheme.compColor,
                         fontSize = 14.sp

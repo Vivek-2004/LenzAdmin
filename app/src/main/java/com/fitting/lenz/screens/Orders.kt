@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fitting.lenz.LenzViewModel
@@ -66,15 +66,15 @@ fun Orders(
                 orderTime = item.createdAt.toIST(),
                 orderDate = item.createdAt.formDate(),
                 paymentStatus = formatPaymentStatus(item.paymentStatus),
+                orderStatus = item.trackingStatus,
                 onClick = {
                     navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
                 }
             )
 
             HorizontalDivider(
-                modifier = Modifier.width(320.dp),
-                color = colorScheme.compColor.copy(alpha = 0.15f),
-                thickness = 1.dp
+                color = Color.DarkGray.copy(alpha = 0.5f),
+                thickness = 8.dp
             )
         }
     }

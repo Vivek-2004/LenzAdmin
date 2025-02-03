@@ -35,6 +35,7 @@ import com.fitting.lenz.orders.OrderDetails
 import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
 import com.fitting.lenz.screens.Shops
+import com.fitting.lenz.screens.components.ShopOrdersHolder
 import com.fitting.lenz.screens.components.SingleOrderItemHolder
 import com.fitting.lenz.screens.details_screen.FittingEdit
 import com.fitting.lenz.screens.details_screen.History
@@ -144,13 +145,6 @@ fun MyApp(
                     )
                 }
 
-                composable(NavigationDestination.History.name) {
-                    History(
-                        colorScheme = colorScheme,
-                        lenzViewModel = lenzViewModelInstance
-                    )
-                }
-
                 composable(NavigationDestination.SingleOrderItemHolder.name + "/{groupOrderId}" ) { backStackEntry ->
                     SingleOrderItemHolder(
                         colorScheme = colorScheme,
@@ -165,6 +159,25 @@ fun MyApp(
                         colorScheme = colorScheme,
                     )
                 }
+
+                composable(NavigationDestination.ShopOrdersHolder.name + "/{shopId}" ) { backStackEntry ->
+                    ShopOrdersHolder(
+                        lenzViewModel = lenzViewModelInstance,
+                        colorScheme = colorScheme,
+                        navController = navController,
+                        shopId = backStackEntry.arguments?.getString("shopId") ?: ""
+                    )
+                }
+
+                composable(NavigationDestination.History.name + "/{shopId}" ) { backStackEntry ->
+                    History(
+                        colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance,
+                        navController = navController,
+                        shopId = backStackEntry.arguments?.getString("shopId") ?: ""
+                    )
+                }
+
             }
         }
     }

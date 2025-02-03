@@ -2,34 +2,21 @@ package com.fitting.lenz.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.models.ColorSchemeModel
@@ -43,13 +30,10 @@ fun GroupOrderItem(
     paymentStatus: String,
     orderQuantity: Int,
     orderTime: String,
+    orderStatus: String,
     orderDate: String,
     onClick: () -> Unit
 ) {
-    val orderStates = listOf("Pending", "Out for Pickup", "Pickup Received", "Out for Delivery", "Delivered")
-    var orderSelectedItem by remember { mutableStateOf(orderStates[0]) }
-    var expanded by remember { mutableStateOf(false) }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,13 +75,14 @@ fun GroupOrderItem(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
-                        text = "$orderValue/- [$orderQuantity']",
+                        text = "Rs.$orderValue/- [$orderQuantity']",
                         color = colorScheme.compColor,
                         fontSize = 16.sp
                     )
                     Text(
                         text = paymentStatus,
-                        color = colorScheme.compColor,
+                        color = if (paymentStatus == "Paid") Color.Green.copy(alpha = 0.6f)
+                        else Color.Red.copy(alpha = 0.6f),
                         fontSize = 16.sp,
                         fontStyle = FontStyle.Italic,
                         fontWeight = FontWeight.Bold
@@ -117,50 +102,15 @@ fun GroupOrderItem(
                         fontSize = 16.sp
                     )
 
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(100f))
-                            .clickable { expanded = true }
-                            .background(Color.LightGray)
-                            .padding(horizontal = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = orderSelectedItem,
-                            color = Color.Black,
-                            fontSize = 12.sp
-                        )
-                        Icon(
-                            imageVector = if(expanded) {
-                                Icons.Default.KeyboardArrowUp
-                            } else {
-                                Icons.Default.KeyboardArrowDown
-                            },
-                            contentDescription = null,
-                            tint = Color.Black,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier.wrapContentSize(Alignment.TopStart)
-                    ) {
-                        orderStates.forEach { orderStateItem ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = orderStateItem,
-                                        color = colorScheme.compColor
-                                    ) },
-                                onClick = {
-                                    expanded = false
-                                    orderSelectedItem = orderStateItem
-                                }
-                            )
-                        }
-                    }
+                    Text(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        text = orderStatus,
+                        color = Color.Yellow.copy(alpha = 0.6f),
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

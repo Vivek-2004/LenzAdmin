@@ -9,5 +9,6 @@ enum class NavigationDestination {
 
     History,
     OrderDetails,
-    SingleOrderItemHolder
+    SingleOrderItemHolder,
+    ShopOrdersHolder
 }

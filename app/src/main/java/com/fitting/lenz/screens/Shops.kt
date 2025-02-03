@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.navigation.NavigationDestination
 import com.fitting.lenz.screens.components.ShopItem
 import kotlinx.coroutines.delay
 
@@ -100,7 +101,12 @@ fun Shops(
                     ShopItem(
                         colorScheme = colorScheme,
                         shop = shop,
-                        navController = navController
+                        shopsOnClick = {
+                            navController.navigate(NavigationDestination.ShopOrdersHolder.name + "/${shop._id}")
+                        },
+                        historyOnClick = {
+                            navController.navigate(NavigationDestination.History.name + "/${shop._id}")
+                        }
                     )
                 }
             }

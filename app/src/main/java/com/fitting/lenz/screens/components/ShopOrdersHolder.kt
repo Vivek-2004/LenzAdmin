@@ -1,4 +1,4 @@
-package com.fitting.lenz.screens.details_screen
+package com.fitting.lenz.screens.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -30,12 +30,11 @@ import com.fitting.lenz.formatPaymentStatus
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.models.GroupOrder
 import com.fitting.lenz.navigation.NavigationDestination
-import com.fitting.lenz.screens.components.GroupOrderItem
 import com.fitting.lenz.toIST
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun History(
+fun ShopOrdersHolder(
     lenzViewModel: LenzViewModel,
     colorScheme: ColorSchemeModel,
     navController: NavController,
@@ -44,7 +43,7 @@ fun History(
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
 
-    val shopOrdersList: List<GroupOrder> = lenzViewModel.groupOrders.filter { it.userId == shopId && it.trackingStatus == "Order Completed" }
+    val shopOrdersList: List<GroupOrder> = lenzViewModel.groupOrders.filter { it.userId == shopId && it.trackingStatus != "Order Completed" }
     val shopsList by lenzViewModel::shopsList
 
     if (shopOrdersList.isEmpty()) {
@@ -55,7 +54,7 @@ fun History(
         ) {
             Text(
                 modifier = Modifier.padding(vertical = 2.dp),
-                text = "No History Found",
+                text = "No Pending Orders",
                 fontStyle = FontStyle.Italic,
                 color = colorScheme.compColor,
                 fontSize = 20.sp,

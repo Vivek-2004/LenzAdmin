@@ -21,6 +21,7 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.findShopName
 import com.fitting.lenz.formDate
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.models.GroupOrder
 import com.fitting.lenz.models.Order
 import com.fitting.lenz.navigation.NavigationDestination
 import com.fitting.lenz.toIST
@@ -36,7 +37,7 @@ fun SingleOrderItemHolder(
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
 
-    val orderGroups = lenzViewModel.groupOrders.filter { it.id == groupOrderId }
+    val orderGroups: List<GroupOrder> = lenzViewModel.groupOrders.filter { it.id == groupOrderId }
     val shopsList by lenzViewModel::shopsList
 
     LazyColumn(
