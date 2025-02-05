@@ -40,6 +40,7 @@ import com.fitting.lenz.screens.components.SingleOrderItemHolder
 import com.fitting.lenz.screens.details_screen.FittingEdit
 import com.fitting.lenz.screens.details_screen.History
 import com.fitting.lenz.screens.details_screen.ShiftingEdit
+import com.fitting.lenz.screens.details_screen.ShopDetails
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -66,7 +67,6 @@ fun MyApp(
         val navController = rememberNavController()
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         var currentScreen = currentBackStackEntry?.destination?.route
-        println(currentScreen)
 
         var showBottomBar by remember { mutableStateOf(false) }
         showBottomBar = (currentScreen == NavigationDestination.Shops.name ||
@@ -174,6 +174,14 @@ fun MyApp(
                         colorScheme = colorScheme,
                         lenzViewModel = lenzViewModelInstance,
                         navController = navController,
+                        shopId = backStackEntry.arguments?.getString("shopId") ?: ""
+                    )
+                }
+
+                composable(NavigationDestination.ShopDetails.name + "/{shopId}" ) { backStackEntry ->
+                    ShopDetails(
+                        lenzViewModel = lenzViewModelInstance,
+                        colorScheme = colorScheme,
                         shopId = backStackEntry.arguments?.getString("shopId") ?: ""
                     )
                 }

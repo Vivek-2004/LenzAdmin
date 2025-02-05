@@ -31,12 +31,24 @@ data class ShopDetails(
     val name: String,
     val email: String,
     val phone: String,
+    val alternatePhone: String,
     val password: String,
+    val shopName: String,
     val plan: String,
     val userId: Long,
     val createdAt: String,
     val updatedAt: String,
-    val __v: Int
+    val __v: Int,
+    val address: Address
+)
+
+data class Address(
+    val line1: String,
+    val line2: String,
+    val landmark: String,
+    val city: String,
+    val state: String,
+    val pinCode: String
 )
 
 data class ShiftingChargesResponse(

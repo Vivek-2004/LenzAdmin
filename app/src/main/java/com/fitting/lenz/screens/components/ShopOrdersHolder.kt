@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -80,7 +81,7 @@ fun ShopOrdersHolder(
             itemsIndexed(shopOrdersList) { index, item ->
                 GroupOrderItem(
                     colorScheme = colorScheme,
-                    orderId = item.id,
+                    orderId = item.id.takeLast(5),
                     shopName = item.userId.findShopName(shopsList),
                     orderValue = item.finalAmount,
                     orderQuantity = item.orders.size,
@@ -94,9 +95,9 @@ fun ShopOrdersHolder(
                 )
 
                 HorizontalDivider(
-                    modifier = Modifier.width(320.dp),
-                    color = colorScheme.compColor.copy(alpha = 0.15f),
-                    thickness = 1.dp
+                    modifier = Modifier.width(330.dp),
+                    color = Color.Green.copy(alpha = 0.45f),
+                    thickness = 2.dp
                 )
             }
         }

@@ -59,7 +59,7 @@ fun Orders(
         itemsIndexed(orderGroups) { index, item->
             GroupOrderItem(
                 colorScheme = colorScheme,
-                orderId = item.id.takeLast(5),
+                orderId = item.id,
                 shopName = item.userId.findShopName(shopsList),
                 orderValue = item.finalAmount,
                 orderQuantity = item.orders.size,

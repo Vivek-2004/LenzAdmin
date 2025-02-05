@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import com.fitting.lenz.models.ShopDetails
 fun ShopItem(
     colorScheme: ColorSchemeModel,
     shop: ShopDetails,
+    onShopCardClick: () -> Unit,
     shopsOnClick: () -> Unit,
     historyOnClick: () -> Unit
 ) {
@@ -41,102 +43,108 @@ fun ShopItem(
                 .fillMaxWidth()
                 .background(colorScheme.bgColor)
         ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.fillMaxSize().clickable{
+                    onShopCardClick()
+                }
             ) {
-                Column(
+                Row(
                     modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = shop.name,
-                        color = colorScheme.compColor,
-                        fontSize = 16.sp
-                    )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(bottom = 5.dp),
+                            text = shop.name,
+                            color = colorScheme.compColor,
+                            fontSize = 16.sp
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(bottom = 5.dp),
+                            text = shop.plan,
+                            color = colorScheme.compColor,
+                            fontSize = 16.sp
+                        )
+                    }
                 }
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = shop.plan,
-                        color = colorScheme.compColor,
-                        fontSize = 16.sp
-                    )
-                }
-            }
 
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
+                Row(
                     modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = shop.phone,
-                        color = colorScheme.compColor,
-                        fontSize = 16.sp
-                    )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(bottom = 5.dp),
+                            text = shop.phone,
+                            color = colorScheme.compColor,
+                            fontSize = 16.sp
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(bottom = 5.dp),
+                            text = shop.userId.toString().substring(0, 6),
+                            color = colorScheme.compColor,
+                            fontSize = 16.sp
+                        )
+                    }
                 }
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                HorizontalDivider(thickness = 0.35.dp)
+                Row(
+                    modifier = Modifier
+                        .weight(0.6f)
+                        .background(Color.LightGray.copy(alpha = 0.4f)),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = shop.userId.toString().substring(0,6),
-                        color = colorScheme.compColor,
-                        fontSize = 16.sp
-                    )
-                }
-            }
-            HorizontalDivider(thickness = 0.35.dp)
-            Row(
-                modifier = Modifier
-                    .weight(0.6f)
-                    .background(Color.LightGray.copy(alpha = 0.4f)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f)
-                        .clickable(
-                            onClick = {
-                                shopsOnClick()
-                            }
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 2.dp),
-                        text = "Pending Orders",
-                        fontStyle = FontStyle.Italic,
-                        color = colorScheme.compColor,
-                        fontSize = 14.sp
-                    )
-                }
-                VerticalDivider()
-                Column(
-                    modifier = Modifier.weight(1f)
-                        .clickable(
-                            onClick = {
-                                historyOnClick()
-                            }
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 2.dp),
-                        text = "Order History",
-                        fontStyle = FontStyle.Italic,
-                        color = colorScheme.compColor,
-                        fontSize = 14.sp
-                    )
+                    Column(
+                        modifier = Modifier.weight(1f)
+                            .clickable(
+                                onClick = {
+                                    shopsOnClick()
+                                }
+                            ),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            text = "Pending Orders",
+                            fontStyle = FontStyle.Italic,
+                            color = colorScheme.compColor,
+                            fontSize = 14.sp
+                        )
+                    }
+                    VerticalDivider()
+                    Column(
+                        modifier = Modifier.weight(1f)
+                            .clickable(
+                                onClick = {
+                                    historyOnClick()
+                                }
+                            ),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            text = "Order History",
+                            fontStyle = FontStyle.Italic,
+                            color = colorScheme.compColor,
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         }

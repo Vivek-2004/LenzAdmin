@@ -6,9 +6,9 @@ enum class NavigationDestination {
     Edit,
     ShiftingEdit,
     FittingEdit,
-
-    History,
+    ShopDetails,
     OrderDetails,
-    SingleOrderItemHolder,
-    ShopOrdersHolder
+    ShopOrdersHolder,
+    History,
+    SingleOrderItemHolder
 }

@@ -3,7 +3,9 @@ package com.fitting.lenz.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -98,9 +100,13 @@ fun Shops(
                     .padding(end = scrollBarWidth)
             ) {
                 items(shopsList) { shop ->
+                    Spacer(Modifier.height(5.dp))
                     ShopItem(
                         colorScheme = colorScheme,
                         shop = shop,
+                        onShopCardClick = {
+                            navController.navigate(NavigationDestination.ShopDetails.name + "/${shop._id}")
+                        },
                         shopsOnClick = {
                             navController.navigate(NavigationDestination.ShopOrdersHolder.name + "/${shop._id}")
                         },
@@ -108,6 +114,7 @@ fun Shops(
                             navController.navigate(NavigationDestination.History.name + "/${shop._id}")
                         }
                     )
+                    Spacer(Modifier.height(5.dp))
                 }
             }
         }
