@@ -367,4 +367,14 @@ class LenzViewModel : ViewModel() {
             }
         }
     }
+
+    fun patchWorkCompleted(groupOrderId: String) {
+        viewModelScope.launch {
+            try {
+                _lenzService.workCompleted(groupOrderId)
+            } catch (_: Exception) {
+
+            }
+        }
+    }
 }

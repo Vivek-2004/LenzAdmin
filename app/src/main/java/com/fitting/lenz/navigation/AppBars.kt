@@ -32,7 +32,7 @@ fun TopAppBar(
         "ShiftingEdit" -> "Edit Price"
         "FittingEdit" -> "Edit Price"
         "SingleOrderItemHolder/{groupOrderId}" -> "Orders List"
-        "OrderDetails" -> "Order Details"
+        "OrderDetails/{orderId}" -> "Order Details"
         "ShopOrdersHolder/{shopId}" -> "Pending Orders"
         "History/{shopId}" -> "Order History"
         "ShopDetails/{shopId}" -> "Shop Details"

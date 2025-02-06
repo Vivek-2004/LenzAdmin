@@ -39,3 +39,9 @@ fun String.findShopName(shopsList: List<ShopDetails>): String {
     }
     return shopName
 }
+
+fun String.checkNullorEmpty(): String {
+    return this.takeUnless {
+        it.isNullOrEmpty()
+    } ?: "N/A"
+}

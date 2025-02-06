@@ -44,7 +44,7 @@ fun ShopItem(
                 .background(colorScheme.bgColor)
         ) {
             Column(
-                modifier = Modifier.fillMaxSize().clickable{
+                modifier = Modifier.fillMaxSize().clickable {
                     onShopCardClick()
                 }
             ) {
@@ -58,7 +58,7 @@ fun ShopItem(
                     ) {
                         Text(
                             modifier = Modifier.padding(bottom = 5.dp),
-                            text = shop.name,
+                            text = shop.shopName,
                             color = colorScheme.compColor,
                             fontSize = 16.sp
                         )

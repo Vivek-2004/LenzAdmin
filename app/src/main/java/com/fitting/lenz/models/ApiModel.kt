@@ -134,7 +134,7 @@ data class GroupOrder(
     @SerializedName("rider_details") val riderDetails: RiderDetails,
     val paidAmount: Int,
     val leftAmount: Int,
-    @SerializedName("tracking_status") val trackingStatus: String,
+    @SerializedName("tracking_status") var trackingStatus: String,
     @SerializedName("rider_id") val riderId: String?,
     @SerializedName("admin_id") val adminId: String?,
     @SerializedName("_id") val id: String,

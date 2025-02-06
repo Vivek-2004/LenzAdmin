@@ -1,7 +1,9 @@
 package com.fitting.lenz
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AdminLogin(
     lenzViewModel: LenzViewModel = viewModel(),
@@ -64,8 +67,7 @@ fun AdminLogin(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                modifier = Modifier
-                    .size(220.dp),
+                modifier = Modifier.size(220.dp),
                 painter = painterResource(id = R.drawable.app_logo),
                 tint = colorScheme.compColor,
                 contentDescription = "logo",
@@ -85,8 +87,7 @@ fun AdminLogin(
                 placeholder = { Text("Enter your ID") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
                     .padding(vertical = 8.dp)
             )
 
@@ -125,7 +126,7 @@ fun AdminLogin(
                         )
                         isLoading = true
                         CoroutineScope(Dispatchers.Main).launch {
-                            delay(2500L)
+                            delay(3000L)
                             if (!loginConfirmation) {
                                 isLoading = false
                                 Toast.makeText(context,"Incorrect ID or Password", Toast.LENGTH_SHORT).show()

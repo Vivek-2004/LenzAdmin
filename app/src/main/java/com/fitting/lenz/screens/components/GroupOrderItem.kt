@@ -2,8 +2,10 @@ package com.fitting.lenz.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.models.ColorSchemeModel
+import android.graphics.Color.parseColor
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun GroupOrderItem(
@@ -34,33 +38,52 @@ fun GroupOrderItem(
     orderDate: String,
     onClick: () -> Unit
 ) {
+    val statusCodeColor = when(orderStatus) {
+        "Order Placed For Pickup" -> MaterialTheme.colorScheme.onErrorContainer
+        "Pickup Accepted" -> Color.Blue
+        "Order Picked Up" -> Color.Green.copy(alpha = 0.5f)
+        "Order Received By Admin" -> Color(parseColor("#A020F0"))
+        "Work Completed" -> Color.Magenta
+        "Out For Delivery" -> Color.Blue.copy(alpha = 0.6f)
+        "Order Completed" -> Color.Green
+        else -> colorScheme.compColor
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
             .background(colorScheme.bgColor)
-            .height(135.dp)
+            .height(145.dp)
             .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
-                .padding(top = 16.dp)
+                .padding(top = 13.dp)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(.5f)
+                modifier = Modifier.fillMaxWidth().weight(.45f)
             ) {
                 Text(
-                    text = "#$orderId - $shopName",
-                    fontSize = 13.sp,
-                    color = colorScheme.compColor,
-                    fontWeight = FontWeight.Bold,
+                    text = "#$orderId",
+                    fontSize = 12.sp,
+                    color = colorScheme.compColor.copy(alpha = 0.6f),
+                    fontWeight = FontWeight.ExtraLight,
                     fontStyle = FontStyle.Italic
                 )
             }
-
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().weight(.65f),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = shopName,
+                    fontSize = 16.sp,
+                    color = colorScheme.compColor,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -105,7 +128,7 @@ fun GroupOrderItem(
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = orderStatus,
-                        color = Color.Yellow.copy(alpha = 0.6f),
+                        color = statusCodeColor,
                         fontSize = 12.sp,
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Bold,

@@ -81,8 +81,8 @@ fun ShopOrdersHolder(
             itemsIndexed(shopOrdersList) { index, item ->
                 GroupOrderItem(
                     colorScheme = colorScheme,
-                    orderId = item.id.takeLast(5),
-                    shopName = item.userId.findShopName(shopsList),
+                    orderId = item.id,
+                    shopName = lenzViewModel.shopsList.filter { item.userId == it._id }[0].shopName,
                     orderValue = item.finalAmount,
                     orderQuantity = item.orders.size,
                     orderTime = item.createdAt.toIST(),
@@ -96,7 +96,7 @@ fun ShopOrdersHolder(
 
                 HorizontalDivider(
                     modifier = Modifier.width(330.dp),
-                    color = Color.Green.copy(alpha = 0.45f),
+                    color = Color.Cyan.copy(alpha = 0.40f),
                     thickness = 2.dp
                 )
             }

@@ -17,8 +17,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 private val okHttpClient = OkHttpClient.Builder()
     .connectTimeout(50, TimeUnit.SECONDS)
@@ -46,9 +48,11 @@ interface ApiService {
     @GET("shops")
     suspend fun getShops(): List<ShopDetails>
 
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
     @GET("charges/shiftingCharges")
     suspend fun getShiftingCharges(): ShiftingChargesResponse
 
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
     @GET("charges/fittingCharges")
     suspend fun getFittingCharges(): FittingChagresResponse
 
@@ -64,9 +68,16 @@ interface ApiService {
         @Body fittingCharges: UpdatedFittingChargesData
     ): PriceUpdateResponse
 
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
     @GET("orders/get-all-group-orders")
     suspend fun getGroupOrders(): GroupOrderResponse
 
     @GET("test")
     suspend fun getTest(): List<TestResponse>
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @PATCH("orders/{groupOrderId}/complete-work")
+    suspend fun workCompleted(
+        @Path("groupOrderId") groupOrderId: String
+    )
 }

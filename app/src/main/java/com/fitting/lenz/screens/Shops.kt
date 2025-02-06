@@ -43,8 +43,8 @@ fun Shops(
 ) {
     val shopsList by lenzViewModel::shopsList
     val lazyListState = rememberLazyListState()
-    val pullToRefreshState = rememberPullToRefreshState()
     val scrollBarWidth = 5.dp
+    val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(isRefreshing) {

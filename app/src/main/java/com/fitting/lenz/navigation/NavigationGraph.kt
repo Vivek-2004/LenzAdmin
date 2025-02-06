@@ -31,7 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
-import com.fitting.lenz.orders.OrderDetails
+import com.fitting.lenz.screens.details_screen.OrderDetails
 import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
 import com.fitting.lenz.screens.Shops
@@ -146,17 +146,23 @@ fun MyApp(
                 }
 
                 composable(NavigationDestination.SingleOrderItemHolder.name + "/{groupOrderId}" ) { backStackEntry ->
+                    val groupOrderId: String = backStackEntry.arguments?.getString("groupOrderId") ?: ""
                     SingleOrderItemHolder(
                         colorScheme = colorScheme,
                         lenzViewModel = lenzViewModelInstance,
                         navController = navController,
-                        groupOrderId = backStackEntry.arguments?.getString("groupOrderId") ?: ""
+                        groupOrderId = groupOrderId,
+                        onCompleteWorkPress = {
+                            lenzViewModelInstance.patchWorkCompleted(groupOrderId)
+                        }
                     )
                 }
 
-                composable(NavigationDestination.OrderDetails.name) {
+                composable(NavigationDestination.OrderDetails.name + "/{orderId}") { backStackEntry ->
                     OrderDetails(
                         colorScheme = colorScheme,
+                        lenzViewModel = lenzViewModelInstance,
+                        orderId = backStackEntry.arguments?.getString("orderId") ?: ""
                     )
                 }
 
@@ -185,7 +191,6 @@ fun MyApp(
                         shopId = backStackEntry.arguments?.getString("shopId") ?: ""
                     )
                 }
-
             }
         }
     }
