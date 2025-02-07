@@ -84,7 +84,6 @@ fun MyApp(
                         navController = navController,
                         currentScreenName = currentScreen ?: ""
                     )
-
                     Spacer(modifier = Modifier.height(2.dp))
                     HorizontalDivider(color = colorScheme.compColor.copy(alpha = 0.2f))
                 }

@@ -41,6 +41,8 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import kotlinx.coroutines.delay
 import android.widget.Toast
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -57,10 +59,32 @@ fun ShiftingEdit(
     var fullFrame by lenzViewModel::shiftingFullFrameCharges
     var supra by lenzViewModel::shiftingSupraCharges
     var rimLess by lenzViewModel::shiftingRimLessCharges
+    var shiftingUpdateConfirmation by lenzViewModel::shiftingUpdateConfirmation
 
     var isRefreshing by remember { mutableStateOf(false) }
     var isUpdating by remember { mutableStateOf(false) }
-    var shiftingUpdateConfirmation by lenzViewModel::shiftingUpdateConfirmation
+    var showDialog by remember { mutableStateOf(false) }
+
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Confirm Price Update") },
+            text = { Text(text = "Are you sure you want to Update the Charges?", fontSize = 15.sp) },
+            confirmButton = {
+                TextButton(onClick = {
+                    isUpdating = true
+                    showDialog = false
+                }) {
+                    Text(text = "Confirm", fontSize = 16.sp)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text(text = "Cancel", fontSize = 16.sp)
+                }
+            }
+        )
+    }
 
     if (isRefreshing) {
         LaunchedEffect(Unit) {
@@ -214,7 +238,7 @@ fun ShiftingEdit(
             Button(
                 onClick = {
                     if (fullFrame.isNotEmpty() && supra.isNotEmpty() && rimLess.isNotEmpty()) {
-                        isUpdating = true
+                        showDialog = true
                     } else {
                         Toast.makeText(context, "Enter all Fields", Toast.LENGTH_SHORT).show()
                     }

@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -123,11 +125,24 @@ fun Orders(
     ) {
         FloatingActionButton(
             onClick = {
+//                expanded = !expanded
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(horizontal = 18.dp, vertical = 90.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Call,
+                contentDescription = null
+            )
+        }
+        FloatingActionButton(
+            onClick = {
                 expanded = !expanded
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(28.dp)
+                .padding(18.dp)
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.filter),

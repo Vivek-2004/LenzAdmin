@@ -16,11 +16,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -56,9 +58,33 @@ fun FittingEdit(
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     val pullToRefreshState = rememberPullToRefreshState()
+
     var isRefreshing by remember { mutableStateOf(false) }
     var isUpdating by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
     var fittingUpdateConfirmation by lenzViewModel::fittingUpdateConfirmation
+
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Confirm Price Update") },
+            text = { Text(text = "Are you sure you want to Update the Charges?", fontSize = 15.sp) },
+            confirmButton = {
+                TextButton(onClick = {
+                    isUpdating = true
+                    showDialog = false
+                }) {
+                    Text(text = "Confirm", fontSize = 16.sp)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text(text = "Cancel", fontSize = 16.sp)
+                }
+            }
+        )
+    }
 
     if (isRefreshing) {
         LaunchedEffect(Unit) {
@@ -218,7 +244,7 @@ fun FittingEdit(
             Spacer(modifier = Modifier.height(28.dp))
             Button(
                 onClick = {
-                    isUpdating = true
+                    showDialog = true
                 },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier

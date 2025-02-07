@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -95,7 +94,6 @@ fun AdminLogin(
                         color = colorScheme.compColor
                     ) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                textStyle = TextStyle(color = colorScheme.compColor),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
                     .padding(vertical = 8.dp)
@@ -112,7 +110,6 @@ fun AdminLogin(
                     text = "Enter your password",
                     color = colorScheme.compColor
                 ) },
-                textStyle = TextStyle(color = colorScheme.compColor),
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 singleLine = true,
                 modifier = Modifier
