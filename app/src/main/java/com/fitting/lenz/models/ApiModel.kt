@@ -202,8 +202,3 @@ data class PowerDetail(
     val axis: String?,
     val addition: String?
 )
-
-data class TestResponse(
-    val _id: String,
-    val notification: Boolean
-)

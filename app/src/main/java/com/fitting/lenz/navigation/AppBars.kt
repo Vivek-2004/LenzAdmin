@@ -40,7 +40,7 @@ fun TopAppBar(
     }
     var showNavigationIcon by remember { mutableStateOf(false) }
     showNavigationIcon = (
-                    title != NavigationDestination.Orders.name &&
+            title != NavigationDestination.Orders.name &&
                     title != NavigationDestination.Shops.name &&
                     title != NavigationDestination.Edit.name
             )
@@ -60,7 +60,7 @@ fun TopAppBar(
                         text = title,
                         color = colorScheme.compColor,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 30.sp
+                        fontSize = 34.sp
                     )
                 }
             }

@@ -8,7 +8,6 @@ import com.fitting.lenz.models.PriceUpdateResponse
 import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
-import com.fitting.lenz.models.TestResponse
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
@@ -71,9 +70,6 @@ interface ApiService {
     @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
     @GET("orders/get-all-group-orders")
     suspend fun getGroupOrders(): GroupOrderResponse
-
-    @GET("test")
-    suspend fun getTest(): List<TestResponse>
 
     @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
     @PATCH("orders/{groupOrderId}/complete-work")

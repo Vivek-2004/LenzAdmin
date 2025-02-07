@@ -5,13 +5,13 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -67,7 +68,8 @@ fun History(
         LazyColumn(
             state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor)
+            modifier = Modifier.fillMaxSize()
+                .background(Color.LightGray)
                 .drawBehind {
                     val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
                     val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
@@ -80,6 +82,7 @@ fun History(
                 }.padding(end = scrollBarWidth)
         ) {
             itemsIndexed(shopOrdersList) { index, item ->
+                Spacer(modifier = Modifier.height(14.dp))
                 GroupOrderItem(
                     colorScheme = colorScheme,
                     orderId = item.id,
@@ -94,12 +97,7 @@ fun History(
                         navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
                     }
                 )
-
-                HorizontalDivider(
-                    modifier = Modifier.width(320.dp),
-                    color = colorScheme.compColor.copy(alpha = 0.15f),
-                    thickness = 1.dp
-                )
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
     }

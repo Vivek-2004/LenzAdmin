@@ -36,7 +36,13 @@ class LenzViewModel : ViewModel() {
     var shiftingUpdateConfirmation by mutableStateOf(false)
     var fittingUpdateConfirmation by mutableStateOf(false)
 
-//  -----------------------------------------------------------------
+    var getFittingChargesResponseError by mutableStateOf("TEST")
+        private set
+
+    var geShiftingChargesResponseError by mutableStateOf("TEST")
+        private set
+
+    //  -----------------------------------------------------------------
     var fittingFullFrameNormal_LS by mutableStateOf("0")
     var fittingFullFrameNormal_LD by mutableStateOf("0")
     var fittingFullFrameNormal_HS by mutableStateOf("0")
@@ -49,7 +55,7 @@ class LenzViewModel : ViewModel() {
     var fittingFullFrameSunglass_LD by mutableStateOf("0")
     var fittingFullFrameSunglass_HS by mutableStateOf("0")
     var fittingFullFrameSunglass_HD by mutableStateOf("0")
-//  -----------------------------------------------------------------
+    //  -----------------------------------------------------------------
     var fittingSupraNormal_LS by mutableStateOf("0")
     var fittingSupraNormal_LD by mutableStateOf("0")
     var fittingSupraNormal_HS by mutableStateOf("0")
@@ -62,7 +68,7 @@ class LenzViewModel : ViewModel() {
     var fittingSupraSunglass_LD by mutableStateOf("0")
     var fittingSupraSunglass_HS by mutableStateOf("0")
     var fittingSupraSunglass_HD by mutableStateOf("0")
-//  -----------------------------------------------------------------
+    //  -----------------------------------------------------------------
     var fittingRimlessNormal_LS by mutableStateOf("0")
     var fittingRimlessNormal_LD by mutableStateOf("0")
     var fittingRimlessNormal_HS by mutableStateOf("0")
@@ -84,12 +90,6 @@ class LenzViewModel : ViewModel() {
     var fittingRimlessPolyPR_HS by mutableStateOf("0")
     var fittingRimlessPolyPR_HD by mutableStateOf("0")
 //  -----------------------------------------------------------------
-
-    var getFittingChargesResponseError by mutableStateOf("TEST")
-        private set
-
-    var geShiftingChargesResponseError by mutableStateOf("TEST")
-        private set
 
     init {
         getShopsList()

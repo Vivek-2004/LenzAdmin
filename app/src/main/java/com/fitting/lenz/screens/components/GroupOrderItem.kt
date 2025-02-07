@@ -125,9 +125,9 @@ fun GroupOrderItem(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
-                        text = orderTime,
+                        text = "$orderDate - $orderTime",
                         color = colorScheme.compColor,
-                        fontSize = 16.sp
+                        fontSize = 12.sp
                     )
 
                     Text(

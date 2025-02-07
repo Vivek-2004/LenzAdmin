@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
             LenzTheme {
                 val isLoggedIn by remember { mutableStateOf(sharedPref.getBoolean("isLoggedIn", false)) }
 
-                val mainColorScheme = ColorSchemeModel( // Used Light Mode
+                val mainColorScheme = ColorSchemeModel( // Used Permanent Light Mode
                     compColor = Color.Black,
                     bgColor = Color.White
                 )

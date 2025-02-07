@@ -148,7 +148,7 @@ fun SingleOrderItemHolder(
                     },
                     fontSize = 15.sp,
                     color = ( if(formatPaymentStatus(singleGroupOrder.paymentStatus) == "Paid") Color.Green
-                            else Color.Red ).copy(alpha = 0.6f)
+                    else Color.Red ).copy(alpha = 0.6f)
                 )
             }
         }
@@ -246,5 +246,4 @@ fun SingleOrderItemHolder(
             }
         }
     }
-
 }

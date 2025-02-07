@@ -93,7 +93,7 @@ fun AdminLogin(
                     Text(
                         text = "Enter your ID",
                         color = colorScheme.compColor
-                ) },
+                    ) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 textStyle = TextStyle(color = colorScheme.compColor),
                 singleLine = true,

@@ -156,6 +156,35 @@ fun ShopDetails(
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Credit: ")
+                        }
+                        append("Rs.5673.34/-")
+                    },
+                    fontSize = 16.sp,
+                    color = Color.Red.copy(alpha = 0.7f)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    modifier = Modifier.size(17.dp).padding(top = 2.dp),
+                    onClick = {
+
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Create,
+                        contentDescription = null,
+                        tint = Color.Green
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 modifier = Modifier.padding(bottom = 3.dp),

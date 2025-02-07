@@ -24,12 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.formDate
 import com.fitting.lenz.formatPaymentStatus
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.models.GroupOrder
 import com.fitting.lenz.navigation.NavigationDestination
 import com.fitting.lenz.toIST
 import kotlinx.coroutines.delay
@@ -40,13 +42,13 @@ import kotlinx.coroutines.delay
 fun GroupOrderItemHolder(
     colorScheme: ColorSchemeModel,
     lenzViewModel: LenzViewModel,
-    navController: NavController
+    navController: NavController,
+    orderGroups: List<GroupOrder>
 ) {
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
-    val orderGroups by lenzViewModel::groupOrders
 
     LaunchedEffect(isRefreshing) {
         lenzViewModel.getGroupOrders()
@@ -69,7 +71,7 @@ fun GroupOrderItemHolder(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorScheme.bgColor)
+                .background(Color.LightGray)
                 .drawBehind {
                     val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
                     val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
@@ -82,9 +84,8 @@ fun GroupOrderItemHolder(
                 }
                 .padding(end = scrollBarWidth + 8.dp, start = 8.dp)
         ) {
-            itemsIndexed(orderGroups) { index, item ->
-                Spacer(modifier = Modifier.height(14.dp))
-
+            itemsIndexed(orderGroups.reversed()) { index, item ->
+                Spacer(modifier = Modifier.height(12.dp))
                 GroupOrderItem(
                     colorScheme = colorScheme,
                     orderId = item.id,
@@ -99,7 +100,6 @@ fun GroupOrderItemHolder(
                         navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
                     }
                 )
-
                 Spacer(modifier = Modifier.height(3.dp))
             }
         }

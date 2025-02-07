@@ -85,23 +85,22 @@ fun OrderDetails(
                 },
                 fontSize = 18.sp,
                 color = colorScheme.compColor
-                )
-                Text(
-                    text = "$paymentStatus Order : Rs.${orderDetails.totalAmount}/-",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = (
-                            if (paymentStatus == "Paid") Color.Green
-                            else Color.Red
-                            ).copy(alpha = 0.7f)
-                )
-                Text(
-                    text = "[ Delivery Charges are always Paid ]",
-                    fontSize = 11.sp,
-                    fontStyle = FontStyle.Italic,
-                    color = colorScheme.compColor
-                )
-
+            )
+            Text(
+                text = "$paymentStatus Order : Rs.${orderDetails.totalAmount}/-",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = (
+                        if (paymentStatus == "Paid") Color.Green
+                        else Color.Red
+                        ).copy(alpha = 0.7f)
+            )
+            Text(
+                text = "[ Delivery Charges are always Paid ]",
+                fontSize = 11.sp,
+                fontStyle = FontStyle.Italic,
+                color = colorScheme.compColor
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))

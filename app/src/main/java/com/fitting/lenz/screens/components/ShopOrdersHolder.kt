@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.fitting.lenz.LenzViewModel
-import com.fitting.lenz.findShopName
 import com.fitting.lenz.formDate
 import com.fitting.lenz.formatPaymentStatus
 import com.fitting.lenz.models.ColorSchemeModel
@@ -68,7 +65,8 @@ fun ShopOrdersHolder(
         LazyColumn(
             state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor)
+            modifier = Modifier.fillMaxSize()
+                .background(color = Color.LightGray)
                 .drawBehind {
                     val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
                     val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
@@ -81,6 +79,7 @@ fun ShopOrdersHolder(
                 }.padding(end = scrollBarWidth + 8.dp, start = 8.dp)
         ) {
             itemsIndexed(shopOrdersList) { index, item ->
+                Spacer(modifier = Modifier.height(14.dp))
                 GroupOrderItem(
                     colorScheme = colorScheme,
                     orderId = item.id,
@@ -95,8 +94,7 @@ fun ShopOrdersHolder(
                         navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
                     }
                 )
-
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
     }
