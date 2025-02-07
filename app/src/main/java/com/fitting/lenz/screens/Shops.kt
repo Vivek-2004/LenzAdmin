@@ -61,7 +61,7 @@ fun Shops(
         },
         modifier = Modifier
             .fillMaxSize()
-            .background(colorScheme.bgColor.copy(alpha = 0.1f))
+            .background(colorScheme.bgColor)
     ) {
         if (shopsList.isEmpty()) {
             Column(

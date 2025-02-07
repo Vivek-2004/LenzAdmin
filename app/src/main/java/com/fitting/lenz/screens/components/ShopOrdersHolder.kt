@@ -2,9 +2,12 @@ package com.fitting.lenz.screens.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -45,11 +48,10 @@ fun ShopOrdersHolder(
     val scrollBarWidth = 5.dp
 
     val shopOrdersList: List<GroupOrder> = lenzViewModel.groupOrders.filter { it.userId == shopId && it.trackingStatus != "Order Completed" }
-    val shopsList by lenzViewModel::shopsList
 
     if (shopOrdersList.isEmpty()) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -66,7 +68,7 @@ fun ShopOrdersHolder(
         LazyColumn(
             state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor)
                 .drawBehind {
                     val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
                     val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
@@ -76,7 +78,7 @@ fun ShopOrdersHolder(
                         topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
                         size = Size(scrollBarWidth.toPx(), scrollbarHeight)
                     )
-                }.padding(end = scrollBarWidth)
+                }.padding(end = scrollBarWidth + 8.dp, start = 8.dp)
         ) {
             itemsIndexed(shopOrdersList) { index, item ->
                 GroupOrderItem(
@@ -94,11 +96,7 @@ fun ShopOrdersHolder(
                     }
                 )
 
-                HorizontalDivider(
-                    modifier = Modifier.width(330.dp),
-                    color = Color.Cyan.copy(alpha = 0.40f),
-                    thickness = 2.dp
-                )
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
     }

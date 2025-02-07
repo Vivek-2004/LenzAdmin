@@ -3,13 +3,14 @@ package com.fitting.lenz.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -23,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fitting.lenz.LenzViewModel
@@ -65,12 +65,12 @@ fun Orders(
             .fillMaxSize()
             .background(colorScheme.bgColor.copy(alpha = 0.1f))
     ) {
-
         LazyColumn(
             state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
+                .background(colorScheme.bgColor)
                 .drawBehind {
                     val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
                     val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
@@ -81,9 +81,11 @@ fun Orders(
                         size = Size(scrollBarWidth.toPx(), scrollbarHeight)
                     )
                 }
-                .padding(end = scrollBarWidth)
+                .padding(end = scrollBarWidth + 8.dp, start = 8.dp)
         ) {
             itemsIndexed(orderGroups) { index, item ->
+                Spacer(modifier = Modifier.height(14.dp))
+
                 GroupOrderItem(
                     colorScheme = colorScheme,
                     orderId = item.id,
@@ -99,10 +101,7 @@ fun Orders(
                     }
                 )
 
-                HorizontalDivider(
-                    color = Color.DarkGray.copy(alpha = 0.5f),
-                    thickness = 8.dp
-                )
+                Spacer(modifier = Modifier.height(3.dp))
             }
         }
     }

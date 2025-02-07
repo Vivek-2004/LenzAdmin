@@ -2,6 +2,7 @@ package com.fitting.lenz.screens.details_screen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,7 +50,7 @@ fun History(
 
     if (shopOrdersList.isEmpty()) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -66,7 +67,7 @@ fun History(
         LazyColumn(
             state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor)
                 .drawBehind {
                     val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
                     val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight

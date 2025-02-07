@@ -85,21 +85,21 @@ fun OrderDetails(
                 },
                 fontSize = 18.sp,
                 color = colorScheme.compColor
-            )
+                )
                 Text(
-                    text = "Amount $paymentStatus : Rs.${orderDetails.totalAmount}/-",
+                    text = "$paymentStatus Order : Rs.${orderDetails.totalAmount}/-",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = (
                             if (paymentStatus == "Paid") Color.Green
                             else Color.Red
-                            ).copy(alpha = 0.8f)
+                            ).copy(alpha = 0.7f)
                 )
                 Text(
-                    text = "* Delivery Charges are always Paid.",
+                    text = "[ Delivery Charges are always Paid ]",
                     fontSize = 11.sp,
-                    color = colorScheme.compColor,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = colorScheme.compColor
                 )
 
         }

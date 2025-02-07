@@ -31,7 +31,7 @@ fun TopAppBar(
     val title = when (currentScreenName) {
         "ShiftingEdit" -> "Edit Price"
         "FittingEdit" -> "Edit Price"
-        "SingleOrderItemHolder/{groupOrderId}" -> "Orders List"
+        "SingleOrderItemHolder/{groupOrderId}" -> "Group Details"
         "OrderDetails/{orderId}" -> "Order Details"
         "ShopOrdersHolder/{shopId}" -> "Pending Orders"
         "History/{shopId}" -> "Order History"
@@ -40,30 +40,35 @@ fun TopAppBar(
     }
     var showNavigationIcon by remember { mutableStateOf(false) }
     showNavigationIcon = (
-            title != NavigationDestination.Orders.name &&
+                    title != NavigationDestination.Orders.name &&
                     title != NavigationDestination.Shops.name &&
                     title != NavigationDestination.Edit.name
             )
     TopAppBar(
         modifier = Modifier.background(colorScheme.bgColor),
         title = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        end = if (showNavigationIcon) 50.dp else 20.dp
-                    ),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = title,
-                    color = colorScheme.compColor,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 30.sp
-                )
+            Column {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(
+                            end = if (showNavigationIcon) 50.dp else 20.dp
+                        ),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = title,
+                        color = colorScheme.compColor,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 30.sp
+                    )
+                }
             }
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.White,
+            titleContentColor = Color.Black
+        ),
         navigationIcon = {
             if (showNavigationIcon) {
                 IconButton(
@@ -130,7 +135,8 @@ fun BottomNavigationBar(
                     label = {
                         Text(
                             text = screen,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            color = colorScheme.compColor
                         )
                     },
                     onClick = {

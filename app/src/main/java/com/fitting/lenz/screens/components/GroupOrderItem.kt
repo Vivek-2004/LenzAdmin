@@ -23,7 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.models.ColorSchemeModel
 import android.graphics.Color.parseColor
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 
 @Composable
 fun GroupOrderItem(
@@ -51,9 +54,11 @@ fun GroupOrderItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .shadow(8.dp, RoundedCornerShape(30.dp))
+            .clip(RoundedCornerShape(30.dp))
             .clickable { onClick() }
             .background(colorScheme.bgColor)
-            .height(145.dp)
+            .height(150.dp)
             .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,22 +35,16 @@ class MainActivity : ComponentActivity() {
             LenzTheme {
                 val isLoggedIn by remember { mutableStateOf(sharedPref.getBoolean("isLoggedIn", false)) }
 
-                var colorScheme = ColorSchemeModel(
+                val mainColorScheme = ColorSchemeModel( // Used Light Mode
                     compColor = Color.Black,
                     bgColor = Color.White
                 )
-                if (isSystemInDarkTheme()) {
-                    colorScheme = ColorSchemeModel(
-                        compColor = Color.White,
-                        bgColor = Color.Black
-                    )
-                }
 
                 if (isLoggedIn) {
-                    MyApp( colorScheme = colorScheme )
+                    MyApp( colorScheme = mainColorScheme )
                 } else {
                     AdminLogin(
-                        colorScheme = colorScheme,
+                        colorScheme = mainColorScheme,
                         sharedPref = sharedPref,
                         prefEditor = prefEditor
                     )

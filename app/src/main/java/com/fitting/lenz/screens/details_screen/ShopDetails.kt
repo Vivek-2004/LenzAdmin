@@ -2,6 +2,7 @@ package com.fitting.lenz.screens.details_screen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +42,7 @@ fun ShopDetails(
 ) {
     val shop: ShopDetails = lenzViewModel.shopsList.filter { shopId == it._id }[0]
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
