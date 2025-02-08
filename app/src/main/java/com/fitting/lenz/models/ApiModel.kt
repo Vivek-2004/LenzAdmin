@@ -202,3 +202,7 @@ data class PowerDetail(
     val axis: String?,
     val addition: String?
 )
+
+data class CallForPickupRequest(
+    val groupOrderIds: List<String>
+)

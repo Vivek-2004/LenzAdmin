@@ -24,6 +24,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.fitting.lenz.CustomTimerFAB
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
@@ -61,11 +64,17 @@ fun Orders(
         "Out For Delivery",
         "Order Completed"
     )
-    var orderSelectedItem by remember { mutableStateOf(orderStates[3]) }
-    var expanded by remember { mutableStateOf(false) }
+    var filterExpanded by remember { mutableStateOf(false) }
+    var statusSelectedItem by remember { mutableStateOf(orderStates[3]) }
+    var selectedIds by remember { mutableStateOf<Set<String>>(emptySet()) }
+    val inSelectionMode by remember { derivedStateOf {  selectedIds.isNotEmpty() } }
 
     val orderGroups = lenzViewModel.groupOrders.filter {
-        orderSelectedItem == "All Orders" || it.trackingStatus == orderSelectedItem
+        statusSelectedItem == "All Orders" || it.trackingStatus == statusSelectedItem
+    }
+
+    LaunchedEffect(statusSelectedItem, orderGroups) {
+        selectedIds = emptySet()
     }
 
     Column(
@@ -90,7 +99,7 @@ fun Orders(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = orderSelectedItem,
+                    text = statusSelectedItem,
                     color = Color.DarkGray,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp
@@ -104,9 +113,9 @@ fun Orders(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 Text(
-                    text = "No $orderSelectedItem",
+                    text = "No $statusSelectedItem",
                     fontSize = 18.sp
                 )
             }
@@ -115,7 +124,9 @@ fun Orders(
                 colorScheme = colorScheme,
                 lenzViewModel = lenzViewModel,
                 navController = navController,
-                orderGroups = orderGroups
+                orderGroups = orderGroups,
+                onSelectedIdsChange = { ids -> selectedIds = ids },
+                inSelectionMode = inSelectionMode
             )
         }
     }
@@ -123,22 +134,38 @@ fun Orders(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        FloatingActionButton(
-            onClick = {
-//                expanded = !expanded
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(horizontal = 18.dp, vertical = 90.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Call,
-                contentDescription = null
-            )
+        if(statusSelectedItem == "Work Completed") {
+            if (selectedIds.isEmpty()) {
+                FloatingActionButton(
+                    onClick = {
+                        Toast.makeText(context, "Press and Hold to Select Orders", Toast.LENGTH_SHORT).show()
+                              },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(horizontal = 18.dp, vertical = 85.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Call,
+                        contentDescription = null
+                    )
+                }
+            } else {
+                CustomTimerFAB(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(vertical = 70.dp),
+                    countdownSeconds = 3,
+                    onCountdownEnd = {
+                        lenzViewModel.callForPickup(selectedIds)
+                        lenzViewModel.getGroupOrders()
+                    }
+                )
+            }
         }
+
         FloatingActionButton(
             onClick = {
-                expanded = !expanded
+                filterExpanded = !filterExpanded
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -153,13 +180,13 @@ fun Orders(
                 modifier = Modifier
                     .wrapContentSize(Alignment.TopStart)
                     .background(Color.LightGray),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
+                expanded = filterExpanded,
+                onDismissRequest = { filterExpanded = false },
             ) {
                 orderStates.forEach { orderStateItem ->
                     DropdownMenuItem(
                         modifier = Modifier.background(
-                            if (orderStateItem == orderSelectedItem) Color.Gray
+                            if (orderStateItem == statusSelectedItem) Color.Gray
                             else Color.Transparent
                         ),
                         text = {
@@ -169,9 +196,9 @@ fun Orders(
                             )
                         },
                         onClick = {
-                            expanded = false
-                            orderSelectedItem = orderStateItem
-                            Toast.makeText(context, "Filter Status: $orderSelectedItem", Toast.LENGTH_SHORT).show()
+                            filterExpanded = false
+                            statusSelectedItem = orderStateItem
+                            Toast.makeText(context, "Filter Status: $statusSelectedItem", Toast.LENGTH_SHORT).show()
                         }
                     )
                 }

@@ -2,6 +2,7 @@ package com.fitting.lenz
 
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.AdminLoginResponse
+import com.fitting.lenz.models.CallForPickupRequest
 import com.fitting.lenz.models.FittingChagresResponse
 import com.fitting.lenz.models.GroupOrderResponse
 import com.fitting.lenz.models.PriceUpdateResponse
@@ -11,6 +12,8 @@ import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -76,4 +79,10 @@ interface ApiService {
     suspend fun workCompleted(
         @Path("groupOrderId") groupOrderId: String
     )
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @POST("orders/call-for-pickup")
+    suspend fun callForPickup(
+        @Body groupOrderIds: CallForPickupRequest
+    ): Response<ResponseBody>
 }

@@ -1,7 +1,6 @@
 package com.fitting.lenz.screens.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +29,7 @@ import androidx.compose.ui.draw.shadow
 
 @Composable
 fun GroupOrderItem(
+    modifier: Modifier = Modifier,
     colorScheme: ColorSchemeModel,
     orderId: String,
     shopName: String,
@@ -39,8 +39,9 @@ fun GroupOrderItem(
     orderTime: String,
     orderStatus: String,
     orderDate: String,
-    onClick: () -> Unit
+    isItemSelected: Boolean = false
 ) {
+    val selectionColor = if(isItemSelected) Color.Gray else colorScheme.bgColor
     val statusCodeColor = when(orderStatus) {
         "Order Placed For Pickup" -> MaterialTheme.colorScheme.onErrorContainer
         "Pickup Accepted" -> Color.Blue
@@ -52,12 +53,11 @@ fun GroupOrderItem(
         else -> colorScheme.compColor
     }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .shadow(8.dp, RoundedCornerShape(30.dp))
             .clip(RoundedCornerShape(30.dp))
-            .clickable { onClick() }
-            .background(colorScheme.bgColor)
+            .background(selectionColor)
             .height(150.dp)
             .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,

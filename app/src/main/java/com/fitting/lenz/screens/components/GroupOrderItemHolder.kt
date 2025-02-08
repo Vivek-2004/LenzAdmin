@@ -2,7 +2,10 @@ package com.fitting.lenz.screens.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -15,6 +18,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,19 +40,26 @@ import com.fitting.lenz.navigation.NavigationDestination
 import com.fitting.lenz.toIST
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GroupOrderItemHolder(
     colorScheme: ColorSchemeModel,
     lenzViewModel: LenzViewModel,
     navController: NavController,
-    orderGroups: List<GroupOrder>
+    orderGroups: List<GroupOrder>,
+    onSelectedIdsChange: (Set<String>) -> Unit,
+    inSelectionMode: Boolean
 ) {
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
+    var selectedIds by remember(orderGroups) { mutableStateOf(emptySet<String>()) }
+
+    LaunchedEffect(selectedIds) {
+        onSelectedIdsChange(selectedIds)
+    }
 
     LaunchedEffect(isRefreshing) {
         lenzViewModel.getGroupOrders()
@@ -85,8 +96,15 @@ fun GroupOrderItemHolder(
                 .padding(end = scrollBarWidth + 8.dp, start = 8.dp)
         ) {
             itemsIndexed(orderGroups.reversed()) { index, item ->
+                val selected by remember {
+                    derivedStateOf {
+                        selectedIds.contains(item.id)
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(12.dp))
                 GroupOrderItem(
+                    isItemSelected = selected,
                     colorScheme = colorScheme,
                     orderId = item.id,
                     shopName = lenzViewModel.shopsList.filter { item.userId == it._id }[0].shopName,
@@ -96,8 +114,29 @@ fun GroupOrderItemHolder(
                     orderDate = item.createdAt.formDate(),
                     paymentStatus = formatPaymentStatus(item.paymentStatus),
                     orderStatus = item.trackingStatus,
-                    onClick = {
-                        navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
+                    modifier = if (inSelectionMode) {
+                        if (item.trackingStatus == "Work Completed") {
+                            Modifier.clickable {
+                                if (selected) {
+                                    selectedIds = selectedIds - item.id
+                                } else {
+                                    selectedIds = selectedIds + item.id
+                                }
+                            }
+                        } else {
+                            Modifier
+                        }
+                    } else {
+                        Modifier.combinedClickable(
+                            onClick = {
+                                navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
+                            },
+                            onLongClick = {
+                                if (item.trackingStatus == "Work Completed") {
+                                    selectedIds = selectedIds + item.id
+                                }
+                            }
+                        )
                     }
                 )
                 Spacer(modifier = Modifier.height(3.dp))

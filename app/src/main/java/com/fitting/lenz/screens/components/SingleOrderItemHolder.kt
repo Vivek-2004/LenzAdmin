@@ -3,6 +3,7 @@ package com.fitting.lenz.screens.components
 import android.graphics.Color.parseColor
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -79,14 +80,15 @@ fun SingleOrderItemHolder(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor.copy(alpha = 0.7f)),
+        modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor.copy(alpha = 0.8f)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Card(
             modifier = Modifier.fillMaxWidth()
                 .wrapContentHeight()
                 .padding(start = 13.dp, end = 13.dp, bottom = 6.dp, top = 4.dp),
-            elevation = CardDefaults.cardElevation(16.dp)
+            elevation = CardDefaults.cardElevation(16.dp),
+            border = BorderStroke(3.dp, Color.Blue.copy(alpha = 0.4f))
         ) {
             Column( modifier = Modifier
                 .fillMaxWidth()

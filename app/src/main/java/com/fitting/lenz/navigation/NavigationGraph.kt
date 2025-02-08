@@ -52,7 +52,7 @@ fun MyApp(
 ) {
     val lenzViewModelInstance: LenzViewModel = viewModel()
 
-    if (lenzViewModelInstance.shopsList.isEmpty()) {
+    if (lenzViewModelInstance.groupOrders.isEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -114,7 +114,7 @@ fun MyApp(
             NavHost(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
-                startDestination = NavigationDestination.Shops.name
+                startDestination = NavigationDestination.Orders.name
             ) {
                 composable(route = NavigationDestination.Orders.name) {
                     Orders(

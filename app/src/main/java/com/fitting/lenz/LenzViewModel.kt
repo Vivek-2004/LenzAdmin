@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fitting.lenz.models.AdminLoginBody
+import com.fitting.lenz.models.CallForPickupRequest
 import com.fitting.lenz.models.FittingChagresResponse
 import com.fitting.lenz.models.FittingChargesData
 import com.fitting.lenz.models.FittingDataFullFrame
@@ -17,6 +18,7 @@ import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.SingleDouble
 import com.fitting.lenz.models.UpdatedFittingChargesData
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -374,6 +376,32 @@ class LenzViewModel : ViewModel() {
                 _lenzService.workCompleted(groupOrderId)
             } catch (_: Exception) {
 
+            }
+        }
+    }
+
+    var test = "TEST VIVEK"
+
+    fun callForPickup(requestBody: Set<String>) {
+        viewModelScope.launch {
+            try {
+                val callForPickupRequestBody = CallForPickupRequest(groupOrderIds = requestBody.toList())
+//                _lenzService.callForPickup(callForPickupRequestBody)
+
+                println(Gson().toJson(callForPickupRequestBody))
+                val response = _lenzService.callForPickup(callForPickupRequestBody)
+
+                if (response.isSuccessful) {
+                    val jsonResponse = response.body()?.string()
+                    println("JSON Response: $jsonResponse")
+                } else {
+                    println(
+                        "Request failed with code: ${response.code()}, message: ${
+                            response.errorBody()?.string()
+                        }"
+                    )
+                }
+            } catch (_: Exception) {
             }
         }
     }

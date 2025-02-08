@@ -3,6 +3,7 @@ package com.fitting.lenz.screens.components
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -90,7 +91,7 @@ fun ShopOrdersHolder(
                     orderDate = item.createdAt.formDate(),
                     paymentStatus = formatPaymentStatus(item.paymentStatus),
                     orderStatus = item.trackingStatus,
-                    onClick = {
+                    modifier = Modifier.clickable{
                         navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
                     }
                 )
