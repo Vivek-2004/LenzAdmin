@@ -54,7 +54,7 @@ fun SingleOrderItem(
             ) {
                 Text(
                     text = "Order ID : #$orderId",
-                    fontSize = 13.5.sp,
+                    fontSize = 12.sp,
                     color = colorScheme.compColor,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic

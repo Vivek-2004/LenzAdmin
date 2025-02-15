@@ -58,7 +58,7 @@ fun GroupOrderItemHolder(
     var isRefreshing by remember { mutableStateOf(false) }
     var selectedIds by remember(orderGroups) { mutableStateOf(emptySet<String>()) }
 
-    LaunchedEffect(forceReset) {
+    LaunchedEffect(forceReset, inSelectionMode) {
         if (!inSelectionMode) {
             selectedIds = emptySet()
             onSelectedIdsChange(emptySet())
@@ -67,12 +67,6 @@ fun GroupOrderItemHolder(
 
     LaunchedEffect(selectedIds) {
         onSelectedIdsChange(selectedIds)
-    }
-
-    LaunchedEffect(inSelectionMode) {
-        if (!inSelectionMode) {
-            selectedIds = emptySet()
-        }
     }
 
     LaunchedEffect(isRefreshing) {
@@ -131,11 +125,7 @@ fun GroupOrderItemHolder(
                     modifier = if (inSelectionMode) {
                         if (item.trackingStatus == "Work Completed") {
                             Modifier.clickable {
-                                if (selected) {
-                                    selectedIds = selectedIds - item.id
-                                } else {
-                                    selectedIds = selectedIds + item.id
-                                }
+                                selectedIds = if (selected) selectedIds - item.id   else selectedIds + item.id
                             }
                         } else {
                             Modifier

@@ -83,6 +83,7 @@ fun SingleOrderItemHolder(
         modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor.copy(alpha = 0.8f)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(12.dp))
         Card(
             modifier = Modifier.fillMaxWidth()
                 .wrapContentHeight()
@@ -204,11 +205,11 @@ fun SingleOrderItemHolder(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .background(Color.DarkGray)
+                    .background(Color.Gray)
                     .align(Alignment.BottomCenter)
                     .clickable {
                         onCompleteWorkPress()
-                        lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus = "Work Complete"
+                        lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus = "Work Complete" //TODO
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -234,7 +235,6 @@ fun SingleOrderItemHolder(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .background(Color.DarkGray)
                     .align(Alignment.BottomCenter),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center

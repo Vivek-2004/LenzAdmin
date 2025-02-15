@@ -44,7 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -53,8 +52,6 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.GroupOrderItemHolder
-import kotlinx.coroutines.delay
-import kotlin.math.round
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -63,7 +60,6 @@ fun Orders(
     lenzViewModel: LenzViewModel,
     navController: NavController
 ) {
-    val context = LocalContext.current
     val orderStates = listOf(
         "All Orders",
         "Order Placed For Pickup",
@@ -74,15 +70,18 @@ fun Orders(
         "Out For Delivery",
         "Order Completed"
     )
+    val context = LocalContext.current
+
     var filterExpanded by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+    var forceReset by remember { mutableStateOf(false) }
+
     var statusSelectedItem by remember { mutableStateOf(orderStates[4]) }
     var selectedIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     val inSelectionMode by remember { derivedStateOf { selectedIds.isNotEmpty() } }
-    var showDialog by remember { mutableStateOf(false) }
+
     var tempAmount by remember { mutableStateOf("") }
     var amount by remember { mutableDoubleStateOf(0.0) }
-    var forceReset by remember { mutableStateOf(false) }
-
     var errorMessage by remember { mutableStateOf("") }
 
     val orderGroups = lenzViewModel.groupOrders.filter {
@@ -90,7 +89,6 @@ fun Orders(
     }
 
     var totalDeliveryChargeCollected = 0
-
     selectedIds.forEach { id ->
         totalDeliveryChargeCollected += orderGroups.find { id == it.id }?.deliveryCharge ?: 0
     }
@@ -152,7 +150,7 @@ fun Orders(
                         tempAmount.toDouble() <= 0.0 ||
                         tempAmount.toDouble() > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100))
                     ) {
-                        errorMessage = "Delivery Charges Must be between 0 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
+                        errorMessage = "Delivery Charges Must be between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
                         tempAmount = ""
                     } else {
                         amount = tempAmount.toDouble()
@@ -160,7 +158,7 @@ fun Orders(
 
                         lenzViewModel.groupOrders.forEach { order ->
                             if(selectedIds.contains( order.id )) {
-                                order.trackingStatus = "test"
+                                order.trackingStatus = "Internal Tracking"
                             }
                         }
 
@@ -180,7 +178,7 @@ fun Orders(
                         showDialog = false
                         errorMessage = ""
 
-                        Toast.makeText(context, "Delivery Initiated for ₹$amount", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Delivery Initiated for  ₹$amount", Toast.LENGTH_SHORT).show()
                     }
                 }) {
                     Text(text = "Confirm", fontSize = 16.sp)
@@ -256,32 +254,30 @@ fun Orders(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        if(statusSelectedItem == "Work Completed") {
-            if (selectedIds.isEmpty()) {
-                FloatingActionButton(
-                    onClick = {
-                        Toast.makeText(context, "Press and Hold to Select Orders", Toast.LENGTH_SHORT).show()
-                              },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(horizontal = 18.dp, vertical = 85.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Call,
-                        contentDescription = null
-                    )
-                }
-            } else {
-                CustomTimerFAB(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(vertical = 70.dp),
-                    countdownSeconds = 3,
-                    onCountdownEnd = {
-                        showDialog = true
-                    }
+        if (selectedIds.isEmpty()) {
+            FloatingActionButton(
+                onClick = {
+                    statusSelectedItem = "Work Completed"
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(horizontal = 18.dp, vertical = 85.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Call,
+                    contentDescription = null
                 )
             }
+        } else {
+            CustomTimerFAB(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(vertical = 70.dp),
+                countdownSeconds = 3,
+                onCountdownEnd = {
+                    showDialog = true
+                }
+            )
         }
 
         FloatingActionButton(
