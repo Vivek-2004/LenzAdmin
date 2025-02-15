@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.CallForPickupRequest
+import com.fitting.lenz.models.CreditAmount
 import com.fitting.lenz.models.FittingChagresResponse
 import com.fitting.lenz.models.FittingChargesData
 import com.fitting.lenz.models.FittingDataFullFrame
@@ -16,6 +17,7 @@ import com.fitting.lenz.models.GroupOrder
 import com.fitting.lenz.models.LowHigh
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
+import com.fitting.lenz.models.ShopDistance
 import com.fitting.lenz.models.SingleDouble
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import com.google.gson.Gson
@@ -28,7 +30,8 @@ class LenzViewModel : ViewModel() {
     var adminConfirmation by mutableStateOf(false)
         private set
     var shopsList by mutableStateOf<List<ShopDetails>>(emptyList())
-        private set
+//        private set
+
     var groupOrders by mutableStateOf<List<GroupOrder>>(emptyList())
         private set
 
@@ -94,10 +97,10 @@ class LenzViewModel : ViewModel() {
 //  -----------------------------------------------------------------
 
     init {
+        getGroupOrders()
         getShopsList()
         getShiftingCharges()
         getFittingCharges()
-        getGroupOrders()
     }
 
     fun verifyAdmin(
@@ -377,6 +380,28 @@ class LenzViewModel : ViewModel() {
             } catch (_: Exception) {
 
             }
+        }
+    }
+
+    fun editShopDistance(shopId: Long, newDistance: Int) {
+        viewModelScope.launch {
+            _lenzService.editShopDistance(
+                shopId = shopId,
+                newDistance = ShopDistance(
+                    newDistance = newDistance
+                )
+            )
+        }
+    }
+
+    fun editShopCredit(shopId: Long, newBalance: Double) {
+        viewModelScope.launch {
+            _lenzService.editCreditBalance(
+                shopId = shopId,
+                newBalance = CreditAmount(
+                    newCreditAmt = newBalance
+                )
+            )
         }
     }
 

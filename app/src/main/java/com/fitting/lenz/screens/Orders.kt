@@ -65,7 +65,7 @@ fun Orders(
         "Order Completed"
     )
     var filterExpanded by remember { mutableStateOf(false) }
-    var statusSelectedItem by remember { mutableStateOf(orderStates[3]) }
+    var statusSelectedItem by remember { mutableStateOf(orderStates[4]) }
     var selectedIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     val inSelectionMode by remember { derivedStateOf {  selectedIds.isNotEmpty() } }
 

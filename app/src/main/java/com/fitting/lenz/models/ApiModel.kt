@@ -39,7 +39,9 @@ data class ShopDetails(
     val createdAt: String,
     val updatedAt: String,
     val __v: Int,
-    val address: Address
+    val address: Address,
+    val distance: Int,
+    val creditBalance: Double
 )
 
 data class Address(
@@ -201,6 +203,14 @@ data class PowerDetail(
     val cylindrical: String?,
     val axis: String?,
     val addition: String?
+)
+
+data class ShopDistance(
+    val newDistance: Int
+)
+
+data class CreditAmount(
+    val newCreditAmt: Double
 )
 
 data class CallForPickupRequest(

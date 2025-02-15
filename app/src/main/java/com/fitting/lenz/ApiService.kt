@@ -3,12 +3,14 @@ package com.fitting.lenz
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.AdminLoginResponse
 import com.fitting.lenz.models.CallForPickupRequest
+import com.fitting.lenz.models.CreditAmount
 import com.fitting.lenz.models.FittingChagresResponse
 import com.fitting.lenz.models.GroupOrderResponse
 import com.fitting.lenz.models.PriceUpdateResponse
 import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
+import com.fitting.lenz.models.ShopDistance
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
@@ -25,9 +27,9 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 private val okHttpClient = OkHttpClient.Builder()
-    .connectTimeout(50, TimeUnit.SECONDS)
-    .readTimeout(50, TimeUnit.SECONDS)
-    .writeTimeout(50, TimeUnit.SECONDS)
+    .connectTimeout(60, TimeUnit.SECONDS)
+    .readTimeout(60, TimeUnit.SECONDS)
+    .writeTimeout(60, TimeUnit.SECONDS)
     .build()
 
 private val retrofit = Retrofit.Builder()
@@ -85,4 +87,18 @@ interface ApiService {
     suspend fun callForPickup(
         @Body groupOrderIds: CallForPickupRequest
     ): Response<ResponseBody>
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @PUT("shops/{shopId}/edit-distance")
+    suspend fun editShopDistance(
+        @Path("shopId") shopId: Long,
+        @Body newDistance: ShopDistance
+    )
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @PUT("shops/{shopId}/edit-credit-bal")
+    suspend fun editCreditBalance(
+        @Path("shopId") shopId: Long,
+        @Body newBalance: CreditAmount
+    )
 }
