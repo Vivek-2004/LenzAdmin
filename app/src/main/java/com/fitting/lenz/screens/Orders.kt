@@ -1,5 +1,6 @@
 package com.fitting.lenz.screens
 
+import android.graphics.Color.parseColor
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -14,15 +15,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -37,6 +42,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -45,6 +52,7 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.GroupOrderItemHolder
+import kotlin.math.round
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -68,13 +76,114 @@ fun Orders(
     var statusSelectedItem by remember { mutableStateOf(orderStates[4]) }
     var selectedIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     val inSelectionMode by remember { derivedStateOf {  selectedIds.isNotEmpty() } }
+    var showDialog by remember { mutableStateOf(false) }
+    var tempAmount by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf(0.0) }
+
+    var errorMessage by remember { mutableStateOf("") }
 
     val orderGroups = lenzViewModel.groupOrders.filter {
         statusSelectedItem == "All Orders" || it.trackingStatus == statusSelectedItem
     }
 
+    var totalDeliveryChargeCollected = 0
+
+    selectedIds.forEach { id ->
+        totalDeliveryChargeCollected += orderGroups.find { id == it.id }!!.deliveryCharge
+    }
+
     LaunchedEffect(statusSelectedItem, orderGroups) {
         selectedIds = emptySet()
+    }
+
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showDialog = false
+                errorMessage = ""
+                tempAmount = ""
+            },
+            title = { Text(text = "Set Delivery Charge") },
+            text = {
+                Column {
+                    Text(
+                        text = "Total Charge Collected : ₹$totalDeliveryChargeCollected",
+                        fontSize = 13.5.sp,
+                        color = Color(parseColor("#38b000"))
+                    )
+                    Text(
+                        text = "Pickup Charge Paid : ₹${totalDeliveryChargeCollected * 40/100}",
+                        fontSize = 13.5.sp,
+                        color = Color.Red
+                    )
+                    Text(
+                        text = "Remaining Margin : ₹${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}",
+                        fontSize = 13.5.sp,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = "Set Order Delivery Amount:",
+                        fontSize = 15.sp
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = tempAmount,
+                        onValueChange = { tempAmount = it },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text(
+                        text = errorMessage,
+                        fontSize = 12.sp,
+                        color = Color.Red
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if( tempAmount.replace(Regex("[\\s,]+"), "").isEmpty() ||
+                        tempAmount.toDouble() <= 0.0 ||
+                        tempAmount.toDouble() > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100))
+                    ) {
+                        errorMessage = "Delivery Charges Must be between 0 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
+                        tempAmount = ""
+                    } else {
+                        amount = tempAmount.toDouble()
+                        tempAmount = ""
+
+
+//                      callForPickup = true TODO
+//                        selectedIds.forEach { id->
+//                            orderGroups.forEach { group ->
+//                                if (id == group.id) {
+//                                    group.trackingStatus = "test"
+//                                }
+//                            }
+//                        }
+//                        selectedIds = emptySet()
+
+
+                        showDialog = false
+                        errorMessage = ""
+                        Toast.makeText(context, "Delivery Initiated for ₹$amount", Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Text(text = "Update", fontSize = 16.sp)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    errorMessage = ""
+                    tempAmount = ""
+                    showDialog = false
+                }) {
+                    Text(text = "Cancel", fontSize = 16.sp)
+                }
+            }
+        )
     }
 
     Column(
@@ -156,8 +265,7 @@ fun Orders(
                         .padding(vertical = 70.dp),
                     countdownSeconds = 3,
                     onCountdownEnd = {
-                        lenzViewModel.callForPickup(selectedIds)
-                        lenzViewModel.getGroupOrders()
+                        showDialog = true
                     }
                 )
             }
