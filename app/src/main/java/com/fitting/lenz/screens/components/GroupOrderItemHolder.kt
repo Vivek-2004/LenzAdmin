@@ -49,7 +49,8 @@ fun GroupOrderItemHolder(
     navController: NavController,
     orderGroups: List<GroupOrder>,
     onSelectedIdsChange: (Set<String>) -> Unit,
-    inSelectionMode: Boolean
+    inSelectionMode: Boolean,
+    forceReset: Boolean = false
 ) {
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
@@ -57,8 +58,21 @@ fun GroupOrderItemHolder(
     var isRefreshing by remember { mutableStateOf(false) }
     var selectedIds by remember(orderGroups) { mutableStateOf(emptySet<String>()) }
 
+    LaunchedEffect(forceReset) {
+        if (!inSelectionMode) {
+            selectedIds = emptySet()
+            onSelectedIdsChange(emptySet())
+        }
+    }
+
     LaunchedEffect(selectedIds) {
         onSelectedIdsChange(selectedIds)
+    }
+
+    LaunchedEffect(inSelectionMode) {
+        if (!inSelectionMode) {
+            selectedIds = emptySet()
+        }
     }
 
     LaunchedEffect(isRefreshing) {
@@ -96,7 +110,7 @@ fun GroupOrderItemHolder(
                 .padding(end = scrollBarWidth + 8.dp, start = 8.dp)
         ) {
             itemsIndexed(orderGroups.reversed()) { index, item ->
-                val selected by remember {
+                val selected by remember(selectedIds, forceReset) {
                     derivedStateOf {
                         selectedIds.contains(item.id)
                     }

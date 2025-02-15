@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,6 +53,7 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.GroupOrderItemHolder
+import kotlinx.coroutines.delay
 import kotlin.math.round
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -75,10 +77,11 @@ fun Orders(
     var filterExpanded by remember { mutableStateOf(false) }
     var statusSelectedItem by remember { mutableStateOf(orderStates[4]) }
     var selectedIds by remember { mutableStateOf<Set<String>>(emptySet()) }
-    val inSelectionMode by remember { derivedStateOf {  selectedIds.isNotEmpty() } }
+    val inSelectionMode by remember { derivedStateOf { selectedIds.isNotEmpty() } }
     var showDialog by remember { mutableStateOf(false) }
     var tempAmount by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf(0.0) }
+    var amount by remember { mutableDoubleStateOf(0.0) }
+    var forceReset by remember { mutableStateOf(false) }
 
     var errorMessage by remember { mutableStateOf("") }
 
@@ -89,7 +92,7 @@ fun Orders(
     var totalDeliveryChargeCollected = 0
 
     selectedIds.forEach { id ->
-        totalDeliveryChargeCollected += orderGroups.find { id == it.id }!!.deliveryCharge
+        totalDeliveryChargeCollected += orderGroups.find { id == it.id }?.deliveryCharge ?: 0
     }
 
     LaunchedEffect(statusSelectedItem, orderGroups) {
@@ -102,6 +105,7 @@ fun Orders(
                 showDialog = false
                 errorMessage = ""
                 tempAmount = ""
+                forceReset = !forceReset
             },
             title = { Text(text = "Set Delivery Charge") },
             text = {
@@ -154,8 +158,15 @@ fun Orders(
                         amount = tempAmount.toDouble()
                         tempAmount = ""
 
+                        lenzViewModel.groupOrders.forEach { order ->
+                            if(selectedIds.contains( order.id )) {
+                                order.trackingStatus = "test"
+                            }
+                        }
 
 //                      callForPickup = true TODO
+//                        clearSelection = true
+//
 //                        selectedIds.forEach { id->
 //                            orderGroups.forEach { group ->
 //                                if (id == group.id) {
@@ -163,15 +174,16 @@ fun Orders(
 //                                }
 //                            }
 //                        }
-//                        selectedIds = emptySet()
 
-
+                        selectedIds = emptySet()
+                        forceReset = !forceReset
                         showDialog = false
                         errorMessage = ""
+
                         Toast.makeText(context, "Delivery Initiated for ₹$amount", Toast.LENGTH_SHORT).show()
                     }
                 }) {
-                    Text(text = "Update", fontSize = 16.sp)
+                    Text(text = "Confirm", fontSize = 16.sp)
                 }
             },
             dismissButton = {
@@ -235,7 +247,8 @@ fun Orders(
                 navController = navController,
                 orderGroups = orderGroups,
                 onSelectedIdsChange = { ids -> selectedIds = ids },
-                inSelectionMode = inSelectionMode
+                inSelectionMode = inSelectionMode,
+                forceReset = forceReset
             )
         }
     }

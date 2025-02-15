@@ -24,6 +24,11 @@ import com.fitting.lenz.models.ColorSchemeModel
 import android.graphics.Color.parseColor
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 
@@ -41,7 +46,10 @@ fun GroupOrderItem(
     orderDate: String,
     isItemSelected: Boolean = false
 ) {
-    val selectionColor = if(isItemSelected) Color.Gray else colorScheme.bgColor
+    val selectionColor = remember(isItemSelected) {
+        if (isItemSelected) Color.Gray else colorScheme.bgColor
+    }
+
     val statusCodeColor = when(orderStatus) {
         "Order Placed For Pickup" -> MaterialTheme.colorScheme.onErrorContainer
         "Pickup Accepted" -> Color.Blue
