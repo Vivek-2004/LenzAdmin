@@ -83,12 +83,6 @@ interface ApiService {
     )
 
     @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
-    @POST("orders/call-for-pickup")
-    suspend fun callForPickup(
-        @Body groupOrderIds: CallForPickupRequest
-    ): Response<ResponseBody>
-
-    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
     @PUT("shops/{shopId}/edit-distance")
     suspend fun editShopDistance(
         @Path("shopId") shopId: Long,
@@ -101,4 +95,10 @@ interface ApiService {
         @Path("shopId") shopId: Long,
         @Body newBalance: CreditAmount
     )
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @POST("orders/call-for-pickup")
+    suspend fun callForPickup(
+        @Body groupOrderIds: CallForPickupRequest
+    ): Response<ResponseBody>
 }

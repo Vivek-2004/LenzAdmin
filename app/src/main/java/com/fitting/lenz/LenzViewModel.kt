@@ -20,7 +20,6 @@ import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.ShopDistance
 import com.fitting.lenz.models.SingleDouble
 import com.fitting.lenz.models.UpdatedFittingChargesData
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -30,7 +29,7 @@ class LenzViewModel : ViewModel() {
     var adminConfirmation by mutableStateOf(false)
         private set
     var shopsList by mutableStateOf<List<ShopDetails>>(emptyList())
-//        private set
+        private set
 
     var groupOrders by mutableStateOf<List<GroupOrder>>(emptyList())
         private set
@@ -46,6 +45,8 @@ class LenzViewModel : ViewModel() {
 
     var geShiftingChargesResponseError by mutableStateOf("TEST")
         private set
+
+    var pickupResponseCode by mutableStateOf(100)
 
     //  -----------------------------------------------------------------
     var fittingFullFrameNormal_LS by mutableStateOf("0")
@@ -405,27 +406,12 @@ class LenzViewModel : ViewModel() {
         }
     }
 
-    var test = "TEST VIVEK"
-
     fun callForPickup(requestBody: Set<String>) {
         viewModelScope.launch {
             try {
                 val callForPickupRequestBody = CallForPickupRequest(groupOrderIds = requestBody.toList())
-//                _lenzService.callForPickup(callForPickupRequestBody)
-
-                println(Gson().toJson(callForPickupRequestBody))
                 val response = _lenzService.callForPickup(callForPickupRequestBody)
-
-                if (response.isSuccessful) {
-                    val jsonResponse = response.body()?.string()
-                    println("JSON Response: $jsonResponse")
-                } else {
-                    println(
-                        "Request failed with code: ${response.code()}, message: ${
-                            response.errorBody()?.string()
-                        }"
-                    )
-                }
+                pickupResponseCode = response.code()
             } catch (_: Exception) {
             }
         }

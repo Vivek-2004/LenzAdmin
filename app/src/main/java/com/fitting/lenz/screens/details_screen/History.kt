@@ -82,7 +82,7 @@ fun History(
                     )
                 }.padding(end = scrollBarWidth)
         ) {
-            itemsIndexed(shopOrdersList) { index, item ->
+            itemsIndexed(shopOrdersList.reversed()) { index, item ->
                 Spacer(modifier = Modifier.height(14.dp))
                 GroupOrderItem(
                     colorScheme = colorScheme,

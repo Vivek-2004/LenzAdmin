@@ -27,9 +27,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -67,7 +69,8 @@ fun SingleOrderItemHolder(
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
     val singleGroupOrder: GroupOrder = lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0]
-    val trackingStatus by remember { mutableStateOf(singleGroupOrder.trackingStatus) }
+    var trackingStatus by remember { mutableStateOf(singleGroupOrder.trackingStatus) }
+    var updateGroupOrders by remember { mutableStateOf(false) }
     val statusCodeColor = when(trackingStatus) {
         "Order Placed For Pickup" -> MaterialTheme.colorScheme.onErrorContainer
         "Pickup Accepted" -> Color.Blue
@@ -77,6 +80,15 @@ fun SingleOrderItemHolder(
         "Out For Delivery" -> Color.Blue.copy(alpha = 0.6f)
         "Order Completed" -> Color.Green
         else -> colorScheme.compColor
+    }
+
+    LaunchedEffect(updateGroupOrders) {
+        if (!updateGroupOrders) return@LaunchedEffect
+        try {
+            lenzViewModel.getGroupOrders()
+        } finally {
+            updateGroupOrders = false
+        }
     }
 
     Column(
@@ -209,13 +221,15 @@ fun SingleOrderItemHolder(
                     .align(Alignment.BottomCenter)
                     .clickable {
                         onCompleteWorkPress()
-                        lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus = "Work Complete" //TODO
+                        trackingStatus = "Work Complete"
+                        lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus = "Work Complete"
+                        updateGroupOrders = true
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Mark Group as Complete", //trackingStatus
+                    text = "Mark Group as Complete",
                     color = statusCodeColor,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold

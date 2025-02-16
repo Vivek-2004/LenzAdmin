@@ -3,6 +3,7 @@ package com.fitting.lenz.screens
 import android.graphics.Color.parseColor
 import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +53,7 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.GroupOrderItemHolder
+import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -75,6 +77,7 @@ fun Orders(
     var filterExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var forceReset by remember { mutableStateOf(false) }
+    var callForPickup by remember { mutableStateOf(false) }
 
     var statusSelectedItem by remember { mutableStateOf(orderStates[4]) }
     var selectedIds by remember { mutableStateOf<Set<String>>(emptySet()) }
@@ -83,6 +86,7 @@ fun Orders(
     var tempAmount by remember { mutableStateOf("") }
     var amount by remember { mutableDoubleStateOf(0.0) }
     var errorMessage by remember { mutableStateOf("") }
+    var responseCode by lenzViewModel::pickupResponseCode
 
     val orderGroups = lenzViewModel.groupOrders.filter {
         statusSelectedItem == "All Orders" || it.trackingStatus == statusSelectedItem
@@ -93,8 +97,34 @@ fun Orders(
         totalDeliveryChargeCollected += orderGroups.find { id == it.id }?.deliveryCharge ?: 0
     }
 
+    if (responseCode == 200) {
+        Toast.makeText(context, "Pickup Initiated with Charge  ₹$amount", Toast.LENGTH_SHORT).show()
+        responseCode = -1
+    } else if(responseCode == 400 || responseCode == 404 || responseCode == 500)  {
+        Toast.makeText(context, "Pickup Failed", Toast.LENGTH_SHORT).show()
+        responseCode = -2
+    }
+
+    LaunchedEffect(callForPickup) {
+        if(!callForPickup) return@LaunchedEffect
+        try {
+            lenzViewModel.callForPickup(selectedIds)
+        } finally {
+            selectedIds = emptySet()
+            forceReset = !forceReset
+            delay(1800)
+            lenzViewModel.getGroupOrders()
+            callForPickup = false
+        }
+    }
+
     LaunchedEffect(statusSelectedItem, orderGroups) {
         selectedIds = emptySet()
+    }
+
+    BackHandler(enabled = inSelectionMode) {
+        selectedIds = emptySet()
+        forceReset = !forceReset
     }
 
     if(showDialog) {
@@ -150,35 +180,14 @@ fun Orders(
                         tempAmount.toDouble() <= 0.0 ||
                         tempAmount.toDouble() > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100))
                     ) {
-                        errorMessage = "Delivery Charges Must be between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
+                        errorMessage = "Delivery Charge Must be between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
                         tempAmount = ""
                     } else {
                         amount = tempAmount.toDouble()
                         tempAmount = ""
-
-                        lenzViewModel.groupOrders.forEach { order ->
-                            if(selectedIds.contains( order.id )) {
-                                order.trackingStatus = "Internal Tracking"
-                            }
-                        }
-
-//                      callForPickup = true TODO
-//                        clearSelection = true
-//
-//                        selectedIds.forEach { id->
-//                            orderGroups.forEach { group ->
-//                                if (id == group.id) {
-//                                    group.trackingStatus = "test"
-//                                }
-//                            }
-//                        }
-
-                        selectedIds = emptySet()
-                        forceReset = !forceReset
+                        callForPickup = true
                         showDialog = false
                         errorMessage = ""
-
-                        Toast.makeText(context, "Delivery Initiated for  ₹$amount", Toast.LENGTH_SHORT).show()
                     }
                 }) {
                     Text(text = "Confirm", fontSize = 16.sp)
