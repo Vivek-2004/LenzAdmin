@@ -32,7 +32,9 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.navigation.NavigationDestination
 import com.fitting.lenz.screens.components.ShopItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +43,12 @@ fun Shops(
     lenzViewModel: LenzViewModel,
     navController: NavController
 ) {
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            lenzViewModel.getGroupOrders()
+        }
+    }
+
     val shopsList by lenzViewModel::shopsList
     val lazyListState = rememberLazyListState()
     val scrollBarWidth = 5.dp

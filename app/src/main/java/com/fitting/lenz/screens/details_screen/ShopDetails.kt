@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,10 +64,12 @@ fun ShopDetails(
     }
 
     val context = LocalContext.current
-    var showDistanceDialog by remember { mutableStateOf(false) }
-    var showCreditDialog by remember { mutableStateOf(false) }
     var updateDistance by remember { mutableStateOf(false) }
     var updateCredit by remember { mutableStateOf(false) }
+
+    var showDistanceDialog by remember { mutableStateOf(false) }
+    var showCreditPlusDialog by remember { mutableStateOf(false) }
+    var showCreditMinusDialog by remember { mutableStateOf(false) }
 
     val shop by remember { mutableStateOf(lenzViewModel.shopsList.find { shopId == it._id }!! ) }
     var creditBalance by remember { mutableDoubleStateOf(shop.creditBalance) }
@@ -95,6 +99,7 @@ fun ShopDetails(
 
     LaunchedEffect(updateCredit) {
         if(!updateCredit) return@LaunchedEffect
+        println(creditBalance)
         try {
             withContext(Dispatchers.IO) {
                 lenzViewModel.editShopCredit(
@@ -168,18 +173,18 @@ fun ShopDetails(
         )
     }
 
-    if(showCreditDialog) {
+    if(showCreditMinusDialog) {
         AlertDialog(
             onDismissRequest = {
-                showCreditDialog = false
+                showCreditMinusDialog = false
                 errorMessage = ""
                 tempAmountPaid = ""
             },
-            title = { Text(text = "Update Credit Balance") },
+            title = { Text(text = "Deduct Credit Balance") },
             text = {
                 Column {
                     Text(
-                        text = "Enter Amount Paid:",
+                        text = "Enter Amount Received",
                         fontSize = 15.sp
                     )
                     Spacer(Modifier.height(8.dp))
@@ -202,7 +207,7 @@ fun ShopDetails(
             confirmButton = {
                 TextButton(onClick = {
                     if( tempAmountPaid.replace(Regex("[\\s,]+"), "").isEmpty() ||
-                        tempAmountPaid.toDouble().toInt() <= 0.0 ||
+                        tempAmountPaid.toDouble().toInt() <= 0 ||
                         tempAmountPaid.toDouble() > creditBalance
                     )  {
                         errorMessage = "Enter a Valid Amount"
@@ -212,7 +217,7 @@ fun ShopDetails(
                         creditBalance -= amountPaid.toDouble()
                         tempAmountPaid = ""
                         updateCredit = true
-                        showCreditDialog = false
+                        showCreditMinusDialog = false
                         errorMessage = ""
                         Toast.makeText(context, "Credit Balance Updated Successfully", Toast.LENGTH_SHORT).show()
                     }
@@ -224,7 +229,70 @@ fun ShopDetails(
                 TextButton(onClick = {
                     tempAmountPaid = ""
                     errorMessage = ""
-                    showCreditDialog = false
+                    showCreditMinusDialog = false
+                }) {
+                    Text(text = "Cancel", fontSize = 16.sp)
+                }
+            }
+        )
+    }
+
+    if(showCreditPlusDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showCreditPlusDialog = false
+                errorMessage = ""
+                tempAmountPaid = ""
+            },
+            title = { Text(text = "Add Credit Balance") },
+            text = {
+                Column {
+                    Text(
+                        text = "Enter Credit Amount",
+                        fontSize = 15.sp
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = tempAmountPaid,
+                        onValueChange = { tempAmountPaid = it },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text(
+                        text = errorMessage,
+                        fontSize = 12.sp,
+                        color = Color.Red
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if( tempAmountPaid.replace(Regex("[\\s,]+"), "").isEmpty() ||
+                        tempAmountPaid.toDouble().toInt() <= 0.0
+                    )  {
+                        errorMessage = "Enter a Valid Amount"
+                        tempAmountPaid = ""
+                    } else {
+                        amountPaid = tempAmountPaid
+                        creditBalance += amountPaid.toDouble()
+                        tempAmountPaid = ""
+                        updateCredit = true
+                        showCreditPlusDialog = false
+                        errorMessage = ""
+                        Toast.makeText(context, "Credit Balance Updated Successfully", Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Text(text = "Update", fontSize = 16.sp)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    tempAmountPaid = ""
+                    errorMessage = ""
+                    showCreditPlusDialog = false
                 }) {
                     Text(text = "Cancel", fontSize = 16.sp)
                 }
@@ -367,12 +435,25 @@ fun ShopDetails(
                 IconButton(
                     modifier = Modifier.size(17.dp).padding(top = 2.dp),
                     onClick = {
-                        showCreditDialog = true
+                        showCreditMinusDialog = true
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Create,
-                        contentDescription = "Edit Credit Amount",
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Minus Credit Amount",
+                        tint = Color.Green
+                    )
+                }
+                Spacer(modifier = Modifier.width(30.dp))
+                IconButton(
+                    modifier = Modifier.size(17.dp).padding(top = 2.dp),
+                    onClick = {
+                        showCreditPlusDialog = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowUp,
+                        contentDescription = "Plus Credit Amount",
                         tint = Color.Green
                     )
                 }

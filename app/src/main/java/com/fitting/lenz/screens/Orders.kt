@@ -6,19 +6,23 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,6 +30,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -54,6 +59,7 @@ import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.GroupOrderItemHolder
 import kotlinx.coroutines.delay
+import androidx.compose.runtime.collectAsState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -108,7 +114,10 @@ fun Orders(
     LaunchedEffect(callForPickup) {
         if(!callForPickup) return@LaunchedEffect
         try {
-            lenzViewModel.callForPickup(selectedIds)
+            lenzViewModel.callForPickup(
+                requestBody = selectedIds,
+                delAmount = amount
+            )
         } finally {
             selectedIds = emptySet()
             forceReset = !forceReset
@@ -246,6 +255,19 @@ fun Orders(
                     text = "No $statusSelectedItem",
                     fontSize = 18.sp
                 )
+                Row(
+                    modifier = Modifier.width(100.dp).clickable {
+                        lenzViewModel.getGroupOrders()
+                    },
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh"
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text("Click to Refresh")
+                }
             }
         } else {
             GroupOrderItemHolder(

@@ -21,11 +21,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -71,6 +73,7 @@ fun SingleOrderItemHolder(
     val singleGroupOrder: GroupOrder = lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0]
     var trackingStatus by remember { mutableStateOf(singleGroupOrder.trackingStatus) }
     var updateGroupOrders by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
     val statusCodeColor = when(trackingStatus) {
         "Order Placed For Pickup" -> MaterialTheme.colorScheme.onErrorContainer
         "Pickup Accepted" -> Color.Blue
@@ -89,6 +92,37 @@ fun SingleOrderItemHolder(
         } finally {
             updateGroupOrders = false
         }
+    }
+
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showDialog = false
+            },
+            text = { Text(
+                text = "Confirm Work Completion!",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            ) },
+            confirmButton = {
+                TextButton(onClick = {
+                    onCompleteWorkPress()
+                    trackingStatus = "Work Complete"
+                    lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus = "Work Complete"
+                    updateGroupOrders = true
+                    showDialog = false
+                }) {
+                    Text(text = "Update", fontSize = 13.sp)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                }) {
+                    Text(text = "Cancel", fontSize = 13.sp)
+                }
+            }
+        )
     }
 
     Column(
@@ -220,10 +254,7 @@ fun SingleOrderItemHolder(
                     .background(Color.Gray)
                     .align(Alignment.BottomCenter)
                     .clickable {
-                        onCompleteWorkPress()
-                        trackingStatus = "Work Complete"
-                        lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus = "Work Complete"
-                        updateGroupOrders = true
+                        showDialog = true
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center

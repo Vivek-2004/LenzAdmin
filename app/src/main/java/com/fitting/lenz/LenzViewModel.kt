@@ -379,7 +379,6 @@ class LenzViewModel : ViewModel() {
             try {
                 _lenzService.workCompleted(groupOrderId)
             } catch (_: Exception) {
-
             }
         }
     }
@@ -406,10 +405,16 @@ class LenzViewModel : ViewModel() {
         }
     }
 
-    fun callForPickup(requestBody: Set<String>) {
+    fun callForPickup(
+        requestBody: Set<String>,
+        delAmount: Double
+    ) {
         viewModelScope.launch {
             try {
-                val callForPickupRequestBody = CallForPickupRequest(groupOrderIds = requestBody.toList())
+                val callForPickupRequestBody = CallForPickupRequest(
+                    groupOrderIds = requestBody.toList(),
+                    delAmount = delAmount
+                )
                 val response = _lenzService.callForPickup(callForPickupRequestBody)
                 pickupResponseCode = response.code()
             } catch (_: Exception) {

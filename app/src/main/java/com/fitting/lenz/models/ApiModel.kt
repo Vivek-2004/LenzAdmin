@@ -214,5 +214,6 @@ data class CreditAmount(
 )
 
 data class CallForPickupRequest(
-    val groupOrderIds: List<String>
+    val groupOrderIds: List<String>,
+    val delAmount: Double
 )
