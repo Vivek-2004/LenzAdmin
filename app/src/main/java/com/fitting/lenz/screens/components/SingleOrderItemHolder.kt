@@ -126,7 +126,7 @@ fun SingleOrderItemHolder(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor.copy(alpha = 0.8f)),
+        modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor.copy(alpha = 0.8f)).padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(12.dp))

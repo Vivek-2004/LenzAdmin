@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         installSplashScreen()
 
-        val sharedPref = getSharedPreferences("LenzAdmin", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("LenzAdminLogin", Context.MODE_PRIVATE)
         val prefEditor = sharedPref.edit()
 
         if (!sharedPref.contains("isLoggedIn")) {

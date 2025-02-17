@@ -4,6 +4,8 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,14 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,10 +34,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +48,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.LenzViewModel
+import com.fitting.lenz.R
 import com.fitting.lenz.formDate
 import com.fitting.lenz.models.ColorSchemeModel
 import kotlinx.coroutines.Dispatchers
@@ -327,6 +332,51 @@ fun ShopDetails(
                 fontSize = 12.sp
             )
         }
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 18.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 38.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 55.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 75.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 95.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 115.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 135.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 155.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 175.dp),
+            thickness = 4.dp,
+            color = Color.LightGray
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier.fillMaxWidth().padding(start = 12.dp)
@@ -353,29 +403,31 @@ fun ShopDetails(
                 fontSize = 16.sp,
                 color = colorScheme.compColor
             )
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 modifier = Modifier.padding(bottom = 3.dp),
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Phone: ")
+                        append("Primary Phone: ")
                     }
-                    append(shop.phone)
+                    append("+91-${shop.phone.takeLast(10)}")
                 },
                 fontSize = 16.sp,
                 color = colorScheme.compColor
             )
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Alternate Phone: ")
-                    }
-                    append(shop.alternatePhone)
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
+            if(shop.alternatePhone.replace("+91","").isNotEmpty()) {
+                Text(
+                    modifier = Modifier.padding(bottom = 3.dp),
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Alternate Phone: ")
+                        }
+                        append("+91-${shop.alternatePhone.takeLast(10)}")
+                    },
+                    fontSize = 16.sp,
+                    color = colorScheme.compColor
+                )
+            }
             Text(
                 modifier = Modifier.padding(bottom = 3.dp),
                 text = buildAnnotatedString {
@@ -387,78 +439,115 @@ fun ShopDetails(
                 fontSize = 16.sp,
                 color = colorScheme.compColor
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth()
+                    .height(60.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Distance: ")
-                        }
-                        append("$distance km")
-                    },
-                    fontSize = 16.sp,
-                    color = colorScheme.compColor
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                IconButton(
-                    modifier = Modifier.size(17.dp).padding(top = 2.dp),
-                    onClick = {
-                        showDistanceDialog = true
-                    }
+                Row(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(end = 5.dp)
+                        .clip(RoundedCornerShape(12.dp)).background(Color.LightGray)
+                        .weight(1.7f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("Distance: ")
+                            }
+                            append("$distance km")
+                        },
+                        fontSize = 20.sp,
+                        color = colorScheme.compColor
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxSize()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.Gray)
+                        .weight(0.3f)
+                        .clickable {
+                            showDistanceDialog = true
+                        },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Create,
-                        contentDescription = "Edit Distance",
-                        tint = Color.Cyan
+                        contentDescription = "Edit Distance"
                     )
                 }
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Credit: ")
-                        }
-                        append("₹$creditBalance")
-                    },
-                    fontSize = 16.sp,
-                    color = Color.Red.copy(alpha = 0.7f)
-                )
                 Spacer(modifier = Modifier.width(8.dp))
-                IconButton(
-                    modifier = Modifier.size(17.dp).padding(top = 2.dp),
-                    onClick = {
-                        showCreditMinusDialog = true
-                    }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().height(60.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(end = 5.dp)
+                        .clip(RoundedCornerShape(12.dp)).background(Color.LightGray)
+                        .weight(1.6f),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = "Minus Credit Amount",
-                        tint = Color.Green
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("Credit: ")
+                            }
+                            withStyle(style = SpanStyle(fontFamily = FontFamily.SansSerif)) {
+                                append("₹")
+                            }
+                            append(creditBalance.toString())
+                        },
+                        fontSize = 20.sp
                     )
                 }
-                Spacer(modifier = Modifier.width(30.dp))
-                IconButton(
-                    modifier = Modifier.size(17.dp).padding(top = 2.dp),
-                    onClick = {
-                        showCreditPlusDialog = true
-                    }
+                Row(
+                    modifier = Modifier.fillMaxSize()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.Gray)
+                        .weight(0.35f)
+                        .clickable {
+                            showCreditMinusDialog = true
+                        },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowUp,
+                        modifier = Modifier.size(32.dp),
+                        painter = painterResource(R.drawable.minus),
+                        contentDescription = "Minus Credit Amount",
+                        tint = Color.Red
+                    )
+                }
+                Spacer(modifier = Modifier.width(2.dp))
+                Row(
+                    modifier = Modifier.fillMaxSize()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.Gray)
+                        .weight(0.35f)
+                        .clickable {
+                            showCreditPlusDialog = true
+                        },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(32.dp),
+                        painter = painterResource(R.drawable.plus),
                         contentDescription = "Plus Credit Amount",
                         tint = Color.Green
                     )
                 }
+                Spacer(modifier = Modifier.width(8.dp))
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(18.dp))
             Text(
                 modifier = Modifier.padding(bottom = 3.dp),
                 text = buildAnnotatedString {
@@ -470,6 +559,7 @@ fun ShopDetails(
                 fontSize = 16.sp,
                 color = colorScheme.compColor
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 modifier = Modifier.padding(bottom = 3.dp),
                 text = buildAnnotatedString {

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.models.ColorSchemeModel
@@ -60,7 +61,8 @@ fun ShopItem(
                             modifier = Modifier.padding(bottom = 5.dp),
                             text = shop.shopName,
                             color = colorScheme.compColor,
-                            fontSize = 16.sp
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
                         )
                     }
                     Column(
@@ -86,7 +88,7 @@ fun ShopItem(
                     ) {
                         Text(
                             modifier = Modifier.padding(bottom = 5.dp),
-                            text = shop.phone,
+                            text = "+91-${shop.phone.takeLast(10)}",
                             color = colorScheme.compColor,
                             fontSize = 16.sp
                         )

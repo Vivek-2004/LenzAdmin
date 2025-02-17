@@ -99,7 +99,7 @@ fun History(
                         topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
                         size = Size(scrollBarWidth.toPx(), scrollbarHeight)
                     )
-                }.padding(end = scrollBarWidth)
+                }.padding(start = 9.dp, end = scrollBarWidth + 9.dp )
         ) {
             itemsIndexed(shopOrdersList.reversed()) { index, item ->
                 Spacer(modifier = Modifier.height(14.dp))
