@@ -51,6 +51,7 @@ import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.formDate
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.roundToTwoDecimalPlaces
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.round
@@ -77,7 +78,7 @@ fun ShopDetails(
     var showCreditMinusDialog by remember { mutableStateOf(false) }
 
     val shop by remember { mutableStateOf(lenzViewModel.shopsList.find { shopId == it._id }!! ) }
-    var creditBalance by remember { mutableDoubleStateOf(shop.creditBalance) }
+    var creditBalance by remember { mutableDoubleStateOf(shop.creditBalance.roundToTwoDecimalPlaces()) }
 
     var distance by remember { mutableStateOf(shop.distance.toString()) }
     var tempDistance by remember { mutableStateOf("") }
@@ -104,7 +105,6 @@ fun ShopDetails(
 
     LaunchedEffect(updateCredit) {
         if(!updateCredit) return@LaunchedEffect
-        println(creditBalance)
         try {
             withContext(Dispatchers.IO) {
                 lenzViewModel.editShopCredit(
@@ -129,8 +129,13 @@ fun ShopDetails(
             text = {
                 Column {
                     Text(
-                        text = "Enter New distance:",
-                        fontSize = 15.sp
+                        text = "Current Distance: $distance km",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Enter New Distance",
+                        fontSize = 19.sp
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
@@ -163,7 +168,7 @@ fun ShopDetails(
                         Toast.makeText(context, "Distance Updated Successfully", Toast.LENGTH_SHORT).show()
                     }
                 }) {
-                    Text(text = "Update", fontSize = 16.sp)
+                    Text(text = "Update", fontSize = 14.5.sp)
                 }
             },
             dismissButton = {
@@ -172,13 +177,13 @@ fun ShopDetails(
                     tempDistance = ""
                     showDistanceDialog = false
                 }) {
-                    Text(text = "Cancel", fontSize = 16.sp)
+                    Text(text = "Cancel", fontSize = 14.5.sp)
                 }
             }
         )
     }
 
-    if(showCreditMinusDialog) {
+    if(showCreditMinusDialog && creditBalance != 0.0) {
         AlertDialog(
             onDismissRequest = {
                 showCreditMinusDialog = false
@@ -189,8 +194,13 @@ fun ShopDetails(
             text = {
                 Column {
                     Text(
+                        text = "Current Credit Amount: ₹$creditBalance",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
                         text = "Enter Amount Received",
-                        fontSize = 15.sp
+                        fontSize = 19.sp
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
@@ -219,7 +229,7 @@ fun ShopDetails(
                         tempAmountPaid = ""
                     } else {
                         amountPaid = tempAmountPaid
-                        creditBalance -= amountPaid.toDouble()
+                        creditBalance -= amountPaid.toDouble().roundToTwoDecimalPlaces()
                         tempAmountPaid = ""
                         updateCredit = true
                         showCreditMinusDialog = false
@@ -227,7 +237,7 @@ fun ShopDetails(
                         Toast.makeText(context, "Credit Balance Updated Successfully", Toast.LENGTH_SHORT).show()
                     }
                 }) {
-                    Text(text = "Update", fontSize = 16.sp)
+                    Text(text = "Update", fontSize = 14.5.sp)
                 }
             },
             dismissButton = {
@@ -236,7 +246,7 @@ fun ShopDetails(
                     errorMessage = ""
                     showCreditMinusDialog = false
                 }) {
-                    Text(text = "Cancel", fontSize = 16.sp)
+                    Text(text = "Cancel", fontSize = 14.5.sp)
                 }
             }
         )
@@ -253,8 +263,13 @@ fun ShopDetails(
             text = {
                 Column {
                     Text(
+                        text = "Current Credit Amount: ₹$creditBalance",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
                         text = "Enter Credit Amount",
-                        fontSize = 15.sp
+                        fontSize = 19.sp
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
@@ -282,7 +297,7 @@ fun ShopDetails(
                         tempAmountPaid = ""
                     } else {
                         amountPaid = tempAmountPaid
-                        creditBalance += amountPaid.toDouble()
+                        creditBalance += amountPaid.toDouble().roundToTwoDecimalPlaces()
                         tempAmountPaid = ""
                         updateCredit = true
                         showCreditPlusDialog = false
@@ -290,7 +305,7 @@ fun ShopDetails(
                         Toast.makeText(context, "Credit Balance Updated Successfully", Toast.LENGTH_SHORT).show()
                     }
                 }) {
-                    Text(text = "Update", fontSize = 16.sp)
+                    Text(text = "Update", fontSize = 14.5.sp)
                 }
             },
             dismissButton = {
@@ -299,7 +314,7 @@ fun ShopDetails(
                     errorMessage = ""
                     showCreditPlusDialog = false
                 }) {
-                    Text(text = "Cancel", fontSize = 16.sp)
+                    Text(text = "Cancel", fontSize = 14.5.sp)
                 }
             }
         )
@@ -332,51 +347,13 @@ fun ShopDetails(
                 fontSize = 12.sp
             )
         }
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 18.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 38.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 55.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 75.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 95.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 115.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 135.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 155.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 175.dp),
-            thickness = 4.dp,
-            color = Color.LightGray
-        )
+        (15..185 step 13).forEach { padding->
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = padding.dp),
+                thickness = 4.dp,
+                color = Color.LightGray
+            )
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier.fillMaxWidth().padding(start = 12.dp)
@@ -503,7 +480,7 @@ fun ShopDetails(
                             withStyle(style = SpanStyle(fontFamily = FontFamily.SansSerif)) {
                                 append("₹")
                             }
-                            append(creditBalance.toString())
+                            append(creditBalance.roundToTwoDecimalPlaces().toString())
                         },
                         fontSize = 20.sp
                     )
@@ -514,7 +491,11 @@ fun ShopDetails(
                         .background(Color.Gray)
                         .weight(0.35f)
                         .clickable {
-                            showCreditMinusDialog = true
+                            if (creditBalance == 0.0) {
+                                Toast.makeText(context, "No Pending Payments", Toast.LENGTH_SHORT).show()
+                            } else {
+                                showCreditMinusDialog = true
+                            }
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center

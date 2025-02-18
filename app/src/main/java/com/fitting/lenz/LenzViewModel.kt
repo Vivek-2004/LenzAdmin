@@ -1,6 +1,7 @@
 package com.fitting.lenz
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,9 @@ class LenzViewModel : ViewModel() {
 
     var adminConfirmation by mutableStateOf(false)
         private set
+
+    var adminLoginMessage by mutableStateOf("")
+
     var shopsList by mutableStateOf<List<ShopDetails>>(emptyList())
         private set
 
@@ -40,13 +44,13 @@ class LenzViewModel : ViewModel() {
     var shiftingUpdateConfirmation by mutableStateOf(false)
     var fittingUpdateConfirmation by mutableStateOf(false)
 
-    var getFittingChargesResponseError by mutableStateOf("TEST")
+    var getFittingChargesResponseError by mutableStateOf("Test")
         private set
 
-    var geShiftingChargesResponseError by mutableStateOf("TEST")
+    var geShiftingChargesResponseError by mutableStateOf("Test")
         private set
 
-    var pickupResponseCode by mutableStateOf(100)
+    var pickupResponseCode by mutableIntStateOf(100)
 
     //  -----------------------------------------------------------------
     var fittingFullFrameNormal_LS by mutableStateOf("0")
@@ -116,8 +120,10 @@ class LenzViewModel : ViewModel() {
             try {
                 val adminResponse = _lenzService.getAdminLogin(adminVerification)
                 adminConfirmation = adminResponse.confirmation
+                adminLoginMessage = adminResponse.message
             } catch (e: Exception) {
                 adminConfirmation = false
+                adminLoginMessage = "Incorrect Id or Password"
             }
         }
     }

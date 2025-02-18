@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.navigation.MyApp
 import com.fitting.lenz.ui.theme.LenzTheme
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            val lenzViewModelInstance: LenzViewModel = viewModel()
             LenzTheme(darkTheme = false) {
                 val isLoggedIn by remember { mutableStateOf(sharedPref.getBoolean("isLoggedIn", false)) }
 
@@ -41,9 +43,12 @@ class MainActivity : ComponentActivity() {
                 )
 
                 if (isLoggedIn) {
-                    MyApp( colorScheme = mainColorScheme )
+                    MyApp( colorScheme = mainColorScheme,
+                        lenzViewModelInstance = lenzViewModelInstance
+                    )
                 } else {
                     AdminLogin(
+                        lenzViewModel = lenzViewModelInstance,
                         colorScheme = mainColorScheme,
                         sharedPref = sharedPref,
                         prefEditor = prefEditor

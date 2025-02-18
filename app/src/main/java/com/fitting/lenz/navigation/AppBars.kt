@@ -4,17 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,8 +28,9 @@ fun TopAppBar(
     currentScreenName: String
 ) {
     val title = when (currentScreenName) {
-        "ShiftingEdit" -> "Edit Price"
-        "FittingEdit" -> "Edit Price"
+        "Edit" -> "Edit Charges"
+        "ShiftingEdit" -> "Edit"
+        "FittingEdit" -> "Edit"
         "SingleOrderItemHolder/{groupOrderId}" -> "Group Details"
         "OrderDetails/{orderId}" -> "Order Details"
         "ShopOrdersHolder/{shopId}" -> "Pending Orders"
@@ -42,7 +42,7 @@ fun TopAppBar(
     showNavigationIcon = (
             title != NavigationDestination.Orders.name &&
                     title != NavigationDestination.Shops.name &&
-                    title != NavigationDestination.Edit.name
+                    title != "Edit Charges"
             )
     TopAppBar(
         modifier = Modifier.background(colorScheme.bgColor),
@@ -60,7 +60,7 @@ fun TopAppBar(
                         text = title,
                         color = colorScheme.compColor,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 34.sp
+                        fontSize = 33.sp
                     )
                 }
             }
@@ -76,10 +76,10 @@ fun TopAppBar(
                     onClick = { navController.popBackStack() }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.Default.KeyboardArrowLeft,
                         contentDescription = "Back Button",
                         tint = colorScheme.compColor,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
@@ -106,30 +106,28 @@ fun BottomNavigationBar(
             color = colorScheme.compColor.copy(alpha = 0.55f),
             thickness = 2.dp
         )
-
         NavigationBar(
             modifier = Modifier
                 .navigationBarsPadding()
                 .height(80.dp),
-            containerColor = colorScheme.bgColor
+            containerColor = Color.White
         ) {
             items.forEach { screen ->
-
                 val icon = when (screen) {
-                    NavigationDestination.Orders.name -> ImageVector.vectorResource(R.drawable.orders)
-                    NavigationDestination.Shops.name -> ImageVector.vectorResource(R.drawable.shops)
-                    NavigationDestination.Edit.name -> ImageVector.vectorResource(R.drawable.edit)
-                    else -> ImageVector.vectorResource(R.drawable.orders)
+                    NavigationDestination.Orders.name -> painterResource(R.drawable.orders)
+                    NavigationDestination.Shops.name -> painterResource(R.drawable.shops)
+                    NavigationDestination.Edit.name -> painterResource(R.drawable.edit)
+                    else -> painterResource(R.drawable.orders)
                 }
-
                 NavigationBarItem(
                     selected = currentDestination?.route == screen,
                     interactionSource = remember { MutableInteractionSource() },
                     icon = {
                         Icon(
-                            modifier = Modifier.size(28.dp),
-                            imageVector = icon,
+                            modifier = Modifier.size(30.dp),
+                            painter = icon,
                             contentDescription = screen,
+                            tint = Color.Unspecified
                         )
                     },
                     label = {
@@ -150,11 +148,11 @@ fun BottomNavigationBar(
                         }
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = colorScheme.compColor,
-                        unselectedIconColor = Color.Gray.copy(0.5F),
-                        selectedTextColor = colorScheme.compColor,
-                        unselectedTextColor = Color.Gray.copy(0.5F),
-                        indicatorColor = MaterialTheme.colorScheme.background.copy(0.0F)
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = Color.LightGray,
                     )
                 )
             }

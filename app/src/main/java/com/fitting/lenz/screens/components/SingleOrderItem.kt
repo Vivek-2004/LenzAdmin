@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -77,7 +78,8 @@ fun SingleOrderItem(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = shopName,
                         color = colorScheme.compColor,
-                        fontSize = 16.sp
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "Rs.$orderAmount/-",
@@ -94,15 +96,15 @@ fun SingleOrderItem(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = orderDate,
-                        color = colorScheme.compColor,
-                        fontSize = 16.sp
-                    )
-                    Text(
                         text = orderTime,
                         color = colorScheme.compColor,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = orderDate,
+                        color = colorScheme.compColor,
+                        fontSize = 14.sp
                     )
                 }
             }

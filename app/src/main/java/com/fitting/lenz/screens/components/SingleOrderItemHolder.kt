@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -102,7 +104,8 @@ fun SingleOrderItemHolder(
             text = { Text(
                 text = "Confirm Work Completion!",
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = Color.Black
             ) },
             confirmButton = {
                 TextButton(onClick = {
@@ -112,156 +115,164 @@ fun SingleOrderItemHolder(
                     updateGroupOrders = true
                     showDialog = false
                 }) {
-                    Text(text = "Update", fontSize = 13.sp)
+                    Text(text = "Confirm", fontSize = 14.5.sp)
                 }
             },
             dismissButton = {
                 TextButton(onClick = {
                     showDialog = false
                 }) {
-                    Text(text = "Cancel", fontSize = 13.sp)
+                    Text(text = "Cancel", fontSize = 14.5.sp)
                 }
             }
         )
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor.copy(alpha = 0.8f)).padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(12.dp))
-        Card(
-            modifier = Modifier.fillMaxWidth()
-                .wrapContentHeight()
-                .padding(start = 13.dp, end = 13.dp, bottom = 6.dp, top = 4.dp),
-            elevation = CardDefaults.cardElevation(16.dp),
-            border = BorderStroke(3.dp, Color.Blue.copy(alpha = 0.4f))
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = colorScheme.bgColor.copy(alpha = 0.8f)),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column( modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.Gray.copy(alpha = 0.7f))
-                .padding(vertical = 6.dp, horizontal = 14.dp)
-            ) {
-                Text(
-                    text = "#$groupOrderId",
-                    fontSize = 12.sp,
-                    color = colorScheme.compColor.copy(alpha = 0.7f),
-                    fontStyle = FontStyle.Italic
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Shop Name: ")
-                        }
-                        append(lenzViewModel.shopsList.filter { singleGroupOrder.userId == it._id }[0].shopName)
-                    },
-                    fontSize = 15.sp,
-                    color = colorScheme.compColor
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("No. Of Orders: ")
-                        }
-                        append(singleGroupOrder.orders.size.toString())
-                    },
-                    fontSize = 15.sp,
-                    color = colorScheme.compColor
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Group Order Value: ")
-                        }
-                        append("Rs.${singleGroupOrder.finalAmount}/-")
-                    },
-                    fontSize = 15.sp,
-                    color = colorScheme.compColor
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Delivery Charges Paid: ")
-                        }
-                        append("Rs.${singleGroupOrder.deliveryCharge}/- ")
-                    },
-                    fontSize = 15.sp,
-                    color = colorScheme.compColor
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Order Amount ${formatPaymentStatus(singleGroupOrder.paymentStatus)}: ")
-                        }
-                        append("Rs.${singleGroupOrder.totalAmount}/- ")
-                    },
-                    fontSize = 15.sp,
-                    color = ( if(formatPaymentStatus(singleGroupOrder.paymentStatus) == "Paid") Color.Green
-                    else Color.Red ).copy(alpha = 0.6f)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Orders List",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.W600
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        LazyColumn(
-            state = listState,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-                .drawBehind {
-                    val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
-                    val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
-                    val scrollbarHeight = listState.layoutInfo.visibleItemsInfo.size * elementHeight
-                    drawRect(
-                        color = colorScheme.compColor.copy(alpha = 0.5f),
-                        topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
-                        size = Size(scrollBarWidth.toPx(), scrollbarHeight)
-                    )
-                }.padding(end = scrollBarWidth + 8.dp, start = 8.dp)
-        ) {
-            itemsIndexed(singleGroupOrder.orders) { index, item ->
-                SingleOrderItem(
-                    colorScheme = colorScheme,
-                    orderId = item.id,
-                    shopName = lenzViewModel.shopsList.filter { item.userId == it._id }[0].shopName,
-                    orderAmount = item.totalAmount,
-                    orderDate = item.createdAt.formDate(),
-                    orderTime = item.createdAt.toIST(),
-                    onClick = {
-                        navController.navigate(NavigationDestination.OrderDetails.name + "/${item.id}")
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-        }
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        if(trackingStatus == "Order Received By Admin") {
-            Row(
+            Spacer(modifier = Modifier.height(12.dp))
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
-                    .background(Color.Gray)
+                    .wrapContentHeight()
+                    .padding(start = 13.dp, end = 13.dp, bottom = 6.dp, top = 4.dp),
+                elevation = CardDefaults.cardElevation(16.dp),
+                border = BorderStroke(3.dp, Color.Blue.copy(alpha = 0.4f))
+            ) {
+                Column( modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.Gray.copy(alpha = 0.7f))
+                    .padding(vertical = 6.dp, horizontal = 14.dp)
+                ) {
+                    Text(
+                        text = "#$groupOrderId",
+                        fontSize = 12.sp,
+                        color = colorScheme.compColor.copy(alpha = 0.7f),
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("Shop Name: ")
+                            }
+                            append(lenzViewModel.shopsList.filter { singleGroupOrder.userId == it._id }[0].shopName)
+                        },
+                        fontSize = 15.sp,
+                        color = colorScheme.compColor
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("No. Of Orders: ")
+                            }
+                            append(singleGroupOrder.orders.size.toString())
+                        },
+                        fontSize = 15.sp,
+                        color = colorScheme.compColor
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("Group Order Value: ")
+                            }
+                            append("Rs.${singleGroupOrder.finalAmount}/-")
+                        },
+                        fontSize = 15.sp,
+                        color = colorScheme.compColor
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("Delivery Charges Paid: ")
+                            }
+                            append("Rs.${singleGroupOrder.deliveryCharge}/- ")
+                        },
+                        fontSize = 15.sp,
+                        color = colorScheme.compColor
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("Order Amount ${formatPaymentStatus(singleGroupOrder.paymentStatus)}: ")
+                            }
+                            append("Rs.${singleGroupOrder.totalAmount}/- ")
+                        },
+                        fontSize = 15.sp,
+                        color = ( if(formatPaymentStatus(singleGroupOrder.paymentStatus) == "Paid") Color.Green
+                        else Color.Red ).copy(alpha = 0.6f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Orders List",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.W600
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LazyColumn(
+                state = listState,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 50.dp)
+                    .drawBehind {
+                        val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
+                        val offset =
+                            listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
+                        val scrollbarHeight =
+                            listState.layoutInfo.visibleItemsInfo.size * elementHeight
+                        drawRect(
+                            color = colorScheme.compColor.copy(alpha = 0.5f),
+                            topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
+                            size = Size(scrollBarWidth.toPx(), scrollbarHeight)
+                        )
+                    }
+                    .padding(end = scrollBarWidth + 8.dp, start = 8.dp)
+            ) {
+                itemsIndexed(singleGroupOrder.orders.reversed()) { index, item ->
+                    SingleOrderItem(
+                        colorScheme = colorScheme,
+                        orderId = item.id,
+                        shopName = lenzViewModel.shopsList.filter { item.userId == it._id }[0].shopName,
+                        orderAmount = item.totalAmount,
+                        orderDate = item.createdAt.formDate(),
+                        orderTime = item.createdAt.toIST(),
+                        onClick = {
+                            navController.navigate(NavigationDestination.OrderDetails.name + "/${item.id}")
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
+        }
+
+        if(trackingStatus == "Order Received By Admin") {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
                     .align(Alignment.BottomCenter)
-                    .clickable {
-                        showDialog = true
-                    },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                onClick = {
+                    showDialog = true
+                },
+                shape = RoundedCornerShape(23.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.compColor.copy(alpha = 0.9f),
+                    contentColor = colorScheme.bgColor
+                )
             ) {
                 Text(
                     text = "Mark Group as Complete",
-                    color = statusCodeColor,
+                    color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -271,23 +282,23 @@ fun SingleOrderItemHolder(
                         .padding(top = 3.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.complete),
                     contentDescription = "Mark Group as Complete",
-                    tint = statusCodeColor
+                    tint = Color.White
                 )
             }
-        }
-        else {
+        } else {
             Row(
                 modifier = Modifier
+                    .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .height(50.dp)
-                    .align(Alignment.BottomCenter),
+                    .background(Color.Transparent),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = trackingStatus,
                     color = statusCodeColor,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
             }

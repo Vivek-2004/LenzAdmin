@@ -30,7 +30,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,7 +58,6 @@ import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.components.GroupOrderItemHolder
 import kotlinx.coroutines.delay
-import androidx.compose.runtime.collectAsState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -256,7 +254,7 @@ fun Orders(
                     fontSize = 18.sp
                 )
                 Row(
-                    modifier = Modifier.width(100.dp).clickable {
+                    modifier = Modifier.wrapContentSize().clickable {
                         lenzViewModel.getGroupOrders()
                     },
                     horizontalArrangement = Arrangement.Center

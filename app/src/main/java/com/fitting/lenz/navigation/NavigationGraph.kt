@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -48,10 +47,9 @@ import com.fitting.lenz.screens.details_screen.ShopDetails
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyApp(
-    colorScheme: ColorSchemeModel
+    colorScheme: ColorSchemeModel,
+    lenzViewModelInstance: LenzViewModel
 ) {
-    val lenzViewModelInstance: LenzViewModel = viewModel()
-
     if (lenzViewModelInstance.groupOrders.isEmpty()) {
         Column(
             modifier = Modifier

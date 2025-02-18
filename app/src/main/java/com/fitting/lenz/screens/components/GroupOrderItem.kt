@@ -67,11 +67,14 @@ fun GroupOrderItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(top = 13.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().weight(.45f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(.45f)
             ) {
                 Text(
                     text = "#$orderId",
@@ -83,14 +86,16 @@ fun GroupOrderItem(
             }
             Spacer(modifier = Modifier.height(6.dp))
             Row(
-                modifier = Modifier.fillMaxWidth().weight(.65f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(.65f),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = shopName,
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     color = colorScheme.compColor,
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.Bold
                 )
             }
             Row(
@@ -129,7 +134,7 @@ fun GroupOrderItem(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
-                        text = "$orderDate - $orderTime",
+                        text = "[${orderDate.substring(0,5)}] $orderTime",
                         color = colorScheme.compColor,
                         fontSize = 12.sp
                     )
