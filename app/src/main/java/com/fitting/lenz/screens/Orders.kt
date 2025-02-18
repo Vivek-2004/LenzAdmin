@@ -183,14 +183,12 @@ fun Orders(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    if( tempAmount.replace(Regex("[\\s,]+"), "").isEmpty() ||
-                        tempAmount.toDouble() <= 0.0 ||
-                        tempAmount.toDouble() > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100))
-                    ) {
-                        errorMessage = "Delivery Charge Must be between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
+                    val temp = tempAmount.toDoubleOrNull() ?: 0.0
+                    if( temp <= 0.0 || temp > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)) ) {
+                        errorMessage = "Enter Valid Delivery Charge between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
                         tempAmount = ""
                     } else {
-                        amount = tempAmount.toDouble()
+                        amount = temp
                         tempAmount = ""
                         callForPickup = true
                         showDialog = false

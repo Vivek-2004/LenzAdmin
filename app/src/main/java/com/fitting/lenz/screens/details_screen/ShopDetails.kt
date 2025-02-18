@@ -68,7 +68,6 @@ fun ShopDetails(
             lenzViewModel.getShopsList()
         }
     }
-
     val context = LocalContext.current
     var updateDistance by remember { mutableStateOf(false) }
     var updateCredit by remember { mutableStateOf(false) }
@@ -156,11 +155,12 @@ fun ShopDetails(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    if(tempDistance.replace(Regex("[\\s,]+"), "").isEmpty() || round(tempDistance.toDouble()).toInt() < 1) {
+                    val temp = round(tempDistance.toDoubleOrNull() ?: 0.0) .toInt()
+                    if(temp < 1) {
                         errorMessage = "Enter Valid Distance Greater Than 1"
                         tempDistance = ""
                     } else {
-                        distance = round(tempDistance.toDouble()).toInt().toString()
+                        distance = temp.toString()
                         tempDistance = ""
                         updateDistance = true
                         showDistanceDialog = false
@@ -221,14 +221,12 @@ fun ShopDetails(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    if( tempAmountPaid.replace(Regex("[\\s,]+"), "").isEmpty() ||
-                        tempAmountPaid.toDouble().toInt() <= 0 ||
-                        tempAmountPaid.toDouble() > creditBalance
-                    )  {
+                    val temp = tempAmountPaid.toDoubleOrNull() ?: 0.0
+                    if(temp <= 0.0 || temp > creditBalance)  {
                         errorMessage = "Enter a Valid Amount"
                         tempAmountPaid = ""
                     } else {
-                        amountPaid = tempAmountPaid
+                        amountPaid = temp.toString()
                         creditBalance -= amountPaid.toDouble().roundToTwoDecimalPlaces()
                         tempAmountPaid = ""
                         updateCredit = true
@@ -290,13 +288,12 @@ fun ShopDetails(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    if( tempAmountPaid.replace(Regex("[\\s,]+"), "").isEmpty() ||
-                        tempAmountPaid.toDouble().toInt() <= 0.0
-                    )  {
+                    val temp = tempAmountPaid.toDoubleOrNull() ?: 0.0
+                    if(temp <= 0.0)  {
                         errorMessage = "Enter a Valid Amount"
                         tempAmountPaid = ""
                     } else {
-                        amountPaid = tempAmountPaid
+                        amountPaid = temp.toString()
                         creditBalance += amountPaid.toDouble().roundToTwoDecimalPlaces()
                         tempAmountPaid = ""
                         updateCredit = true
