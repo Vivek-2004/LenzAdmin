@@ -205,6 +205,7 @@ fun Orders(
                     errorMessage = ""
                     tempAmount = ""
                     showDialog = false
+                    forceReset = !forceReset
                 }) {
                     Text(text = "Cancel", fontSize = 16.sp)
                 }
@@ -303,6 +304,7 @@ fun Orders(
                     .align(Alignment.BottomEnd)
                     .padding(vertical = 70.dp),
                 countdownSeconds = 3,
+                resetTrigger = forceReset,
                 onCountdownEnd = {
                     showDialog = true
                 }
