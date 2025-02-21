@@ -102,7 +102,7 @@ fun CustomTimerFAB(
                                     isTimerRunning = false
                                     currentSeconds = countdownSeconds
                                     if (pressDuration < tapThreshold) {
-                                        Toast.makeText(context, "Press and Hold for 5 Seconds to Confirm", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Press and Hold for 3 Seconds to Confirm", Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }

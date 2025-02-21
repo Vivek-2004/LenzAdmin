@@ -134,7 +134,8 @@ fun BottomNavigationBar(
                         Text(
                             text = screen,
                             fontSize = 14.sp,
-                            color = colorScheme.compColor
+                            color = colorScheme.compColor,
+                            fontWeight = FontWeight.Bold
                         )
                     },
                     onClick = {
