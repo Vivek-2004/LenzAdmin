@@ -87,6 +87,9 @@ fun SingleOrderItemHolder(
         else -> colorScheme.compColor
     }
 
+    val dispatchOtp = "654321"
+    val collectionOtp = "123456"
+
     LaunchedEffect(updateGroupOrders) {
         if (!updateGroupOrders) return@LaunchedEffect
         try {
@@ -206,6 +209,34 @@ fun SingleOrderItemHolder(
                         color = ( if(formatPaymentStatus(singleGroupOrder.paymentStatus) == "Paid") Color.Green
                         else Color.Red ).copy(alpha = 0.6f)
                     )
+                    if(trackingStatus == "Internal Tracking") {
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp)
+                                .align(Alignment.CenterHorizontally),
+                            text = buildAnnotatedString {
+                                append("Your Dispatch OTP is ")
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(dispatchOtp)
+                                }
+                            },
+                            fontSize = 15.sp,
+                            color = colorScheme.compColor
+                        )
+                    }
+                    if(trackingStatus == "Order Picked Up") {
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp)
+                                .align(Alignment.CenterHorizontally),
+                            text = buildAnnotatedString {
+                                append("Your Collection OTP is ")
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(collectionOtp)
+                                }
+                            },
+                            fontSize = 15.sp,
+                            color = colorScheme.compColor
+                        )
+                    }
                 }
             }
 

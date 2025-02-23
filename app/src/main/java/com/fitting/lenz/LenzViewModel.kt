@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fitting.lenz.models.AdminDetails
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.CallForPickupRequest
 import com.fitting.lenz.models.CreditAmount
@@ -21,11 +22,17 @@ import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.ShopDistance
 import com.fitting.lenz.models.SingleDouble
 import com.fitting.lenz.models.UpdatedFittingChargesData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class LenzViewModel : ViewModel() {
     private val _lenzService = lenzService
+
+    private val _adminDetails = MutableStateFlow<AdminDetails?>(null)
+    val adminDetails: StateFlow<AdminDetails?> = _adminDetails.asStateFlow()
 
     var adminConfirmation by mutableStateOf(false)
         private set
@@ -103,6 +110,7 @@ class LenzViewModel : ViewModel() {
 
     init {
         getGroupOrders()
+        getAdminDetails()
         getShopsList()
         getShiftingCharges()
         getFittingCharges()
@@ -124,6 +132,19 @@ class LenzViewModel : ViewModel() {
             } catch (e: Exception) {
                 adminConfirmation = false
                 adminLoginMessage = "Incorrect Id or Password"
+            }
+        }
+    }
+
+    fun getAdminDetails() {
+        viewModelScope.launch {
+            try {
+                println("IM IN")
+                val response = _lenzService.getAdminDetails()
+                println("response +++ "+ response)
+                _adminDetails.value = response.admin.first()
+            } catch (e: Exception) {
+                println(e)
             }
         }
     }

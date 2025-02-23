@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -46,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -282,6 +284,25 @@ fun Orders(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+        if( lenzViewModel.groupOrders.filter {
+                it.trackingStatus == "Internal Tracking"
+            }.isNotEmpty())
+        {
+            FloatingActionButton(
+                onClick = {
+                    statusSelectedItem = "Internal Tracking"
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(horizontal = 80.dp, vertical = 50.dp),
+            ) {
+                Icon(
+                    modifier = Modifier.size(45.dp),
+                    painter = painterResource(R.drawable.delivery),
+                    contentDescription = null
+                )
+            }
+        }
         if (selectedIds.isEmpty()) {
             FloatingActionButton(
                 onClick = {

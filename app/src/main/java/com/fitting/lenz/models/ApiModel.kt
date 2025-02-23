@@ -15,15 +15,21 @@ data class AdminLoginResponse(
 )
 
 data class AdminDetails(
+    val address: Address,
     val _id: String,
     val name: String,
     val email: String,
     val phone: String,
     val password: String,
     val adminId: Int,
+    val authToken: String,
     val createdAt: String,
-    val updatedAttr: String,
-    val __v: Int
+    val updatedAt: String
+)
+
+data class GetAdminResponse(
+    val admin: List<AdminDetails>,
+    val confirmation: Boolean
 )
 
 data class ShopDetails(

@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.screens.AdminProfile
 import com.fitting.lenz.screens.details_screen.OrderDetails
 import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
@@ -72,7 +73,8 @@ fun MyApp(
         var showBottomBar by remember { mutableStateOf(false) }
         showBottomBar = (currentScreen == NavigationDestination.Shops.name ||
                 currentScreen == NavigationDestination.Orders.name ||
-                currentScreen == NavigationDestination.Edit.name)
+                currentScreen == NavigationDestination.Edit.name) ||
+                currentScreen == NavigationDestination.AdminProfile.name
 
         Scaffold(
             topBar = {
@@ -134,6 +136,12 @@ fun MyApp(
                     Edit(
                         colorScheme = colorScheme,
                         navController = navController
+                    )
+                }
+
+                composable(route = NavigationDestination.AdminProfile.name) {
+                    AdminProfile(
+                        lenzViewModel = lenzViewModelInstance
                     )
                 }
 
