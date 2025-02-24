@@ -28,7 +28,6 @@ fun TopAppBar(
     currentScreenName: String
 ) {
     val title = when (currentScreenName) {
-        "AdminProfile" -> "Profile"
         "Edit" -> "Edit Charges"
         "ShiftingEdit" -> "Edit"
         "FittingEdit" -> "Edit"
@@ -44,7 +43,7 @@ fun TopAppBar(
                     title != NavigationDestination.Orders.name &&
                     title != NavigationDestination.Shops.name &&
                     title != "Edit Charges" &&
-                    title != "Profile"
+                    title != NavigationDestination.Admin.name
             )
     TopAppBar(
         modifier = Modifier.background(colorScheme.bgColor),
@@ -101,7 +100,7 @@ fun BottomNavigationBar(
         NavigationDestination.Orders.name,
         NavigationDestination.Shops.name,
         NavigationDestination.Edit.name,
-        NavigationDestination.AdminProfile.name
+        NavigationDestination.Admin.name
     )
 
     Column(modifier = Modifier.wrapContentSize()) {
@@ -120,7 +119,7 @@ fun BottomNavigationBar(
                     NavigationDestination.Orders.name -> painterResource(R.drawable.orders)
                     NavigationDestination.Shops.name -> painterResource(R.drawable.shops)
                     NavigationDestination.Edit.name -> painterResource(R.drawable.edit)
-                    NavigationDestination.AdminProfile.name -> painterResource(R.drawable.profile)
+                    NavigationDestination.Admin.name -> painterResource(R.drawable.profile)
                     else -> painterResource(R.drawable.orders)
                 }
                 NavigationBarItem(
@@ -136,10 +135,7 @@ fun BottomNavigationBar(
                     },
                     label = {
                         Text(
-                            text = when(screen) {
-                                "AdminProfile" -> "Profile"
-                                else -> screen
-                            },
+                            text = screen,
                             fontSize = 14.sp,
                             color = colorScheme.compColor,
                             fontWeight = FontWeight.Bold

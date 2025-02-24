@@ -87,8 +87,8 @@ fun SingleOrderItemHolder(
         else -> colorScheme.compColor
     }
 
-    val dispatchOtp = "654321"
-    val collectionOtp = "123456"
+    val collectionOtp = "1234"
+    val dispatchOtp = "4321"
 
     LaunchedEffect(updateGroupOrders) {
         if (!updateGroupOrders) return@LaunchedEffect

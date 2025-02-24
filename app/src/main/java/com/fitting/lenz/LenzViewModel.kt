@@ -139,12 +139,9 @@ class LenzViewModel : ViewModel() {
     fun getAdminDetails() {
         viewModelScope.launch {
             try {
-                println("IM IN")
                 val response = _lenzService.getAdminDetails()
-                println("response +++ "+ response)
                 _adminDetails.value = response.admin.first()
-            } catch (e: Exception) {
-                println(e)
+            } catch (_: Exception) {
             }
         }
     }

@@ -139,7 +139,6 @@ data class GroupOrderResponse(
 )
 
 data class GroupOrder(
-    @SerializedName("rider_details") val riderDetails: RiderDetails,
     val paidAmount: Int,
     val leftAmount: Int,
     @SerializedName("tracking_status") var trackingStatus: String,
@@ -153,13 +152,6 @@ data class GroupOrder(
     val finalAmount: Int,
     val paymentStatus: String,
     val createdAt: String,
-    val updatedAt: String,
-    @SerializedName("__v") val version: Int
-)
-
-data class RiderDetails(
-    val name: String?,
-    val phone: String?
 )
 
 data class Order(

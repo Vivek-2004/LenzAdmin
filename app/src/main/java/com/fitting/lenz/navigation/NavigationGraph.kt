@@ -74,7 +74,7 @@ fun MyApp(
         showBottomBar = (currentScreen == NavigationDestination.Shops.name ||
                 currentScreen == NavigationDestination.Orders.name ||
                 currentScreen == NavigationDestination.Edit.name) ||
-                currentScreen == NavigationDestination.AdminProfile.name
+                currentScreen == NavigationDestination.Admin.name
 
         Scaffold(
             topBar = {
@@ -139,7 +139,7 @@ fun MyApp(
                     )
                 }
 
-                composable(route = NavigationDestination.AdminProfile.name) {
+                composable(route = NavigationDestination.Admin.name) {
                     AdminProfile(
                         lenzViewModel = lenzViewModelInstance
                     )
