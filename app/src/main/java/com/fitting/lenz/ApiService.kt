@@ -12,6 +12,8 @@ import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.ShopDistance
+import com.fitting.lenz.models.TrackingOtpReqBody
+import com.fitting.lenz.models.TrackingOtpResponse
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
@@ -106,4 +108,10 @@ interface ApiService {
     suspend fun callForPickup(
         @Body groupOrderIds: CallForPickupRequest
     ): Response<ResponseBody>
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @POST("otp/request-tracking-otp")
+    suspend fun getTrackingOtp(
+        @Body otpRequestBody: TrackingOtpReqBody
+    ): TrackingOtpResponse
 }

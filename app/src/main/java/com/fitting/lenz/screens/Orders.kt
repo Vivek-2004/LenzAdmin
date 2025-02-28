@@ -75,6 +75,8 @@ fun Orders(
         "Order Picked Up",
         "Order Received By Admin",
         "Work Completed",
+        "Internal Tracking",
+        "Delivery Accepted",
         "Out For Delivery",
         "Order Completed"
     )
@@ -106,13 +108,13 @@ fun Orders(
     if (responseCode == 200) {
         Toast.makeText(context, "Pickup Initiated with Charge  ₹$amount", Toast.LENGTH_SHORT).show()
         responseCode = -1
-    } else if(responseCode == 400 || responseCode == 404 || responseCode == 500)  {
+    } else if (responseCode == 400 || responseCode == 404 || responseCode == 500) {
         Toast.makeText(context, "Pickup Failed", Toast.LENGTH_SHORT).show()
         responseCode = -2
     }
 
     LaunchedEffect(callForPickup) {
-        if(!callForPickup) return@LaunchedEffect
+        if (!callForPickup) return@LaunchedEffect
         try {
             lenzViewModel.callForPickup(
                 requestBody = selectedIds,
@@ -136,7 +138,7 @@ fun Orders(
         forceReset = !forceReset
     }
 
-    if(showDialog) {
+    if (showDialog) {
         AlertDialog(
             onDismissRequest = {
                 showDialog = false
@@ -153,12 +155,12 @@ fun Orders(
                         color = Color(parseColor("#38b000"))
                     )
                     Text(
-                        text = "Pickup Charge Paid : ₹${totalDeliveryChargeCollected * 40/100}",
+                        text = "Pickup Charge Paid : ₹${totalDeliveryChargeCollected * 40 / 100}",
                         fontSize = 13.5.sp,
                         color = Color.Red
                     )
                     Text(
-                        text = "Remaining Margin : ₹${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}",
+                        text = "Remaining Margin : ₹${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100)}",
                         fontSize = 13.5.sp,
                         color = Color.Gray
                     )
@@ -186,8 +188,9 @@ fun Orders(
             confirmButton = {
                 TextButton(onClick = {
                     val temp = tempAmount.toDoubleOrNull() ?: 0.0
-                    if( temp <= 0.0 || temp > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)) ) {
-                        errorMessage = "Enter Valid Delivery Charge between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40/100)}"
+                    if (temp <= 0.0 || temp > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100))) {
+                        errorMessage =
+                            "Enter Valid Delivery Charge between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100)}"
                         tempAmount = ""
                     } else {
                         amount = temp
@@ -244,7 +247,7 @@ fun Orders(
         }
         Spacer(modifier = Modifier.height(4.dp))
 
-        if(orderGroups.isEmpty()) {
+        if (orderGroups.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -255,9 +258,11 @@ fun Orders(
                     fontSize = 18.sp
                 )
                 Row(
-                    modifier = Modifier.wrapContentSize().clickable {
-                        lenzViewModel.getGroupOrders()
-                    },
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .clickable {
+                            lenzViewModel.getGroupOrders()
+                        },
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
@@ -284,13 +289,20 @@ fun Orders(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        if( lenzViewModel.groupOrders.filter {
-                it.trackingStatus == "Internal Tracking"
-            }.isNotEmpty())
-        {
+        if (lenzViewModel.groupOrders.filter {
+                it.trackingStatus == "Delivery Accepted" || it.trackingStatus == "Order Picked Up"
+            }.isNotEmpty()) {
             FloatingActionButton(
                 onClick = {
-                    statusSelectedItem = "Internal Tracking"
+                    if (lenzViewModel.groupOrders.filter { it.trackingStatus == "Order Picked Up" }
+                            .isNotEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Filter \"Order Picked Up\" from Menu",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    statusSelectedItem = "Delivery Accepted"
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -365,7 +377,11 @@ fun Orders(
                         onClick = {
                             filterExpanded = false
                             statusSelectedItem = orderStateItem
-                            Toast.makeText(context, "Filter Status: $statusSelectedItem", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Filter Status: $statusSelectedItem",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     )
                 }

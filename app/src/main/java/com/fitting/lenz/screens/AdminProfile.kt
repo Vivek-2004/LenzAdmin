@@ -206,30 +206,32 @@ fun AdminProfile(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        AdminInfoCard(
-                            title = "Line 1",
-                            value = "123, Main Street"
-                        )
-                        AdminInfoCard(
-                            title = "Line 2",
-                            value = "Apartment 4B"
-                        )
-                        AdminInfoCard(
-                            title = "Landmark",
-                            value = "Near City Mall"
-                        )
-                        AdminInfoCard(
-                            title = "City",
-                            value = "Mumbai"
-                        )
-                        AdminInfoCard(
-                            title = "State",
-                            value = "Maharashtra"
-                        )
-                        AdminInfoCard(
-                            title = "Pin Code",
-                            value = "400001"
-                        )
+                        with(admin.address) {
+                            AdminInfoCard(
+                                title = "Line 1",
+                                value = line1
+                            )
+                            AdminInfoCard(
+                                title = "Line 2",
+                                value = line2
+                            )
+                            AdminInfoCard(
+                                title = "Landmark",
+                                value = landmark
+                            )
+                            AdminInfoCard(
+                                title = "City",
+                                value = city
+                            )
+                            AdminInfoCard(
+                                title = "State",
+                                value = state
+                            )
+                            AdminInfoCard(
+                                title = "Pin Code",
+                                value = pinCode
+                            )
+                        }
                     }
                 }
             }

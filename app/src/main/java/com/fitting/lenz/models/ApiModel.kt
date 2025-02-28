@@ -138,6 +138,10 @@ data class GroupOrderResponse(
     val data: List<GroupOrder>
 )
 
+data class PickupObject(
+    val key: String
+)
+
 data class GroupOrder(
     val paidAmount: Int,
     val leftAmount: Int,
@@ -145,6 +149,8 @@ data class GroupOrder(
     @SerializedName("rider_id") val riderId: String?,
     @SerializedName("admin_id") val adminId: String?,
     @SerializedName("_id") val id: String,
+    @SerializedName("shop_pickup") val shopPickup: PickupObject,
+    @SerializedName("admin_pickup") val adminPickup: PickupObject,
     val userId: String,
     val orders: List<Order>,
     val totalAmount: Int,
@@ -214,4 +220,17 @@ data class CreditAmount(
 data class CallForPickupRequest(
     val groupOrderIds: List<String>,
     val delAmount: Double
+)
+
+data class TrackingOtpReqBody(
+    @SerializedName("groupOrder_id") val groupOrderId: String?,
+    @SerializedName("order_key") val orderKey: String?,
+    val purpose: String
+)
+
+data class TrackingOtpResponse(
+    @SerializedName("groupOrder_id") val groupOrderId: String?,
+    @SerializedName("order_key") val orderKey: String?,
+    @SerializedName("otp_code") val otpCode: String,
+    val purpose: String
 )

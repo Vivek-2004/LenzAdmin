@@ -21,6 +21,7 @@ import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.ShopDistance
 import com.fitting.lenz.models.SingleDouble
+import com.fitting.lenz.models.TrackingOtpReqBody
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,6 +73,7 @@ class LenzViewModel : ViewModel() {
     var fittingFullFrameSunglass_LD by mutableStateOf("0")
     var fittingFullFrameSunglass_HS by mutableStateOf("0")
     var fittingFullFrameSunglass_HD by mutableStateOf("0")
+
     //  -----------------------------------------------------------------
     var fittingSupraNormal_LS by mutableStateOf("0")
     var fittingSupraNormal_LD by mutableStateOf("0")
@@ -85,6 +87,7 @@ class LenzViewModel : ViewModel() {
     var fittingSupraSunglass_LD by mutableStateOf("0")
     var fittingSupraSunglass_HS by mutableStateOf("0")
     var fittingSupraSunglass_HD by mutableStateOf("0")
+
     //  -----------------------------------------------------------------
     var fittingRimlessNormal_LS by mutableStateOf("0")
     var fittingRimlessNormal_LD by mutableStateOf("0")
@@ -202,18 +205,26 @@ class LenzViewModel : ViewModel() {
     }
 
     private fun processFittingChargesResponse(fittingChagresResponse: FittingChagresResponse) {
-        fittingFullFrameNormal_LS = fittingChagresResponse.data.fullFrame.normal.low.single.toString()
-        fittingFullFrameNormal_LD = fittingChagresResponse.data.fullFrame.normal.low.double.toString()
-        fittingFullFrameNormal_HS = fittingChagresResponse.data.fullFrame.normal.high.single.toString()
-        fittingFullFrameNormal_HD = fittingChagresResponse.data.fullFrame.normal.high.double.toString()
+        fittingFullFrameNormal_LS =
+            fittingChagresResponse.data.fullFrame.normal.low.single.toString()
+        fittingFullFrameNormal_LD =
+            fittingChagresResponse.data.fullFrame.normal.low.double.toString()
+        fittingFullFrameNormal_HS =
+            fittingChagresResponse.data.fullFrame.normal.high.single.toString()
+        fittingFullFrameNormal_HD =
+            fittingChagresResponse.data.fullFrame.normal.high.double.toString()
         fittingFullFramePR_LS = fittingChagresResponse.data.fullFrame.pr.low.single.toString()
         fittingFullFramePR_LD = fittingChagresResponse.data.fullFrame.pr.low.double.toString()
         fittingFullFramePR_HS = fittingChagresResponse.data.fullFrame.pr.high.single.toString()
         fittingFullFramePR_HD = fittingChagresResponse.data.fullFrame.pr.high.double.toString()
-        fittingFullFrameSunglass_LS = fittingChagresResponse.data.fullFrame.sunglass.low.single.toString()
-        fittingFullFrameSunglass_LD = fittingChagresResponse.data.fullFrame.sunglass.low.double.toString()
-        fittingFullFrameSunglass_HS = fittingChagresResponse.data.fullFrame.sunglass.high.single.toString()
-        fittingFullFrameSunglass_HD = fittingChagresResponse.data.fullFrame.sunglass.high.double.toString()
+        fittingFullFrameSunglass_LS =
+            fittingChagresResponse.data.fullFrame.sunglass.low.single.toString()
+        fittingFullFrameSunglass_LD =
+            fittingChagresResponse.data.fullFrame.sunglass.low.double.toString()
+        fittingFullFrameSunglass_HS =
+            fittingChagresResponse.data.fullFrame.sunglass.high.single.toString()
+        fittingFullFrameSunglass_HD =
+            fittingChagresResponse.data.fullFrame.sunglass.high.double.toString()
 
         fittingSupraNormal_LS = fittingChagresResponse.data.supra.normal.low.single.toString()
         fittingSupraNormal_LD = fittingChagresResponse.data.supra.normal.low.double.toString()
@@ -236,10 +247,14 @@ class LenzViewModel : ViewModel() {
         fittingRimlessPR_LD = fittingChagresResponse.data.rimless.pr.low.double.toString()
         fittingRimlessPR_HS = fittingChagresResponse.data.rimless.pr.high.single.toString()
         fittingRimlessPR_HD = fittingChagresResponse.data.rimless.pr.high.double.toString()
-        fittingRimlessSunglass_LS = fittingChagresResponse.data.rimless.sunglass.low.single.toString()
-        fittingRimlessSunglass_LD = fittingChagresResponse.data.rimless.sunglass.low.double.toString()
-        fittingRimlessSunglass_HS = fittingChagresResponse.data.rimless.sunglass.high.single.toString()
-        fittingRimlessSunglass_HD = fittingChagresResponse.data.rimless.sunglass.high.double.toString()
+        fittingRimlessSunglass_LS =
+            fittingChagresResponse.data.rimless.sunglass.low.single.toString()
+        fittingRimlessSunglass_LD =
+            fittingChagresResponse.data.rimless.sunglass.low.double.toString()
+        fittingRimlessSunglass_HS =
+            fittingChagresResponse.data.rimless.sunglass.high.single.toString()
+        fittingRimlessSunglass_HD =
+            fittingChagresResponse.data.rimless.sunglass.high.double.toString()
         fittingRimlessPoly_LS = fittingChagresResponse.data.rimless.poly.low.single.toString()
         fittingRimlessPoly_LD = fittingChagresResponse.data.rimless.poly.low.double.toString()
         fittingRimlessPoly_HS = fittingChagresResponse.data.rimless.poly.high.single.toString()
@@ -443,6 +458,26 @@ class LenzViewModel : ViewModel() {
                 pickupResponseCode = response.code()
             } catch (_: Exception) {
             }
+        }
+    }
+
+    suspend fun getTrackingOtp(
+        groupOrderId: String?,
+        orderKey: String?,
+        purpose: String
+    ): String {
+        return try {
+            val key = if (groupOrderId.isNullOrEmpty()) orderKey else groupOrderId
+            val requestBody = TrackingOtpReqBody(
+                groupOrderId = key,
+                orderKey = key,
+                purpose = purpose
+            )
+
+            val response = _lenzService.getTrackingOtp(otpRequestBody = requestBody)
+            response.otpCode
+        } catch (e: Exception) {
+            "* * * *"
         }
     }
 }

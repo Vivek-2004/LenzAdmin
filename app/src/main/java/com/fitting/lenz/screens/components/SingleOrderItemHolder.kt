@@ -27,6 +27,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -76,7 +77,7 @@ fun SingleOrderItemHolder(
     var trackingStatus by remember { mutableStateOf(singleGroupOrder.trackingStatus) }
     var updateGroupOrders by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
-    val statusCodeColor = when(trackingStatus) {
+    val statusCodeColor = when (trackingStatus) {
         "Order Placed For Pickup" -> MaterialTheme.colorScheme.onErrorContainer
         "Pickup Accepted" -> Color.Blue
         "Order Picked Up" -> Color.Green.copy(alpha = 0.5f)
@@ -87,8 +88,22 @@ fun SingleOrderItemHolder(
         else -> colorScheme.compColor
     }
 
-    val collectionOtp = "1234"
-    val dispatchOtp = "4321"
+    var collectionOtp by remember { mutableStateOf<String?>(null) }
+    var dispatchOtp by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(trackingStatus) {
+        if (trackingStatus == "Order Picked Up") {
+            collectionOtp = lenzViewModel.getTrackingOtp(
+                groupOrderId = groupOrderId, orderKey = "", purpose = "admin_delivery"
+            )
+        } else if (trackingStatus == "Delivery Accepted") {
+            dispatchOtp = lenzViewModel.getTrackingOtp(
+                groupOrderId = "", orderKey = lenzViewModel.groupOrders.first { grpOrder ->
+                    grpOrder.id == groupOrderId
+                }.adminPickup.key, purpose = "admin_pickup"
+            )
+        }
+    }
 
     LaunchedEffect(updateGroupOrders) {
         if (!updateGroupOrders) return@LaunchedEffect
@@ -99,36 +114,34 @@ fun SingleOrderItemHolder(
         }
     }
 
-    if(showDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                showDialog = false
-            },
-            text = { Text(
+    if (showDialog) {
+        AlertDialog(onDismissRequest = {
+            showDialog = false
+        }, text = {
+            Text(
                 text = "Confirm Work Completion!",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = Color.Black
-            ) },
-            confirmButton = {
-                TextButton(onClick = {
-                    onCompleteWorkPress()
-                    trackingStatus = "Work Complete"
-                    lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus = "Work Complete"
-                    updateGroupOrders = true
-                    showDialog = false
-                }) {
-                    Text(text = "Confirm", fontSize = 14.5.sp)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showDialog = false
-                }) {
-                    Text(text = "Cancel", fontSize = 14.5.sp)
-                }
+            )
+        }, confirmButton = {
+            TextButton(onClick = {
+                onCompleteWorkPress()
+                trackingStatus = "Work Complete"
+                lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0].trackingStatus =
+                    "Work Complete"
+                updateGroupOrders = true
+                showDialog = false
+            }) {
+                Text(text = "Confirm", fontSize = 14.5.sp)
             }
-        )
+        }, dismissButton = {
+            TextButton(onClick = {
+                showDialog = false
+            }) {
+                Text(text = "Cancel", fontSize = 14.5.sp)
+            }
+        })
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -147,10 +160,11 @@ fun SingleOrderItemHolder(
                 elevation = CardDefaults.cardElevation(16.dp),
                 border = BorderStroke(3.dp, Color.Blue.copy(alpha = 0.4f))
             ) {
-                Column( modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.Gray.copy(alpha = 0.7f))
-                    .padding(vertical = 6.dp, horizontal = 14.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color.Gray.copy(alpha = 0.7f))
+                        .padding(vertical = 6.dp, horizontal = 14.dp)
                 ) {
                     Text(
                         text = "#$groupOrderId",
@@ -164,9 +178,7 @@ fun SingleOrderItemHolder(
                                 append("Shop Name: ")
                             }
                             append(lenzViewModel.shopsList.filter { singleGroupOrder.userId == it._id }[0].shopName)
-                        },
-                        fontSize = 15.sp,
-                        color = colorScheme.compColor
+                        }, fontSize = 15.sp, color = colorScheme.compColor
                     )
                     Text(
                         text = buildAnnotatedString {
@@ -174,9 +186,7 @@ fun SingleOrderItemHolder(
                                 append("No. Of Orders: ")
                             }
                             append(singleGroupOrder.orders.size.toString())
-                        },
-                        fontSize = 15.sp,
-                        color = colorScheme.compColor
+                        }, fontSize = 15.sp, color = colorScheme.compColor
                     )
                     Text(
                         text = buildAnnotatedString {
@@ -184,9 +194,7 @@ fun SingleOrderItemHolder(
                                 append("Group Order Value: ")
                             }
                             append("Rs.${singleGroupOrder.finalAmount}/-")
-                        },
-                        fontSize = 15.sp,
-                        color = colorScheme.compColor
+                        }, fontSize = 15.sp, color = colorScheme.compColor
                     )
                     Text(
                         text = buildAnnotatedString {
@@ -194,9 +202,7 @@ fun SingleOrderItemHolder(
                                 append("Delivery Charges Paid: ")
                             }
                             append("Rs.${singleGroupOrder.deliveryCharge}/- ")
-                        },
-                        fontSize = 15.sp,
-                        color = colorScheme.compColor
+                        }, fontSize = 15.sp, color = colorScheme.compColor
                     )
                     Text(
                         text = buildAnnotatedString {
@@ -206,50 +212,84 @@ fun SingleOrderItemHolder(
                             append("Rs.${singleGroupOrder.totalAmount}/- ")
                         },
                         fontSize = 15.sp,
-                        color = ( if(formatPaymentStatus(singleGroupOrder.paymentStatus) == "Paid") Color.Green
-                        else Color.Red ).copy(alpha = 0.6f)
+                        color = (if (formatPaymentStatus(singleGroupOrder.paymentStatus) == "Paid") Color.Green
+                        else Color.Red).copy(alpha = 0.6f)
                     )
-                    if(trackingStatus == "Internal Tracking") {
-                        Text(
-                            modifier = Modifier.padding(vertical = 8.dp)
-                                .align(Alignment.CenterHorizontally),
-                            text = buildAnnotatedString {
-                                append("Your Dispatch OTP is ")
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(dispatchOtp)
+                    if (trackingStatus == "Order Picked Up") {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                text = "Your Collection OTP is ",
+                                fontSize = 15.sp,
+                                color = colorScheme.compColor,
+                                fontWeight = FontWeight.Bold
+                            )
+                            when {
+                                collectionOtp == null -> {
+                                    LinearProgressIndicator(
+                                        modifier = Modifier.padding(10.dp)
+                                    )
                                 }
-                            },
-                            fontSize = 15.sp,
-                            color = colorScheme.compColor
-                        )
+
+                                else -> {
+                                    collectionOtp?.let { otp ->
+                                        Text(
+                                            text = otp,
+                                            fontSize = 15.sp,
+                                            color = colorScheme.compColor
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if(trackingStatus == "Order Picked Up") {
-                        Text(
-                            modifier = Modifier.padding(vertical = 8.dp)
-                                .align(Alignment.CenterHorizontally),
-                            text = buildAnnotatedString {
-                                append("Your Collection OTP is ")
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(collectionOtp)
+
+                    if (trackingStatus == "Delivery Accepted") {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                text = "Your Dispatch OTP is ",
+                                fontSize = 15.sp,
+                                color = colorScheme.compColor,
+                                fontWeight = FontWeight.Bold
+                            )
+                            when {
+                                dispatchOtp == null -> {
+                                    LinearProgressIndicator(
+                                        modifier = Modifier.padding(10.dp)
+                                    )
                                 }
-                            },
-                            fontSize = 15.sp,
-                            color = colorScheme.compColor
-                        )
+
+                                else -> {
+                                    dispatchOtp?.let { otp ->
+                                        Text(
+                                            text = otp,
+                                            fontSize = 15.sp,
+                                            color = colorScheme.compColor
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Orders List",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.W600
+                text = "Orders List", fontSize = 30.sp, fontWeight = FontWeight.W600
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            LazyColumn(
-                state = listState,
+            LazyColumn(state = listState,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
@@ -266,11 +306,9 @@ fun SingleOrderItemHolder(
                             size = Size(scrollBarWidth.toPx(), scrollbarHeight)
                         )
                     }
-                    .padding(end = scrollBarWidth + 8.dp, start = 8.dp)
-            ) {
+                    .padding(end = scrollBarWidth + 8.dp, start = 8.dp)) {
                 itemsIndexed(singleGroupOrder.orders.reversed()) { index, item ->
-                    SingleOrderItem(
-                        colorScheme = colorScheme,
+                    SingleOrderItem(colorScheme = colorScheme,
                         orderId = item.id,
                         shopName = lenzViewModel.shopsList.filter { item.userId == it._id }[0].shopName,
                         orderAmount = item.totalAmount,
@@ -278,25 +316,21 @@ fun SingleOrderItemHolder(
                         orderTime = item.createdAt.toIST(),
                         onClick = {
                             navController.navigate(NavigationDestination.OrderDetails.name + "/${item.id}")
-                        }
-                    )
+                        })
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }
         }
 
-        if(trackingStatus == "Order Received By Admin") {
+        if (trackingStatus == "Order Received By Admin") {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
                     .align(Alignment.BottomCenter)
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                onClick = {
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp), onClick = {
                     showDialog = true
-                },
-                shape = RoundedCornerShape(23.dp),
-                colors = ButtonDefaults.buttonColors(
+                }, shape = RoundedCornerShape(23.dp), colors = ButtonDefaults.buttonColors(
                     containerColor = colorScheme.compColor.copy(alpha = 0.9f),
                     contentColor = colorScheme.bgColor
                 )
@@ -309,7 +343,8 @@ fun SingleOrderItemHolder(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier
+                        .size(28.dp)
                         .padding(top = 3.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.complete),
                     contentDescription = "Mark Group as Complete",

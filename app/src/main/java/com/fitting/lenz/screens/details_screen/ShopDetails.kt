@@ -76,7 +76,7 @@ fun ShopDetails(
     var showCreditPlusDialog by remember { mutableStateOf(false) }
     var showCreditMinusDialog by remember { mutableStateOf(false) }
 
-    val shop by remember { mutableStateOf(lenzViewModel.shopsList.find { shopId == it._id }!! ) }
+    val shop by remember { mutableStateOf(lenzViewModel.shopsList.find { shopId == it._id }!!) }
     var creditBalance by remember { mutableDoubleStateOf(shop.creditBalance.roundToTwoDecimalPlaces()) }
 
     var distance by remember { mutableStateOf(shop.distance.toString()) }
@@ -88,7 +88,7 @@ fun ShopDetails(
     var errorMessage by remember { mutableStateOf("") }
 
     LaunchedEffect(updateDistance) {
-        if(!updateDistance) return@LaunchedEffect
+        if (!updateDistance) return@LaunchedEffect
         try {
             withContext(Dispatchers.IO) {
                 lenzViewModel.editShopDistance(
@@ -103,7 +103,7 @@ fun ShopDetails(
     }
 
     LaunchedEffect(updateCredit) {
-        if(!updateCredit) return@LaunchedEffect
+        if (!updateCredit) return@LaunchedEffect
         try {
             withContext(Dispatchers.IO) {
                 lenzViewModel.editShopCredit(
@@ -117,7 +117,7 @@ fun ShopDetails(
         }
     }
 
-    if(showDistanceDialog) {
+    if (showDistanceDialog) {
         AlertDialog(
             onDismissRequest = {
                 showDistanceDialog = false
@@ -141,7 +141,7 @@ fun ShopDetails(
                         value = tempDistance,
                         onValueChange = { tempDistance = it },
                         keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.NumberPassword
                         ),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -155,17 +155,17 @@ fun ShopDetails(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    val temp = round(tempDistance.toDoubleOrNull() ?: 0.0) .toInt()
-                    if(temp < 1) {
-                        errorMessage = "Enter Valid Distance Greater Than 1"
+                    if (tempDistance.toInt() < 1 || tempDistance.toInt() > 10) {
+                        errorMessage = "Enter Distance Between 1 and 10 kms"
                         tempDistance = ""
                     } else {
-                        distance = temp.toString()
+                        distance = tempDistance
                         tempDistance = ""
                         updateDistance = true
                         showDistanceDialog = false
                         errorMessage = ""
-                        Toast.makeText(context, "Distance Updated Successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Distance Updated Successfully", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }) {
                     Text(text = "Update", fontSize = 14.5.sp)
@@ -183,7 +183,7 @@ fun ShopDetails(
         )
     }
 
-    if(showCreditMinusDialog && creditBalance != 0.0) {
+    if (showCreditMinusDialog && creditBalance != 0.0) {
         AlertDialog(
             onDismissRequest = {
                 showCreditMinusDialog = false
@@ -222,7 +222,7 @@ fun ShopDetails(
             confirmButton = {
                 TextButton(onClick = {
                     val temp = tempAmountPaid.toDoubleOrNull() ?: 0.0
-                    if(temp <= 0.0 || temp > creditBalance)  {
+                    if (temp <= 0.0 || temp > creditBalance) {
                         errorMessage = "Enter a Valid Amount"
                         tempAmountPaid = ""
                     } else {
@@ -232,7 +232,11 @@ fun ShopDetails(
                         updateCredit = true
                         showCreditMinusDialog = false
                         errorMessage = ""
-                        Toast.makeText(context, "Credit Balance Updated Successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Credit Balance Updated Successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }) {
                     Text(text = "Update", fontSize = 14.5.sp)
@@ -250,7 +254,7 @@ fun ShopDetails(
         )
     }
 
-    if(showCreditPlusDialog) {
+    if (showCreditPlusDialog) {
         AlertDialog(
             onDismissRequest = {
                 showCreditPlusDialog = false
@@ -289,7 +293,7 @@ fun ShopDetails(
             confirmButton = {
                 TextButton(onClick = {
                     val temp = tempAmountPaid.toDoubleOrNull() ?: 0.0
-                    if(temp <= 0.0)  {
+                    if (temp <= 0.0) {
                         errorMessage = "Enter a Valid Amount"
                         tempAmountPaid = ""
                     } else {
@@ -299,7 +303,11 @@ fun ShopDetails(
                         updateCredit = true
                         showCreditPlusDialog = false
                         errorMessage = ""
-                        Toast.makeText(context, "Credit Balance Updated Successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Credit Balance Updated Successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }) {
                     Text(text = "Update", fontSize = 14.5.sp)
@@ -318,7 +326,8 @@ fun ShopDetails(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(color = colorScheme.bgColor)
     ) {
         Column(
@@ -334,7 +343,9 @@ fun ShopDetails(
             )
         }
         Column(
-            modifier = Modifier.fillMaxWidth().padding(end = 30.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 30.dp),
             horizontalAlignment = Alignment.End
         ) {
             Text(
@@ -344,7 +355,7 @@ fun ShopDetails(
                 fontSize = 12.sp
             )
         }
-        (15..185 step 13).forEach { padding->
+        (15..185 step 13).forEach { padding ->
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = padding.dp),
                 thickness = 4.dp,
@@ -353,7 +364,9 @@ fun ShopDetails(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Column(
-            modifier = Modifier.fillMaxWidth().padding(start = 12.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp)
         ) {
             Text(
                 modifier = Modifier.padding(top = 6.dp, bottom = 3.dp),
@@ -389,7 +402,7 @@ fun ShopDetails(
                 fontSize = 16.sp,
                 color = colorScheme.compColor
             )
-            if(shop.alternatePhone.replace("+91","").isNotEmpty()) {
+            if (shop.alternatePhone.replace("+91", "").isNotEmpty()) {
                 Text(
                     modifier = Modifier.padding(bottom = 3.dp),
                     text = buildAnnotatedString {
@@ -415,14 +428,17 @@ fun ShopDetails(
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(60.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Row(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .padding(end = 5.dp)
-                        .clip(RoundedCornerShape(12.dp)).background(Color.LightGray)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.LightGray)
                         .weight(1.7f),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -439,7 +455,8 @@ fun ShopDetails(
                     )
                 }
                 Row(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color.Gray)
                         .weight(0.3f)
@@ -458,13 +475,17 @@ fun ShopDetails(
             }
             Spacer(modifier = Modifier.height(12.dp))
             Row(
-                modifier = Modifier.fillMaxWidth().height(60.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Row(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .padding(end = 5.dp)
-                        .clip(RoundedCornerShape(12.dp)).background(Color.LightGray)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.LightGray)
                         .weight(1.6f),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -483,13 +504,15 @@ fun ShopDetails(
                     )
                 }
                 Row(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color.Gray)
                         .weight(0.35f)
                         .clickable {
                             if (creditBalance == 0.0) {
-                                Toast.makeText(context, "No Pending Payments", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "No Pending Payments", Toast.LENGTH_SHORT)
+                                    .show()
                             } else {
                                 showCreditMinusDialog = true
                             }
@@ -506,7 +529,8 @@ fun ShopDetails(
                 }
                 Spacer(modifier = Modifier.width(2.dp))
                 Row(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color.Gray)
                         .weight(0.35f)
