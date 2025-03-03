@@ -334,7 +334,7 @@ fun Orders(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(vertical = 70.dp),
-                countdownSeconds = 3,
+                countdownSeconds = 2,
                 resetTrigger = forceReset,
                 onCountdownEnd = {
                     showDialog = true
