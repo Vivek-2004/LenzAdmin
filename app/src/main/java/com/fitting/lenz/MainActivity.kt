@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         installSplashScreen()
 
-        val sharedPref = getSharedPreferences("LenzAdminLogin", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("LenzAdmin", Context.MODE_PRIVATE)
         val prefEditor = sharedPref.edit()
 
         if (!sharedPref.contains("isLoggedIn")) {
@@ -35,7 +35,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val lenzViewModelInstance: LenzViewModel = viewModel()
             LenzTheme(darkTheme = false) {
-                val isLoggedIn by remember { mutableStateOf(sharedPref.getBoolean("isLoggedIn", false)) }
+                val isLoggedIn by remember {
+                    mutableStateOf(
+                        sharedPref.getBoolean(
+                            "isLoggedIn",
+                            false
+                        )
+                    )
+                }
 
                 val mainColorScheme = ColorSchemeModel(
                     compColor = Color.Black,
@@ -43,7 +50,8 @@ class MainActivity : ComponentActivity() {
                 )
 
                 if (isLoggedIn) {
-                    MyApp( colorScheme = mainColorScheme,
+                    MyApp(
+                        colorScheme = mainColorScheme,
                         lenzViewModelInstance = lenzViewModelInstance
                     )
                 } else {

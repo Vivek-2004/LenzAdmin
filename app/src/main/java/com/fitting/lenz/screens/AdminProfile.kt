@@ -17,7 +17,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,11 +44,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.LenzViewModel
-import com.fitting.lenz.screens.components.AdminInfoCard
 import kotlinx.coroutines.delay
 
 @Composable
@@ -77,44 +86,51 @@ fun AdminProfile(
                             .verticalScroll(scrollState)
                             .padding(16.dp)
                     ) {
-                        AdminInfoCard(
-                            title = "Name",
-                            value = admin.name
+                        AdminInfoCardWithIcon(
+                            title = "Name", value = admin.name, icon = Icons.Default.AccountCircle
                         )
-                        AdminInfoCard(
-                            title = "Email",
-                            value = admin.email
+                        AdminInfoCardWithIcon(
+                            title = "Email", value = admin.email, icon = Icons.Default.Email
                         )
-                        AdminInfoCard(
+                        AdminInfoCardWithIcon(
                             title = "Phone",
-                            value = admin.phone.takeLast(10)
+                            value = admin.phone.takeLast(10),
+                            icon = Icons.Default.Phone
                         )
                         Card(
-                            shape = RoundedCornerShape(8.dp),
-                            colors = CardDefaults.cardColors(
+                            shape = RoundedCornerShape(8.dp), colors = CardDefaults.cardColors(
                                 containerColor = Color.LightGray.copy(
                                     alpha = 0.3f
                                 )
-                            ),
-                            border = BorderStroke(
-                                width = 3.dp,
-                                color = Color.Black
-                            ),
-                            modifier = Modifier
+                            ), border = BorderStroke(
+                                width = 3.dp, color = Color.Black
+                            ), modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
                         ) {
-                            Column(modifier = Modifier.padding(12.dp)) {
-                                Text(
-                                    text = "LenZ Admin ID",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 16.sp
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Shield,
+                                    contentDescription = "Admin ID",
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color.Black
                                 )
-                                Text(
-                                    text = admin.adminId.toString(),
-                                    fontSize = 14.sp,
-                                    color = Color.DarkGray
-                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Column {
+                                    Text(
+                                        text = "LenZ Admin ID",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
+                                    )
+                                    Text(
+                                        text = admin.adminId.toString(),
+                                        fontSize = 14.sp,
+                                        color = Color.DarkGray
+                                    )
+                                }
                             }
                         }
 
@@ -129,8 +145,7 @@ fun AdminProfile(
                                     )
                                 ),
                                 border = BorderStroke(
-                                    width = 3.dp,
-                                    color = Color.Gray
+                                    width = 3.dp, color = Color.Gray
                                 ),
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -138,11 +153,20 @@ fun AdminProfile(
                                     .padding(vertical = 4.dp)
                             ) {
                                 Column(modifier = Modifier.padding(12.dp)) {
-                                    Text(
-                                        text = "Auth Token",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 16.sp
-                                    )
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(
+                                            imageVector = Icons.Default.Key,
+                                            contentDescription = "Auth Token",
+                                            modifier = Modifier.size(24.dp),
+                                            tint = Color.Gray
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = "Auth Token",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp
+                                        )
+                                    }
                                     if (isLoading) {
                                         LinearProgressIndicator(
                                             modifier = Modifier.padding(10.dp)
@@ -165,8 +189,7 @@ fun AdminProfile(
                                     )
                                 ),
                                 border = BorderStroke(
-                                    width = 3.dp,
-                                    color = Color.Red.copy(alpha = 0.5f)
+                                    width = 3.dp, color = Color.Red.copy(alpha = 0.4f)
                                 ),
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -188,7 +211,8 @@ fun AdminProfile(
                                                 .padding(11.dp)
                                                 .clickable { isLoading = true },
                                             imageVector = Icons.Default.Refresh,
-                                            contentDescription = "Refresh Auth Token"
+                                            contentDescription = "Refresh Auth Token",
+                                            tint = Color.DarkGray
                                         )
                                     }
                                 }
@@ -197,43 +221,88 @@ fun AdminProfile(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        Text(
-                            text = "Address",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        Row(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = "Address",
+                                modifier = Modifier.size(28.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Address",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         with(admin.address) {
-                            AdminInfoCard(
-                                title = "Line 1",
-                                value = line1
+                            AdminInfoCardWithIcon(
+                                title = "Line 1", value = line1, icon = Icons.Default.Home
                             )
-                            AdminInfoCard(
-                                title = "Line 2",
-                                value = line2
+                            AdminInfoCardWithIcon(
+                                title = "Line 2", value = line2, icon = Icons.Default.Home
                             )
-                            AdminInfoCard(
+                            AdminInfoCardWithIcon(
                                 title = "Landmark",
-                                value = landmark
+                                value = landmark,
+                                icon = Icons.Default.LocationOn
                             )
-                            AdminInfoCard(
-                                title = "City",
-                                value = city
+                            AdminInfoCardWithIcon(
+                                title = "City", value = city, icon = Icons.Default.LocationCity
                             )
-                            AdminInfoCard(
-                                title = "State",
-                                value = state
+                            AdminInfoCardWithIcon(
+                                title = "State", value = state, icon = Icons.Default.LocationCity
                             )
-                            AdminInfoCard(
-                                title = "Pin Code",
-                                value = pinCode
+                            AdminInfoCardWithIcon(
+                                title = "Pin Code", value = pinCode, icon = Icons.Default.Pin
                             )
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun AdminInfoCardWithIcon(
+    title: String, value: String, icon: ImageVector
+) {
+    Card(
+        shape = RoundedCornerShape(8.dp), colors = CardDefaults.cardColors(
+            containerColor = Color.LightGray.copy(
+                alpha = 0.3f
+            )
+        ), border = BorderStroke(
+            width = 1.dp, color = Color.Gray.copy(alpha = 0.5f)
+        ), modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                Text(
+                    text = title, fontWeight = FontWeight.Bold, fontSize = 16.sp
+                )
+                Text(
+                    text = value, fontSize = 14.sp, color = Color.DarkGray
+                )
             }
         }
     }

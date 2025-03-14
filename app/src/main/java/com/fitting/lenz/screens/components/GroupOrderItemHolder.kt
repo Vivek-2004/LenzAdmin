@@ -76,12 +76,9 @@ fun GroupOrderItemHolder(
     }
 
     PullToRefreshBox(
-        state = pullToRefreshState,
-        isRefreshing = isRefreshing,
-        onRefresh = {
+        state = pullToRefreshState, isRefreshing = isRefreshing, onRefresh = {
             isRefreshing = true
-        },
-        modifier = Modifier
+        }, modifier = Modifier
             .fillMaxSize()
             .background(colorScheme.bgColor.copy(alpha = 0.1f))
     ) {
@@ -92,17 +89,21 @@ fun GroupOrderItemHolder(
                 .fillMaxSize()
                 .background(Color.LightGray)
                 .drawBehind {
-                    val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
-                    val offset = listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
-                    val scrollbarHeight = listState.layoutInfo.visibleItemsInfo.size * elementHeight
-                    drawRect(
-                        color = colorScheme.compColor.copy(alpha = 0.5f),
-                        topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
-                        size = Size(scrollBarWidth.toPx(), scrollbarHeight)
-                    )
+
+                    if (listState.layoutInfo.totalItemsCount > 0) {
+                        val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
+                        val offset =
+                            listState.layoutInfo.visibleItemsInfo.first().index * elementHeight
+                        val scrollbarHeight =
+                            listState.layoutInfo.visibleItemsInfo.size * elementHeight
+                        drawRect(
+                            color = colorScheme.compColor.copy(alpha = 0.5f),
+                            topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
+                            size = Size(scrollBarWidth.toPx(), scrollbarHeight)
+                        )
+                    }
                 }
-                .padding(end = scrollBarWidth + 8.dp, start = 8.dp)
-        ) {
+                .padding(end = scrollBarWidth + 8.dp, start = 8.dp)) {
             itemsIndexed(orderGroups.reversed()) { index, item ->
                 val selected by remember(selectedIds, forceReset) {
                     derivedStateOf {
@@ -115,7 +116,8 @@ fun GroupOrderItemHolder(
                     isItemSelected = selected,
                     colorScheme = colorScheme,
                     orderId = item.id,
-                    shopName = lenzViewModel.shopsList.filter { item.userId == it._id }[0].shopName,
+                    shopName = lenzViewModel.shopsList.firstOrNull { shop -> shop._id == item.userId }?.shopName
+                        ?: "Unknown Shop",
                     orderValue = item.finalAmount,
                     orderQuantity = item.orders.size,
                     orderTime = item.createdAt.toIST(),
@@ -125,24 +127,21 @@ fun GroupOrderItemHolder(
                     modifier = if (inSelectionMode) {
                         if (item.trackingStatus == "Work Completed") {
                             Modifier.clickable {
-                                selectedIds = if (selected) selectedIds - item.id   else selectedIds + item.id
+                                selectedIds =
+                                    if (selected) selectedIds - item.id else selectedIds + item.id
                             }
                         } else {
                             Modifier
                         }
                     } else {
-                        Modifier.combinedClickable(
-                            onClick = {
-                                navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
-                            },
-                            onLongClick = {
-                                if (item.trackingStatus == "Work Completed") {
-                                    selectedIds = selectedIds + item.id
-                                }
+                        Modifier.combinedClickable(onClick = {
+                            navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
+                        }, onLongClick = {
+                            if (item.trackingStatus == "Work Completed") {
+                                selectedIds = selectedIds + item.id
                             }
-                        )
-                    }
-                )
+                        })
+                    })
                 Spacer(modifier = Modifier.height(3.dp))
             }
         }
