@@ -94,69 +94,63 @@ fun FittingEdit(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false }, title = {
-            Text(
-                text = "Confirm Price Update", fontWeight = FontWeight.Bold, fontSize = 18.sp
-            )
-        }, text = {
-            Text(
-                text = "Are you sure you want to update the fitting charges? This action cannot be undone.",
-                fontSize = 15.sp
-            )
-        }, confirmButton = {
-            TextButton(
-                onClick = {
-                    isUpdating = true
-                    showDialog = false
-                }, colors = ButtonDefaults.textButtonColors(
-                    contentColor = colorScheme.compColor
-                )
-            ) {
                 Text(
-                    text = "Confirm", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    text = "Confirm Price Update", fontWeight = FontWeight.Bold, fontSize = 18.sp
                 )
-            }
-        }, dismissButton = {
-            TextButton(
-                onClick = { showDialog = false }, colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color.Gray
-                )
-            ) {
+            }, text = {
                 Text(
-                    text = "Cancel", fontSize = 16.sp
+                    text = "Are you sure you want to update the fitting charges? This action cannot be undone.",
+                    fontSize = 15.sp
                 )
-            }
-        }, containerColor = colorScheme.bgColor, shape = RoundedCornerShape(16.dp)
+            }, confirmButton = {
+                TextButton(
+                    onClick = {
+                        isUpdating = true
+                        showDialog = false
+                    }, colors = ButtonDefaults.textButtonColors(
+                        contentColor = colorScheme.compColor
+                    )
+                ) {
+                    Text(
+                        text = "Confirm", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }, dismissButton = {
+                TextButton(
+                    onClick = { showDialog = false }, colors = ButtonDefaults.textButtonColors(
+                        contentColor = Color.Gray
+                    )
+                ) {
+                    Text(
+                        text = "Cancel", fontSize = 16.sp
+                    )
+                }
+            }, containerColor = colorScheme.bgColor, shape = RoundedCornerShape(16.dp)
         )
     }
 
-    if (isRefreshing) {
-        LaunchedEffect(Unit) {
-            withContext(Dispatchers.IO) {
-                lenzViewModel.getFittingCharges()
-            }
-            delay(1500L)
-            isRefreshing = false
-        }
+    LaunchedEffect(isRefreshing) {
+        if (!isRefreshing) return@LaunchedEffect
+        lenzViewModel.getFittingCharges()
+        delay(1500L)
+        isRefreshing = false
     }
 
-    if (isUpdating) {
-        LaunchedEffect(Unit) {
-            withContext(Dispatchers.IO) {
-                lenzViewModel.updateFittingCharges()
+    LaunchedEffect(isUpdating) {
+        if (!isUpdating) return@LaunchedEffect
+        lenzViewModel.updateFittingCharges()
+        delay(1500L)
+        isUpdating = false
+        if (fittingUpdateConfirmation) {
+            updateSuccess = true
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    context, "Fitting charges updated successfully", Toast.LENGTH_SHORT
+                ).show()
+                fittingUpdateConfirmation = false
             }
-            delay(1500L)
-            isUpdating = false
-            if (fittingUpdateConfirmation) {
-                updateSuccess = true
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        context, "Fitting charges updated successfully", Toast.LENGTH_SHORT
-                    ).show()
-                    fittingUpdateConfirmation = false
-                }
-                delay(3000L)
-                updateSuccess = false
-            }
+            delay(3000L)
+            updateSuccess = false
         }
     }
 
@@ -360,7 +354,7 @@ fun ExpandableCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onExpandToggle() }  // Ensure this is correctly set
-                .padding(16.dp),
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -392,7 +386,6 @@ fun ExpandableCard(
                 }
             }
 
-            // Expandable content
             AnimatedVisibility(
                 visibleState = transitionState,
                 enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),

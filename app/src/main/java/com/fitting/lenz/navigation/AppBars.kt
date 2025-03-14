@@ -1,29 +1,47 @@
 package com.fitting.lenz.navigation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.material3.TopAppBar
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
-    colorScheme: ColorSchemeModel,
     navController: NavController,
     currentScreenName: String
 ) {
@@ -40,35 +58,32 @@ fun TopAppBar(
     }
     var showNavigationIcon by remember { mutableStateOf(false) }
     showNavigationIcon = (
-                    title != NavigationDestination.Orders.name &&
+            title != NavigationDestination.Orders.name &&
                     title != NavigationDestination.Shops.name &&
                     title != "Edit Charges" &&
                     title != NavigationDestination.Admin.name
             )
     TopAppBar(
-        modifier = Modifier.background(colorScheme.bgColor),
         title = {
-            Column {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(
-                            end = if (showNavigationIcon) 50.dp else 20.dp
-                        ),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = title,
-                        color = colorScheme.compColor,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 33.sp
-                    )
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        end = if (showNavigationIcon) 50.dp else 20.dp
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 33.sp,
+                    color = Color.LightGray
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White,
-            titleContentColor = Color.Black
+            containerColor = Color.DarkGray
         ),
         navigationIcon = {
             if (showNavigationIcon) {
@@ -77,10 +92,10 @@ fun TopAppBar(
                     onClick = { navController.popBackStack() }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "Back Button",
-                        tint = colorScheme.compColor,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        tint = Color.White
                     )
                 }
             }
@@ -91,7 +106,6 @@ fun TopAppBar(
 
 @Composable
 fun BottomNavigationBar(
-    colorScheme: ColorSchemeModel,
     navController: NavController,
     onTitleChange: (String) -> Unit
 ) {
@@ -104,17 +118,16 @@ fun BottomNavigationBar(
     )
 
     Column(modifier = Modifier.wrapContentSize()) {
-        HorizontalDivider(
-            color = colorScheme.compColor.copy(alpha = 0.55f),
-            thickness = 2.dp
-        )
+        HorizontalDivider(thickness = 2.dp, color = Color.Gray)
+
         NavigationBar(
             modifier = Modifier
                 .navigationBarsPadding()
                 .height(80.dp),
-            containerColor = Color.White
+            containerColor = Color.DarkGray
         ) {
             items.forEach { screen ->
+                val selected = currentDestination?.route == screen
                 val icon = when (screen) {
                     NavigationDestination.Orders.name -> painterResource(R.drawable.orders)
                     NavigationDestination.Shops.name -> painterResource(R.drawable.shops)
@@ -123,11 +136,11 @@ fun BottomNavigationBar(
                     else -> painterResource(R.drawable.orders)
                 }
                 NavigationBarItem(
-                    selected = currentDestination?.route == screen,
+                    selected = selected,
                     interactionSource = remember { MutableInteractionSource() },
                     icon = {
                         Icon(
-                            modifier = Modifier.size(30.dp),
+                            modifier = if (selected) Modifier.size(30.dp) else Modifier.size(25.dp),
                             painter = icon,
                             contentDescription = screen,
                             tint = Color.Unspecified
@@ -136,9 +149,9 @@ fun BottomNavigationBar(
                     label = {
                         Text(
                             text = screen,
-                            fontSize = 14.sp,
-                            color = colorScheme.compColor,
-                            fontWeight = FontWeight.Bold
+                            fontSize = if (selected) 16.sp else 13.5.sp,
+                            fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Bold,
+                            color = if (selected) Color.White else Color.LightGray
                         )
                     },
                     onClick = {
@@ -156,7 +169,7 @@ fun BottomNavigationBar(
                         unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         selectedTextColor = MaterialTheme.colorScheme.primary,
                         unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        indicatorColor = Color.LightGray,
+                        indicatorColor = Color.LightGray.copy(alpha = 0.7f),
                     )
                 )
             }

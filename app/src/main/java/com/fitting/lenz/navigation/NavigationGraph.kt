@@ -34,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.AdminProfile
-import com.fitting.lenz.screens.details_screen.OrderDetails
 import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
 import com.fitting.lenz.screens.Shops
@@ -42,6 +41,7 @@ import com.fitting.lenz.screens.components.ShopOrdersHolder
 import com.fitting.lenz.screens.components.SingleOrderItemHolder
 import com.fitting.lenz.screens.details_screen.FittingEdit
 import com.fitting.lenz.screens.details_screen.History
+import com.fitting.lenz.screens.details_screen.OrderDetails
 import com.fitting.lenz.screens.details_screen.ShiftingEdit
 import com.fitting.lenz.screens.details_screen.ShopDetails
 
@@ -80,7 +80,6 @@ fun MyApp(
             topBar = {
                 Column {
                     TopAppBar(
-                        colorScheme = colorScheme,
                         navController = navController,
                         currentScreenName = currentScreen ?: ""
                     )
@@ -101,7 +100,6 @@ fun MyApp(
                     ) + fadeOut(animationSpec = tween(durationMillis = 500))
                 ) {
                     BottomNavigationBar(
-                        colorScheme = colorScheme,
                         navController = navController,
                         onTitleChange = {
                             currentScreen = it
@@ -159,8 +157,9 @@ fun MyApp(
                     )
                 }
 
-                composable(NavigationDestination.SingleOrderItemHolder.name + "/{groupOrderId}" ) { backStackEntry ->
-                    val groupOrderId: String = backStackEntry.arguments?.getString("groupOrderId") ?: ""
+                composable(NavigationDestination.SingleOrderItemHolder.name + "/{groupOrderId}") { backStackEntry ->
+                    val groupOrderId: String =
+                        backStackEntry.arguments?.getString("groupOrderId") ?: ""
                     SingleOrderItemHolder(
                         colorScheme = colorScheme,
                         lenzViewModel = lenzViewModelInstance,
@@ -180,7 +179,7 @@ fun MyApp(
                     )
                 }
 
-                composable(NavigationDestination.ShopOrdersHolder.name + "/{shopId}" ) { backStackEntry ->
+                composable(NavigationDestination.ShopOrdersHolder.name + "/{shopId}") { backStackEntry ->
                     ShopOrdersHolder(
                         lenzViewModel = lenzViewModelInstance,
                         colorScheme = colorScheme,
@@ -189,7 +188,7 @@ fun MyApp(
                     )
                 }
 
-                composable(NavigationDestination.History.name + "/{shopId}" ) { backStackEntry ->
+                composable(NavigationDestination.History.name + "/{shopId}") { backStackEntry ->
                     History(
                         colorScheme = colorScheme,
                         lenzViewModel = lenzViewModelInstance,
@@ -198,7 +197,7 @@ fun MyApp(
                     )
                 }
 
-                composable(NavigationDestination.ShopDetails.name + "/{shopId}" ) { backStackEntry ->
+                composable(NavigationDestination.ShopDetails.name + "/{shopId}") { backStackEntry ->
                     ShopDetails(
                         lenzViewModel = lenzViewModelInstance,
                         colorScheme = colorScheme,
