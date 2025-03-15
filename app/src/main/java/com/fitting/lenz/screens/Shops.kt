@@ -122,7 +122,6 @@ fun Shops(
                             navController.navigate(NavigationDestination.History.name + "/${shop._id}")
                         }
                     )
-                    Spacer(Modifier.height(5.dp))
                 }
             }
         }

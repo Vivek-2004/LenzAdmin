@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +16,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.rounded.CreditCard
+import androidx.compose.material.icons.rounded.Email
+import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -36,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -50,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.formDate
+import com.fitting.lenz.models.Address
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.roundToTwoDecimalPlaces
 import kotlinx.coroutines.Dispatchers
@@ -129,18 +142,19 @@ fun ShopDetails(
                 Column {
                     Text(
                         text = "Current Distance: $distance km",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
                     )
+                    Spacer(Modifier.height(16.dp))
                     Text(
                         text = "Enter New Distance",
-                        fontSize = 19.sp
+                        fontSize = 16.sp
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = tempDistance,
                         onValueChange = { tempDistance = it },
-                        keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.NumberPassword
                         ),
                         singleLine = true,
@@ -155,7 +169,7 @@ fun ShopDetails(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    if (tempDistance.toInt() < 1 || tempDistance.toInt() > 10) {
+                    if (tempDistance.isEmpty() || tempDistance.toIntOrNull() == null || tempDistance.toInt() < 1 || tempDistance.toInt() > 10) {
                         errorMessage = "Enter Distance Between 1 and 10 kms"
                         tempDistance = ""
                     } else {
@@ -168,7 +182,7 @@ fun ShopDetails(
                             .show()
                     }
                 }) {
-                    Text(text = "Update", fontSize = 14.5.sp)
+                    Text(text = "Update", fontSize = 14.sp)
                 }
             },
             dismissButton = {
@@ -177,7 +191,7 @@ fun ShopDetails(
                     tempDistance = ""
                     showDistanceDialog = false
                 }) {
-                    Text(text = "Cancel", fontSize = 14.5.sp)
+                    Text(text = "Cancel", fontSize = 14.sp)
                 }
             }
         )
@@ -195,19 +209,20 @@ fun ShopDetails(
                 Column {
                     Text(
                         text = "Current Credit Amount: ₹$creditBalance",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
                     )
+                    Spacer(Modifier.height(16.dp))
                     Text(
                         text = "Enter Amount Received",
-                        fontSize = 19.sp
+                        fontSize = 16.sp
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = tempAmountPaid,
                         onValueChange = { tempAmountPaid = it },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.NumberPassword
                         ),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -239,7 +254,7 @@ fun ShopDetails(
                         ).show()
                     }
                 }) {
-                    Text(text = "Update", fontSize = 14.5.sp)
+                    Text(text = "Update", fontSize = 14.sp)
                 }
             },
             dismissButton = {
@@ -248,7 +263,7 @@ fun ShopDetails(
                     errorMessage = ""
                     showCreditMinusDialog = false
                 }) {
-                    Text(text = "Cancel", fontSize = 14.5.sp)
+                    Text(text = "Cancel", fontSize = 14.sp)
                 }
             }
         )
@@ -266,19 +281,20 @@ fun ShopDetails(
                 Column {
                     Text(
                         text = "Current Credit Amount: ₹$creditBalance",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
                     )
+                    Spacer(Modifier.height(16.dp))
                     Text(
                         text = "Enter Credit Amount",
-                        fontSize = 19.sp
+                        fontSize = 16.sp
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = tempAmountPaid,
                         onValueChange = { tempAmountPaid = it },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.NumberPassword
                         ),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -310,7 +326,7 @@ fun ShopDetails(
                         ).show()
                     }
                 }) {
-                    Text(text = "Update", fontSize = 14.5.sp)
+                    Text(text = "Update", fontSize = 14.sp)
                 }
             },
             dismissButton = {
@@ -319,7 +335,7 @@ fun ShopDetails(
                     errorMessage = ""
                     showCreditPlusDialog = false
                 }) {
-                    Text(text = "Cancel", fontSize = 14.5.sp)
+                    Text(text = "Cancel", fontSize = 14.sp)
                 }
             }
         )
@@ -329,282 +345,516 @@ fun ShopDetails(
         modifier = Modifier
             .fillMaxSize()
             .background(color = colorScheme.bgColor)
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
+    ) {
+        // Shop Header with Name and Creation Date
+        ShopHeader(shop.shopName, shop.createdAt.formDate(), colorScheme.compColor)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Contact Information Card
+        ContactInfoCard(
+            shop.name,
+            shop.userId.toString(),
+            shop.phone,
+            shop.alternatePhone,
+            shop.email,
+            colorScheme.compColor
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Distance Information Card with Edit Button
+        DistanceCard(
+            distance = distance,
+            colorScheme = colorScheme,
+            onEditClick = { showDistanceDialog = true }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Credit Balance Card with Add/Subtract buttons
+        CreditBalanceCard(
+            creditBalance = creditBalance,
+            colorScheme = colorScheme,
+            onMinusClick = {
+                if (creditBalance == 0.0) {
+                    Toast.makeText(context, "No Pending Payments", Toast.LENGTH_SHORT).show()
+                } else {
+                    showCreditMinusDialog = true
+                }
+            },
+            onPlusClick = { showCreditPlusDialog = true }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Address Information Card
+        AddressCard(shop.address, colorScheme.compColor)
+    }
+}
+
+@Composable
+fun ShopHeader(shopName: String, creationDate: String, textColor: Color) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = shopName,
+            color = textColor,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 32.sp
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = "Member Since $creationDate",
+            color = textColor.copy(alpha = 0.7f),
+            textAlign = TextAlign.Center,
+            fontSize = 14.sp
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 32.dp),
+            thickness = 2.dp,
+            color = textColor.copy(alpha = 0.2f)
+        )
+    }
+}
+
+@Composable
+fun ContactInfoCard(
+    dealerName: String,
+    userId: String,
+    phone: String,
+    alternatePhone: String,
+    email: String,
+    textColor: Color
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = shop.shopName,
-                color = colorScheme.compColor,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp
+            // Person Info Row
+            InfoRow(
+                icon = Icons.Rounded.Person,
+                iconTint = textColor,
+                title = "Dealer:",
+                value = dealerName,
+                textColor = textColor
             )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 30.dp),
-            horizontalAlignment = Alignment.End
-        ) {
-            Text(
-                text = "Member Since ${shop.createdAt.formDate()}",
-                color = colorScheme.compColor,
-                textAlign = TextAlign.End,
-                fontSize = 12.sp
-            )
-        }
-        (15..185 step 13).forEach { padding ->
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = padding.dp),
-                thickness = 4.dp,
-                color = Color.LightGray
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp)
-        ) {
-            Text(
-                modifier = Modifier.padding(top = 6.dp, bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Dealer: ")
-                    }
-                    append(shop.name)
-                },
-                fontSize = 20.sp,
-                color = colorScheme.compColor
-            )
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("User ID: ")
-                    }
-                    append(shop.userId.toString())
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Primary Phone: ")
-                    }
-                    append("+91-${shop.phone.takeLast(10)}")
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
-            if (shop.alternatePhone.replace("+91", "").isNotEmpty()) {
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // User ID Row
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(textColor.copy(alpha = 0.1f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "#",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = textColor
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
                 Text(
-                    modifier = Modifier.padding(bottom = 3.dp),
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Alternate Phone: ")
-                        }
-                        append("+91-${shop.alternatePhone.takeLast(10)}")
-                    },
+                    text = "User ID:",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = textColor.copy(alpha = 0.7f)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = userId,
                     fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider(thickness = 1.dp, color = textColor.copy(alpha = 0.1f))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Primary Phone Row
+            InfoRow(
+                icon = Icons.Rounded.Phone,
+                iconTint = textColor,
+                title = "Primary :",
+                value = phone.takeLast(10),
+                textColor = textColor
+            )
+
+            // Alternate Phone Row (if exists)
+            if (alternatePhone.replace("+91", "").isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                InfoRow(
+                    icon = Icons.Rounded.Phone,
+                    iconTint = textColor.copy(alpha = 0.6f),
+                    title = "Alternate :",
+                    value = alternatePhone.takeLast(10),
+                    textColor = textColor
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Email Row
+            InfoRow(
+                icon = Icons.Rounded.Email,
+                iconTint = textColor,
+                title = "",
+                value = email,
+                textColor = textColor
+            )
+        }
+    }
+}
+
+@Composable
+fun InfoRow(
+    icon: ImageVector,
+    iconTint: Color,
+    title: String,
+    value: String,
+    textColor: Color
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(iconTint.copy(alpha = 0.1f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = iconTint,
+                modifier = Modifier.size(18.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        if (title.isNotEmpty()) {
+            Text(
+                text = title,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = textColor.copy(alpha = 0.7f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        if (title == "Dealer:") {
+            Text(
+                text = value,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = textColor
+            )
+        } else {
+            Text(
+                text = value,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = textColor
+            )
+        }
+    }
+}
+
+@Composable
+fun DistanceCard(
+    distance: String,
+    colorScheme: ColorSchemeModel,
+    onEditClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(colorScheme.compColor.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.LocationOn,
+                    contentDescription = "Distance",
+                    tint = colorScheme.compColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Distance",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = colorScheme.compColor.copy(alpha = 0.7f)
+                )
+
+                Text(
+                    text = "$distance km",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
                     color = colorScheme.compColor
                 )
             }
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Mail: ")
-                    }
-                    append(shop.email)
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(
+
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-                horizontalArrangement = Arrangement.Center
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+                    .clickable(onClick = onEditClick),
+                contentAlignment = Alignment.Center
             ) {
-                Row(
+                Icon(
+                    imageVector = Icons.Default.Create,
+                    contentDescription = "Edit Distance",
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CreditBalanceCard(
+    creditBalance: Double,
+    colorScheme: ColorSchemeModel,
+    onMinusClick: () -> Unit,
+    onPlusClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(end = 5.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.LightGray)
-                        .weight(1.7f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(15.dp))
-                    Text(
-                        text = buildAnnotatedString {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("Distance: ")
-                            }
-                            append("$distance km")
-                        },
-                        fontSize = 20.sp,
-                        color = colorScheme.compColor
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.Gray)
-                        .weight(0.3f)
-                        .clickable {
-                            showDistanceDialog = true
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(colorScheme.compColor.copy(alpha = 0.1f)),
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Create,
-                        contentDescription = "Edit Distance"
+                        imageVector = Icons.Rounded.CreditCard,
+                        contentDescription = "Credit Balance",
+                        tint = colorScheme.compColor,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(end = 5.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.LightGray)
-                        .weight(1.6f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(15.dp))
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    Text(
+                        text = "Credit Balance",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = colorScheme.compColor.copy(alpha = 0.7f)
+                    )
+
                     Text(
                         text = buildAnnotatedString {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("Credit: ")
-                            }
                             withStyle(style = SpanStyle(fontFamily = FontFamily.SansSerif)) {
                                 append("₹")
                             }
                             append(creditBalance.roundToTwoDecimalPlaces().toString())
                         },
-                        fontSize = 20.sp
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (creditBalance > 0) Color(0xFF2E7D32) else colorScheme.compColor
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.Gray)
-                        .weight(0.35f)
-                        .clickable {
-                            if (creditBalance == 0.0) {
-                                Toast.makeText(context, "No Pending Payments", Toast.LENGTH_SHORT)
-                                    .show()
-                            } else {
-                                showCreditMinusDialog = true
-                            }
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        modifier = Modifier.size(32.dp),
-                        painter = painterResource(R.drawable.minus),
-                        contentDescription = "Minus Credit Amount",
-                        tint = Color.Red
-                    )
-                }
-                Spacer(modifier = Modifier.width(2.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.Gray)
-                        .weight(0.35f)
-                        .clickable {
-                            showCreditPlusDialog = true
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        modifier = Modifier.size(32.dp),
-                        painter = painterResource(R.drawable.plus),
-                        contentDescription = "Plus Credit Amount",
-                        tint = Color.Green
-                    )
-                }
-                Spacer(modifier = Modifier.width(8.dp))
             }
-            Spacer(modifier = Modifier.height(18.dp))
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Address Line 1: ")
-                    }
-                    append(shop.address.line1)
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Address Line 2: ")
-                    }
-                    append(shop.address.line2)
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
+
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Landmark: ")
-                    }
-                    append(shop.address.landmark)
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("City: ")
-                    }
-                    append(shop.address.city)
-                },
-                fontSize = 16.sp,
-                color = colorScheme.compColor
-            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                ActionButton(
+                    color = Color(0xFFD32F2F),
+                    onClick = onMinusClick
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.minus),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                ActionButton(
+                    color = Color(0xFF2E7D32),
+                    onClick = onPlusClick
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.plus),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ActionButton(
+    color: Color,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .clip(CircleShape)
+            .background(color)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun AddressCard(address: Address, textColor: Color) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(textColor.copy(alpha = 0.1f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.LocationOn,
+                        contentDescription = "Address",
+                        tint = textColor,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = "Shop Address",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            AddressField("Address Line 1", address.line1, textColor)
             Spacer(modifier = Modifier.height(8.dp))
+            AddressField("Address Line 2", address.line2, textColor)
+            Spacer(modifier = Modifier.height(8.dp))
+            AddressField("Landmark", address.landmark, textColor)
+            Spacer(modifier = Modifier.height(8.dp))
+            AddressField("City", address.city, textColor)
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             Text(
-                modifier = Modifier.padding(bottom = 3.dp),
-                text = "${shop.address.state}, ${shop.address.pinCode}",
+                text = "${address.state}, ${address.pinCode}",
                 fontSize = 16.sp,
-                color = colorScheme.compColor,
-                fontWeight = FontWeight.ExtraBold
+                fontWeight = FontWeight.ExtraBold,
+                color = textColor,
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
+    }
+}
+
+@Composable
+fun AddressField(label: String, value: String, textColor: Color) {
+    Column(modifier = Modifier.padding(start = 8.dp)) {
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            color = textColor.copy(alpha = 0.6f)
+        )
+
+        Text(
+            text = value,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = textColor
+        )
     }
 }
