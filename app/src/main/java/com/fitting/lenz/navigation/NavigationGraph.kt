@@ -34,6 +34,7 @@ import com.fitting.lenz.screens.Orders
 import com.fitting.lenz.screens.Shops
 import com.fitting.lenz.screens.components.ShopOrdersHolder
 import com.fitting.lenz.screens.components.SingleOrderItemHolder
+import com.fitting.lenz.screens.details_screen.ActiveOrders
 import com.fitting.lenz.screens.details_screen.FittingEdit
 import com.fitting.lenz.screens.details_screen.History
 import com.fitting.lenz.screens.details_screen.OrderDetails
@@ -182,6 +183,12 @@ fun MyApp(
                     lenzViewModel = lenzViewModelInstance,
                     colorScheme = colorScheme,
                     shopId = backStackEntry.arguments?.getString("shopId") ?: ""
+                )
+            }
+
+            composable(NavigationDestination.ActiveOrders.name) {
+                ActiveOrders(
+                    lenzViewModel = lenzViewModelInstance
                 )
             }
         }

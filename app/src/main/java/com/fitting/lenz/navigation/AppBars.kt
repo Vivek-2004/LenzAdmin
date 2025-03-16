@@ -54,6 +54,7 @@ fun TopAppBar(
         "ShopOrdersHolder/{shopId}" -> "Pending Orders"
         "History/{shopId}" -> "Order History"
         "ShopDetails/{shopId}" -> "Shop Details"
+        "ActiveOrders" -> "Active Orders"
         else -> currentScreenName
     }
     var showNavigationIcon by remember { mutableStateOf(false) }

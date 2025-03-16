@@ -20,10 +20,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -52,7 +54,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -64,6 +65,7 @@ import com.fitting.lenz.CustomTimerFAB
 import com.fitting.lenz.LenzViewModel
 import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
+import com.fitting.lenz.navigation.NavigationDestination
 import com.fitting.lenz.screens.components.GroupOrderItemHolder
 import kotlinx.coroutines.delay
 
@@ -116,6 +118,7 @@ fun Orders(
         totalDeliveryChargeCollected += orderGroups.find { id == it.id }?.deliveryCharge ?: 0
     }
 
+    // Handle response codes
     if (responseCode == 200) {
         Toast.makeText(context, "Pickup Initiated with Charge  ₹$amount", Toast.LENGTH_SHORT).show()
         responseCode = -1
@@ -170,75 +173,127 @@ fun Orders(
                 tempAmount = ""
                 forceReset = !forceReset
             },
-            title = { Text(text = "Set Delivery Charge") },
+            title = {
+                Text(
+                    text = "Set Delivery Charge",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+            },
             text = {
-                Column {
-                    Text(
-                        text = "Total Charge Collected : ₹$totalDeliveryChargeCollected",
-                        fontSize = 13.5.sp,
-                        color = Color("#38b000".toColorInt())
-                    )
-                    Text(
-                        text = "Pickup Charge Paid : ₹${totalDeliveryChargeCollected * 40 / 100}",
-                        fontSize = 13.5.sp,
-                        color = Color.Red
-                    )
-                    Text(
-                        text = "Remaining Margin : ₹${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100)}",
-                        fontSize = 13.5.sp,
-                        color = Color.Gray
-                    )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp),
+                        elevation = CardDefaults.cardElevation(4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(6.dp)
+                        ) {
+                            Text(
+                                text = "Total Charge Collected: ₹$totalDeliveryChargeCollected",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color("#38b000".toColorInt())
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Pickup Charge Paid: ₹${totalDeliveryChargeCollected * 40 / 100}",
+                                fontSize = 13.sp,
+                                color = Color.Red
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Remaining Margin: ₹${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100)}",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.DarkGray
+                            )
+                        }
+                    }
+
                     Text(
                         text = "Set Order Delivery Amount:",
-                        fontSize = 15.sp
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
-                    Spacer(Modifier.height(8.dp))
+
                     OutlinedTextField(
                         value = tempAmount,
                         onValueChange = { tempAmount = it },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.NumberPassword
                         ),
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("Enter amount") },
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
                     )
-                    Text(
-                        text = errorMessage,
-                        fontSize = 12.sp,
-                        color = Color.Red
-                    )
+
+                    if (errorMessage.isNotEmpty()) {
+                        Text(
+                            text = errorMessage,
+                            fontSize = 12.sp,
+                            color = Color.Red,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
                 }
             },
             confirmButton = {
-                TextButton(onClick = {
-                    val temp = tempAmount.toDoubleOrNull() ?: 0.0
-                    if (temp <= 0.0 || temp > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100))) {
-                        errorMessage =
-                            "Enter Valid Delivery Charge between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100)}"
-                        tempAmount = ""
-                    } else {
-                        amount = temp
-                        tempAmount = ""
-                        callForPickup = true
-                        showDialog = false
-                        errorMessage = ""
-                    }
-                }) {
-                    Text(text = "Confirm", fontSize = 16.sp)
+                TextButton(
+                    onClick = {
+                        val temp = tempAmount.toDoubleOrNull() ?: 0.0
+                        if (temp <= 0.0 || temp > (totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100))) {
+                            errorMessage =
+                                "Enter Valid Delivery Charge between 1 and ${totalDeliveryChargeCollected - (totalDeliveryChargeCollected * 40 / 100)}"
+                            tempAmount = ""
+                        } else {
+                            amount = temp
+                            tempAmount = ""
+                            callForPickup = true
+                            showDialog = false
+                            errorMessage = ""
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(
+                        text = "Confirm",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = colorScheme.compColor
+                    )
                 }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    errorMessage = ""
-                    tempAmount = ""
-                    showDialog = false
-                    forceReset = !forceReset
-                }) {
-                    Text(text = "Cancel", fontSize = 16.sp)
+                TextButton(
+                    onClick = {
+                        errorMessage = ""
+                        tempAmount = ""
+                        showDialog = false
+                        forceReset = !forceReset
+                    }
+                ) {
+                    Text(
+                        text = "Cancel",
+                        fontSize = 16.sp,
+                        color = Color.Gray
+                    )
                 }
-            }
+            },
+            containerColor = Color.White,
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
         )
     }
+
     PullToRefreshBox(
         state = pullToRefreshState,
         isRefreshing = isRefreshing,
@@ -247,83 +302,152 @@ fun Orders(
         },
         modifier = Modifier
             .fillMaxSize()
-            .background(colorScheme.bgColor.copy(0.1f))
+            .background(Color.White)
     ) {
         if (lenzViewModel.groupOrders.isEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(colorScheme.bgColor)
+                    .background(colorScheme.bgColor.copy(alpha = 0.05f))
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(100.dp),
-                        strokeWidth = 11.dp,
+                        modifier = Modifier.size(80.dp),
+                        strokeWidth = 8.dp,
+                        color = colorScheme.compColor
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        "Loading Orders...",
+                        fontSize = 16.sp,
                         color = Color.DarkGray
                     )
                 } else {
-                    Text("No Orders Found")
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.filter),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .padding(bottom = 16.dp),
+                        tint = Color.Gray
+                    )
+                    Text(
+                        "No Orders Found",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.DarkGray
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .clickable {
+                                isRefreshing = true
+                            }
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh",
+                            tint = colorScheme.compColor
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            "Refresh",
+                            color = colorScheme.compColor,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
         } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.LightGray)
+                    .background(Color(0xFFF5F5F5))
             ) {
-                Spacer(modifier = Modifier.height(4.dp))
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .padding(start = 13.dp, end = 13.dp, bottom = 6.dp, top = 4.dp),
-                    elevation = CardDefaults.cardElevation(16.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorScheme.bgColor
+                    ),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
                 ) {
-                    Column(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(60.dp)
-                            .background(color = colorScheme.bgColor),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             text = statusSelectedItem,
                             color = Color.DarkGray,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp
+                            fontSize = 20.sp
                         )
+
+                        if (inSelectionMode) {
+                            Text(
+                                text = "${selectedIds.size} Selected",
+                                color = colorScheme.compColor,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp
+                            )
+                        }
                     }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
 
                 if (orderGroups.isEmpty()) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             text = "No $statusSelectedItem",
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Gray
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             modifier = Modifier
                                 .wrapContentSize()
                                 .clickable {
                                     lenzViewModel.getGroupOrders()
-                                },
-                            horizontalArrangement = Arrangement.Center
+                                }
+                                .padding(8.dp)
+                                .background(
+                                    color = colorScheme.bgColor.copy(alpha = 0.1f),
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp)
+                                )
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "Refresh"
+                                contentDescription = "Refresh",
+                                tint = colorScheme.compColor
                             )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text("Click to Refresh")
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "Refresh",
+                                color = colorScheme.compColor,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
                     }
                 } else {
@@ -342,32 +466,30 @@ fun Orders(
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (lenzViewModel.groupOrders.filter {
+                if ( lenzViewModel.groupOrders.any {
                         it.trackingStatus == "Delivery Accepted" || it.trackingStatus == "Order Picked Up"
-                    }.isNotEmpty()) {
+                    }
+                ) {
                     FloatingActionButton(
                         onClick = {
-                            if (lenzViewModel.groupOrders.filter { it.trackingStatus == "Order Picked Up" }
-                                    .isNotEmpty()) {
-                                Toast.makeText(
-                                    context,
-                                    "Filter \"Order Picked Up\" from Menu",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                            statusSelectedItem = "Delivery Accepted"
+                            navController.navigate(NavigationDestination.ActiveOrders.name)
                         },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(horizontal = 80.dp, vertical = 50.dp),
+                        containerColor = Color(0xFF4CAF50),
+                        contentColor = Color.White,
+                        shape = CircleShape
                     ) {
                         Icon(
-                            modifier = Modifier.size(45.dp),
-                            painter = painterResource(R.drawable.delivery),
-                            contentDescription = null
+                            modifier = Modifier.size(26.dp),
+                            imageVector = Icons.Default.Pin,
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
                 }
+
                 if (selectedIds.isEmpty()) {
                     FloatingActionButton(
                         onClick = {
@@ -376,10 +498,14 @@ fun Orders(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(horizontal = 18.dp, vertical = 85.dp),
+                        containerColor = Color(0xFF2196F3),
+                        contentColor = Color.White,
+                        shape = CircleShape
                     ) {
                         Icon(
                             imageVector = Icons.Default.Call,
-                            contentDescription = null
+                            contentDescription = "Call for Pickup",
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 } else {
@@ -401,30 +527,43 @@ fun Orders(
                     },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(18.dp)
+                        .padding(18.dp),
+                    containerColor = colorScheme.compColor,
+                    contentColor = Color.White,
+                    shape = CircleShape
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.filter),
-                        contentDescription = "Tracking Status Filter"
+                        contentDescription = "Tracking Status Filter",
+                        modifier = Modifier.size(24.dp)
                     )
 
                     DropdownMenu(
                         modifier = Modifier
                             .wrapContentSize(Alignment.TopStart)
-                            .background(Color.LightGray),
+                            .background(Color.White),
                         expanded = filterExpanded,
                         onDismissRequest = { filterExpanded = false },
                     ) {
                         orderStates.forEach { orderStateItem ->
                             DropdownMenuItem(
                                 modifier = Modifier.background(
-                                    if (orderStateItem == statusSelectedItem) Color.Gray
-                                    else Color.Transparent
+                                    if (orderStateItem == statusSelectedItem)
+                                        Color.LightGray
+                                    else
+                                        Color.Transparent
                                 ),
                                 text = {
                                     Text(
                                         text = orderStateItem,
-                                        color = colorScheme.compColor
+                                        color = if (orderStateItem == statusSelectedItem)
+                                            colorScheme.compColor
+                                        else
+                                            Color.DarkGray,
+                                        fontWeight = if (orderStateItem == statusSelectedItem)
+                                            FontWeight.Bold
+                                        else
+                                            FontWeight.Normal
                                     )
                                 },
                                 onClick = {
