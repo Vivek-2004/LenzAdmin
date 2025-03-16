@@ -1,29 +1,29 @@
 package com.fitting.lenz.screens.components
 
-import android.graphics.Color.parseColor
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitting.lenz.models.ColorSchemeModel
@@ -42,114 +42,158 @@ fun GroupOrderItem(
     orderDate: String,
     isItemSelected: Boolean = false
 ) {
-    val selectionColor = remember(isItemSelected) {
-        if (isItemSelected) Color.Gray else colorScheme.bgColor
-    }
-
-    val statusCodeColor = when(orderStatus) {
-        "Order Placed For Pickup" -> MaterialTheme.colorScheme.onErrorContainer
-        "Pickup Accepted" -> Color.Blue
-        "Order Picked Up" -> Color.Green.copy(alpha = 0.5f)
-        "Order Received By Admin" -> Color(parseColor("#A020F0"))
-        "Work Completed" -> Color.Magenta
-        "Out For Delivery" -> Color.Blue.copy(alpha = 0.6f)
-        "Order Completed" -> Color.Green
+    val statusCodeColor = when (orderStatus) {
+        "Order Placed For Pickup" -> Color(0xFFFF6B6B)
+        "Pickup Accepted" -> Color(0xFF4EA8DE)
+        "Order Picked Up" -> Color(0xFF4BD37B)
+        "Order Received By Admin" -> Color(0xFFB160FF)
+        "Work Completed" -> Color(0xFFFF66D9)
+        "Out For Delivery" -> Color(0xFF3E8FFF)
+        "Order Completed" -> Color(0xFF22DD88)
         else -> colorScheme.compColor
     }
-    Row(
+
+    val bgColor by animateColorAsState(
+        targetValue = if (isItemSelected) Color(0xFF3E8FFF).copy(alpha = 0.1f) else Color.White,
+        animationSpec = tween(300),
+        label = "backgroundColorAnimation"
+    )
+
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(8.dp, RoundedCornerShape(30.dp))
-            .clip(RoundedCornerShape(30.dp))
-            .background(selectionColor)
-            .height(150.dp)
-            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(20.dp))
+            .background(bgColor)
     ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .width(7.dp)
+                .height(180.dp)
+                .clip(RoundedCornerShape(0.dp, 4.dp, 4.dp, 0.dp))
+                .background(statusCodeColor)
+        )
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 13.dp)
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp)
         ) {
+            Text(
+                text = "#$orderId",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Gray
+            )
+
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(.45f)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    text = "#$orderId",
+                    text = "${orderDate.substring(0, 5)} | $orderTime",
                     fontSize = 12.sp,
-                    color = colorScheme.compColor.copy(alpha = 0.6f),
-                    fontWeight = FontWeight.ExtraLight,
-                    fontStyle = FontStyle.Italic
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
                 )
             }
-            Spacer(modifier = Modifier.height(6.dp))
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = shopName,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(.65f),
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = shopName,
-                    fontSize = 18.sp,
-                    color = colorScheme.compColor,
-                    fontWeight = FontWeight.Bold
+                DetailItem(
+                    label = "Amount",
+                    value = "Rs.$orderValue"
                 )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 14.dp)
-                    .weight(2f)
-            ) {
-                Column(
+
+                DetailItem(
+                    label = "Quantity",
+                    value = "$orderQuantity items"
+                )
+
+                Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            if (paymentStatus == "Paid")
+                                Color(0xFF22DD88).copy(alpha = 0.15f)
+                            else
+                                Color(0xFFFF6B6B).copy(alpha = 0.15f)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = "Rs.$orderValue/- [$orderQuantity']",
-                        color = colorScheme.compColor,
-                        fontSize = 16.sp
-                    )
                     Text(
                         text = paymentStatus,
-                        color = if (paymentStatus == "Paid") Color.Green.copy(alpha = 0.6f)
-                        else Color.Red.copy(alpha = 0.6f),
-                        fontSize = 16.sp,
-                        fontStyle = FontStyle.Italic,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = "[${orderDate.substring(0,5)}] $orderTime",
-                        color = colorScheme.compColor,
-                        fontSize = 12.sp
-                    )
-
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = orderStatus,
-                        color = statusCodeColor,
-                        fontSize = 12.sp,
-                        fontFamily = FontFamily.SansSerif,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (paymentStatus == "Paid")
+                            Color(0xFF22DD88)
+                        else
+                            Color(0xFFFF6B6B)
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(statusCodeColor.copy(alpha = 0.12f))
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Text(
+                    text = orderStatus,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = statusCodeColor
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun DetailItem(
+    label: String,
+    value: String
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = value,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Light,
+            color = Color.Gray
+        )
     }
 }

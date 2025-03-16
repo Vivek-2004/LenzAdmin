@@ -308,15 +308,16 @@ fun SingleOrderItemHolder(
                     }
                     .padding(end = scrollBarWidth + 8.dp, start = 8.dp)) {
                 itemsIndexed(singleGroupOrder.orders.reversed()) { index, item ->
-                    SingleOrderItem(colorScheme = colorScheme,
+                    SingleOrderItem(
+                        colorScheme = colorScheme,
                         orderId = item.id,
-                        shopName = lenzViewModel.shopsList.filter { item.userId == it._id }[0].shopName,
                         orderAmount = item.totalAmount,
                         orderDate = item.createdAt.formDate(),
                         orderTime = item.createdAt.toIST(),
                         onClick = {
                             navController.navigate(NavigationDestination.OrderDetails.name + "/${item.id}")
-                        })
+                        }
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }

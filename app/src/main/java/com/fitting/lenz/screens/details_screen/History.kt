@@ -102,7 +102,7 @@ fun History(
                 }.padding(start = 9.dp, end = scrollBarWidth + 9.dp )
         ) {
             itemsIndexed(shopOrdersList.reversed()) { index, item ->
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(9.dp))
                 GroupOrderItem(
                     colorScheme = colorScheme,
                     orderId = item.id,
@@ -117,7 +117,7 @@ fun History(
                         navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
                     }
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(9.dp))
             }
         }
     }
