@@ -25,6 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
@@ -118,7 +119,6 @@ fun Orders(
         totalDeliveryChargeCollected += orderGroups.find { id == it.id }?.deliveryCharge ?: 0
     }
 
-    // Handle response codes
     if (responseCode == 200) {
         Toast.makeText(context, "Pickup Initiated with Charge  ₹$amount", Toast.LENGTH_SHORT).show()
         responseCode = -1
@@ -129,7 +129,7 @@ fun Orders(
 
     LaunchedEffect(isLoading) {
         if (!isLoading) return@LaunchedEffect
-        delay(3000) // 3 seconds delay
+        delay(4000)
         isLoading = false
     }
 
@@ -317,18 +317,18 @@ fun Orders(
                     CircularProgressIndicator(
                         modifier = Modifier.size(80.dp),
                         strokeWidth = 8.dp,
-                        color = colorScheme.compColor
+                        color = Color.DarkGray
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         "Loading Orders...",
                         fontSize = 16.sp,
-                        color = Color.DarkGray
+                        color = Color.Gray
                     )
                 } else {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.filter),
-                        contentDescription = null,
+                        imageVector = Icons.Default.Error,
+                        contentDescription = "No Orders Found",
                         modifier = Modifier
                             .size(80.dp)
                             .padding(bottom = 16.dp),
@@ -341,28 +341,12 @@ fun Orders(
                         color = Color.DarkGray
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .clickable {
-                                isRefreshing = true
-                            }
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Refresh",
-                            tint = colorScheme.compColor
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            "Refresh",
-                            color = colorScheme.compColor,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                    Text(
+                        "Pull Down to Refresh",
+                        fontSize = 13.sp,
+                        color = colorScheme.compColor,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         } else {
@@ -466,7 +450,7 @@ fun Orders(
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                if ( lenzViewModel.groupOrders.any {
+                if (lenzViewModel.groupOrders.any {
                         it.trackingStatus == "Delivery Accepted" || it.trackingStatus == "Order Picked Up"
                     }
                 ) {
