@@ -1,45 +1,40 @@
 package com.fitting.lenz.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.fitting.lenz.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
     navController: NavController,
@@ -57,53 +52,51 @@ fun TopAppBar(
         "ActiveOrders" -> "Active Orders"
         else -> currentScreenName
     }
-    var showNavigationIcon by remember { mutableStateOf(false) }
-    showNavigationIcon = (
+
+    val showNavigationIcon = (
             title != NavigationDestination.Orders.name &&
                     title != NavigationDestination.Shops.name &&
                     title != "Edit Charges" &&
                     title != NavigationDestination.Admin.name
             )
-    TopAppBar(
-        title = {
-            Column(
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
+            .height(55.dp)
+            .background(Color.Black)
+    ) {
+        if (showNavigationIcon) {
+            IconButton(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        end = if (showNavigationIcon) 50.dp else 20.dp
-                    ),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .align(Alignment.CenterStart)
+                    .padding(start = 8.dp),
+                onClick = { navController.popBackStack() }
             ) {
-                Text(
-                    text = title,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 33.sp,
-                    color = Color.LightGray
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    contentDescription = "Back",
+                    modifier = Modifier.size(34.dp),
+                    tint = Color.White
                 )
             }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.DarkGray
-        ),
-        navigationIcon = {
-            if (showNavigationIcon) {
-                IconButton(
-                    modifier = Modifier.padding(start = 8.dp),
-                    onClick = { navController.popBackStack() }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Back Button",
-                        modifier = Modifier.fillMaxSize(),
-                        tint = Color.White
-                    )
-                }
-            }
         }
-    )
-}
 
+        Text(
+            text = title,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .padding(horizontal = if (showNavigationIcon) 64.dp else 24.dp),
+            fontWeight = FontWeight.Bold,
+            fontSize = 28.sp,
+            color = Color.White,
+            textAlign = TextAlign.Left,
+            fontFamily = FontFamily.Default
+        )
+    }
+}
 
 @Composable
 fun BottomNavigationBar(
@@ -117,15 +110,13 @@ fun BottomNavigationBar(
         NavigationDestination.Edit.name,
         NavigationDestination.Admin.name
     )
-
     Column(modifier = Modifier.wrapContentSize()) {
-        HorizontalDivider(thickness = 2.dp, color = Color.Gray)
-
+        HorizontalDivider(thickness = 1.dp, color = Color.DarkGray)
         NavigationBar(
             modifier = Modifier
                 .navigationBarsPadding()
                 .height(80.dp),
-            containerColor = Color.DarkGray
+            containerColor = Color.Black
         ) {
             items.forEach { screen ->
                 val selected = currentDestination?.route == screen
@@ -141,7 +132,7 @@ fun BottomNavigationBar(
                     interactionSource = remember { MutableInteractionSource() },
                     icon = {
                         Icon(
-                            modifier = if (selected) Modifier.size(30.dp) else Modifier.size(25.dp),
+                            modifier = if (selected) Modifier.size(30.dp) else Modifier.size(25.dp),  // Slightly reduced size
                             painter = icon,
                             contentDescription = screen,
                             tint = Color.Unspecified
@@ -151,8 +142,8 @@ fun BottomNavigationBar(
                         Text(
                             text = screen,
                             fontSize = if (selected) 16.sp else 13.5.sp,
-                            fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Bold,
-                            color = if (selected) Color.White else Color.LightGray
+                            fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
+                            color = if (selected) Color.White else Color.LightGray.copy(alpha = 0.7f)
                         )
                     },
                     onClick = {
@@ -166,11 +157,11 @@ fun BottomNavigationBar(
                         }
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        selectedTextColor = MaterialTheme.colorScheme.primary,
-                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        indicatorColor = Color.LightGray.copy(alpha = 0.7f),
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = Color.LightGray.copy(alpha = 0.7f),
+                        selectedTextColor = Color.White,
+                        unselectedTextColor = Color.LightGray.copy(alpha = 0.7f),
+                        indicatorColor = Color.Gray
                     )
                 )
             }

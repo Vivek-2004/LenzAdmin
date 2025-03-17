@@ -15,7 +15,6 @@ import com.fitting.lenz.models.ShopDistance
 import com.fitting.lenz.models.TrackingOtpReqBody
 import com.fitting.lenz.models.TrackingOtpResponse
 import com.fitting.lenz.models.UpdatedFittingChargesData
-import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -28,15 +27,16 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import java.util.concurrent.TimeUnit
 
 private val okHttpClient = OkHttpClient.Builder()
-    .connectTimeout(60, TimeUnit.SECONDS)
-    .readTimeout(60, TimeUnit.SECONDS)
-    .writeTimeout(60, TimeUnit.SECONDS)
+    .connectTimeout(30, TimeUnit.SECONDS)
+    .readTimeout(30, TimeUnit.SECONDS)
+    .writeTimeout(30, TimeUnit.SECONDS)
     .build()
 
 private val retrofit = Retrofit.Builder()
-    .baseUrl("https://lenz-backend.onrender.com/api/")
+    .baseUrl("https://lenzshop.duckdns.org/api/")
     .client(okHttpClient)
     .addConverterFactory(GsonConverterFactory.create())
     .build()

@@ -8,11 +8,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,14 +54,10 @@ fun MyApp(
 
     Scaffold(
         topBar = {
-            Column {
-                TopAppBar(
-                    navController = navController,
-                    currentScreenName = currentScreen ?: ""
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                HorizontalDivider(color = colorScheme.compColor.copy(alpha = 0.2f))
-            }
+            TopAppBar(
+                navController = navController,
+                currentScreenName = currentScreen ?: ""
+            )
         },
         bottomBar = {
             AnimatedVisibility(
