@@ -37,6 +37,7 @@ import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.screens.AdminProfile
 import com.fitting.lenz.screens.Edit
 import com.fitting.lenz.screens.Orders
+import com.fitting.lenz.screens.Riders
 import com.fitting.lenz.screens.Shops
 import com.fitting.lenz.screens.components.ShopOrdersHolder
 import com.fitting.lenz.screens.components.SingleOrderItemHolder
@@ -44,6 +45,7 @@ import com.fitting.lenz.screens.details_screen.ActiveOrders
 import com.fitting.lenz.screens.details_screen.FittingEdit
 import com.fitting.lenz.screens.details_screen.History
 import com.fitting.lenz.screens.details_screen.OrderDetails
+import com.fitting.lenz.screens.details_screen.RiderDetails
 import com.fitting.lenz.screens.details_screen.ShiftingEdit
 import com.fitting.lenz.screens.details_screen.ShopDetails
 import kotlinx.coroutines.delay
@@ -55,10 +57,12 @@ fun MyApp(
     lenzViewModelInstance: LenzViewModel
 ) {
     val adminState by lenzViewModelInstance.adminDetails.collectAsState()
+
+    println("vivek + $adminState")
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        delay(5000)
+        delay(7000)
         isLoading = false
     }
 
@@ -88,8 +92,8 @@ fun MyApp(
         var showBottomBar by remember { mutableStateOf(false) }
         showBottomBar = (currentScreen == NavigationDestination.Shops.name ||
                 currentScreen == NavigationDestination.Orders.name ||
-                currentScreen == NavigationDestination.Edit.name) ||
-                currentScreen == NavigationDestination.Admin.name
+                currentScreen == NavigationDestination.Riders.name ||
+                currentScreen == NavigationDestination.Edit.name)
 
         Scaffold(
             topBar = {
@@ -219,6 +223,20 @@ fun MyApp(
                 composable(NavigationDestination.ActiveOrders.name) {
                     ActiveOrders(
                         lenzViewModel = lenzViewModelInstance
+                    )
+                }
+
+                composable(NavigationDestination.Riders.name) {
+                    Riders(
+                        lenzViewModel = lenzViewModelInstance,
+                        navController = navController
+                    )
+                }
+
+                composable(NavigationDestination.RiderDetails.name + "/{riderId}") { riderId ->
+                    RiderDetails(
+                        lenzViewModel = lenzViewModelInstance,
+                        riderId = riderId.arguments?.getString("riderId") ?: "",
                     )
                 }
             }

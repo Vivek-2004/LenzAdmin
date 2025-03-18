@@ -8,6 +8,7 @@ import com.fitting.lenz.models.FittingChagresResponse
 import com.fitting.lenz.models.GetAdminResponse
 import com.fitting.lenz.models.GroupOrderResponse
 import com.fitting.lenz.models.PriceUpdateResponse
+import com.fitting.lenz.models.RiderDetails
 import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
@@ -114,4 +115,12 @@ interface ApiService {
     suspend fun getTrackingOtp(
         @Body otpRequestBody: TrackingOtpReqBody
     ): TrackingOtpResponse
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @GET("riders")
+    suspend fun getAllRiders(): List<RiderDetails>
+
+    @Headers("lenz-api-key: a99ed2023194a3356d37634474417f8b")
+    @GET("riders")
+    suspend fun getActiveOrders(): List<RiderDetails>
 }

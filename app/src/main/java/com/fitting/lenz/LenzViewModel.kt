@@ -17,6 +17,7 @@ import com.fitting.lenz.models.FittingDataRimless
 import com.fitting.lenz.models.FittingDataSupra
 import com.fitting.lenz.models.GroupOrder
 import com.fitting.lenz.models.LowHigh
+import com.fitting.lenz.models.RiderDetails
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.ShopDistance
@@ -44,6 +45,9 @@ class LenzViewModel : ViewModel() {
         private set
 
     var groupOrders by mutableStateOf<List<GroupOrder>>(emptyList())
+        private set
+
+    var ridersList by mutableStateOf<List<RiderDetails>>(emptyList())
         private set
 
     var shiftingFullFrameCharges by mutableStateOf("0")
@@ -112,6 +116,7 @@ class LenzViewModel : ViewModel() {
 //  -----------------------------------------------------------------
 
     init {
+        getAllRiders()
         getGroupOrders()
         getAdminDetails()
         getShopsList()
@@ -156,6 +161,17 @@ class LenzViewModel : ViewModel() {
                 shopsList = shopsResponse
             } catch (e: Exception) {
                 shopsList = emptyList()
+            }
+        }
+    }
+
+    fun getAllRiders() {
+        viewModelScope.launch {
+            try {
+                val response = _lenzService.getAllRiders()
+                ridersList = response
+            } catch (e: Exception) {
+                ridersList = emptyList()
             }
         }
     }

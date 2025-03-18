@@ -2,18 +2,6 @@ package com.fitting.lenz.models
 
 import com.google.gson.annotations.SerializedName
 
-data class AdminLoginBody(
-    val adminId: Int,
-    val password: String
-)
-
-data class AdminLoginResponse(
-    val message: String,
-    val confirmation: Boolean,
-    val token: String,
-    val admin: AdminDetails
-)
-
 data class AdminDetails(
     val address: Address,
     val _id: String,
@@ -25,6 +13,35 @@ data class AdminDetails(
     val authToken: String,
     val createdAt: String,
     val updatedAt: String
+)
+
+data class RiderDetails(
+    val _id: String,
+    val riderId: String,
+    val name: String,
+    val phone: String,
+    val email: String,
+    val vehicleNumber: String,
+    var isAvailable: Boolean,
+    val isWorking: Boolean,
+    val totalOrders: Int,
+    val dailyOrders: Int,
+    val totalEarnings: Double,
+    val dailyEarnings: Double,
+    val createdAt: String,
+    val updatedAt: String
+)
+
+data class AdminLoginBody(
+    val adminId: Int,
+    val password: String
+)
+
+data class AdminLoginResponse(
+    val message: String,
+    val confirmation: Boolean,
+    val token: String,
+    val admin: AdminDetails
 )
 
 data class GetAdminResponse(

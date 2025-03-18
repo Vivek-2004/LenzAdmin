@@ -1,16 +1,22 @@
 package com.fitting.lenz.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.HorizontalDivider
@@ -24,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -50,14 +57,22 @@ fun TopAppBar(
         "History/{shopId}" -> "Order History"
         "ShopDetails/{shopId}" -> "Shop Details"
         "ActiveOrders" -> "Active Orders"
+        "RiderDetails/{riderId}" -> "Rider Details"
         else -> currentScreenName
     }
 
     val showNavigationIcon = (
             title != NavigationDestination.Orders.name &&
                     title != NavigationDestination.Shops.name &&
-                    title != "Edit Charges" &&
-                    title != NavigationDestination.Admin.name
+                    title != NavigationDestination.Riders.name &&
+                    title != "Edit Charges"
+            )
+
+    val showAdminProfile = (
+            title != NavigationDestination.Orders.name &&
+                    title != NavigationDestination.Shops.name &&
+                    title != NavigationDestination.Riders.name &&
+                    title != NavigationDestination.Edit.name
             )
 
     Box(
@@ -95,6 +110,38 @@ fun TopAppBar(
             textAlign = TextAlign.Left,
             fontFamily = FontFamily.Default
         )
+
+        if (!showNavigationIcon) {
+            Row(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterEnd)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(45.dp)
+                        .border(2.dp, Color.White, CircleShape)
+                        .clip(CircleShape)
+                        .background(Color.Transparent)
+                        .clickable {
+                            navController.navigate(NavigationDestination.Admin.name)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.profile),
+                        contentDescription = "Admin Profile",
+                        tint = Color.Unspecified,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(start = 4.dp)
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.width(14.dp))
+            }
+        }
     }
 }
 
@@ -107,8 +154,8 @@ fun BottomNavigationBar(
     val items = listOf(
         NavigationDestination.Orders.name,
         NavigationDestination.Shops.name,
-        NavigationDestination.Edit.name,
-        NavigationDestination.Admin.name
+        NavigationDestination.Riders.name,
+        NavigationDestination.Edit.name
     )
     Column(modifier = Modifier.wrapContentSize()) {
         HorizontalDivider(thickness = 1.dp, color = Color.DarkGray)
@@ -123,8 +170,8 @@ fun BottomNavigationBar(
                 val icon = when (screen) {
                     NavigationDestination.Orders.name -> painterResource(R.drawable.orders)
                     NavigationDestination.Shops.name -> painterResource(R.drawable.shops)
+                    NavigationDestination.Riders.name -> painterResource(R.drawable.rider_profile)
                     NavigationDestination.Edit.name -> painterResource(R.drawable.edit)
-                    NavigationDestination.Admin.name -> painterResource(R.drawable.profile)
                     else -> painterResource(R.drawable.orders)
                 }
                 NavigationBarItem(
@@ -132,7 +179,7 @@ fun BottomNavigationBar(
                     interactionSource = remember { MutableInteractionSource() },
                     icon = {
                         Icon(
-                            modifier = if (selected) Modifier.size(30.dp) else Modifier.size(25.dp),  // Slightly reduced size
+                            modifier = if (selected) Modifier.size(30.dp) else Modifier.size(25.dp),
                             painter = icon,
                             contentDescription = screen,
                             tint = Color.Unspecified
