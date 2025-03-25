@@ -251,3 +251,18 @@ data class TrackingOtpResponse(
     @SerializedName("otp_code") val otpCode: String,
     val purpose: String
 )
+
+data class ActiveOrdersData(
+    val id: String,
+    val orderKey: String,
+    val trackingStatus: String,
+    val otpCode: String,
+    val shopName: String,
+    val deliveryPersonName: String,
+    val deliveryPersonPhone: String,
+    val groupOrderIds: List<String>
+)
+
+data class ActiveOrders(
+    val data: List<ActiveOrdersData>
+)

@@ -86,13 +86,13 @@ fun AdminProfile(
                             .verticalScroll(scrollState)
                             .padding(16.dp)
                     ) {
-                        AdminInfoCardWithIcon(
+                        AdminInfoCard(
                             title = "Name", value = admin.name, icon = Icons.Default.AccountCircle
                         )
-                        AdminInfoCardWithIcon(
+                        AdminInfoCard(
                             title = "Email", value = admin.email, icon = Icons.Default.Email
                         )
-                        AdminInfoCardWithIcon(
+                        AdminInfoCard(
                             title = "Phone",
                             value = admin.phone.takeLast(10),
                             icon = Icons.Default.Phone
@@ -243,24 +243,24 @@ fun AdminProfile(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         with(admin.address) {
-                            AdminInfoCardWithIcon(
+                            AdminInfoCard(
                                 title = "Line 1", value = line1, icon = Icons.Default.Home
                             )
-                            AdminInfoCardWithIcon(
+                            AdminInfoCard(
                                 title = "Line 2", value = line2, icon = Icons.Default.Home
                             )
-                            AdminInfoCardWithIcon(
+                            AdminInfoCard(
                                 title = "Landmark",
                                 value = landmark,
                                 icon = Icons.Default.LocationOn
                             )
-                            AdminInfoCardWithIcon(
+                            AdminInfoCard(
                                 title = "City", value = city, icon = Icons.Default.LocationCity
                             )
-                            AdminInfoCardWithIcon(
+                            AdminInfoCard(
                                 title = "State", value = state, icon = Icons.Default.LocationCity
                             )
-                            AdminInfoCardWithIcon(
+                            AdminInfoCard(
                                 title = "Pin Code", value = pinCode, icon = Icons.Default.Pin
                             )
                         }
@@ -272,7 +272,7 @@ fun AdminProfile(
 }
 
 @Composable
-fun AdminInfoCardWithIcon(
+fun AdminInfoCard(
     title: String, value: String, icon: ImageVector
 ) {
     Card(

@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fitting.lenz.models.ActiveOrdersData
 import com.fitting.lenz.models.AdminDetails
 import com.fitting.lenz.models.AdminLoginBody
 import com.fitting.lenz.models.CallForPickupRequest
@@ -35,6 +36,8 @@ class LenzViewModel : ViewModel() {
 
     private val _adminDetails = MutableStateFlow<AdminDetails?>(null)
     val adminDetails: StateFlow<AdminDetails?> = _adminDetails.asStateFlow()
+    var adminObjectId by mutableStateOf("")
+        private set
 
     var adminConfirmation by mutableStateOf(false)
         private set
@@ -48,6 +51,9 @@ class LenzViewModel : ViewModel() {
         private set
 
     var ridersList by mutableStateOf<List<RiderDetails>>(emptyList())
+        private set
+
+    var activeOrdersList by mutableStateOf<List<ActiveOrdersData>>(emptyList())
         private set
 
     var shiftingFullFrameCharges by mutableStateOf("0")
@@ -149,6 +155,7 @@ class LenzViewModel : ViewModel() {
             try {
                 val response = _lenzService.getAdminDetails()
                 _adminDetails.value = response.admin.first()
+                adminObjectId = _adminDetails.value!!._id
             } catch (_: Exception) {
             }
         }
@@ -429,6 +436,17 @@ class LenzViewModel : ViewModel() {
         }
     }
 
+    fun getActiveOrders() {
+        viewModelScope.launch {
+            try {
+                val response = _lenzService.getActiveOrders(adminObjectId = adminObjectId)
+                activeOrdersList = response.data
+            } catch (e: Exception) {
+                activeOrdersList = emptyList()
+            }
+        }
+    }
+
     fun patchWorkCompleted(groupOrderId: String) {
         viewModelScope.launch {
             try {
@@ -497,4 +515,6 @@ class LenzViewModel : ViewModel() {
             "* * * *"
         }
     }
+
+
 }

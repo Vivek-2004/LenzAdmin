@@ -58,7 +58,6 @@ fun MyApp(
 ) {
     val adminState by lenzViewModelInstance.adminDetails.collectAsState()
 
-    println("vivek + $adminState")
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
