@@ -56,8 +56,9 @@ fun Shops(
     var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(isRefreshing) {
+        if (!isRefreshing) return@LaunchedEffect
         lenzViewModel.getShopsList()
-        delay(2000L)
+        delay(1200L)
         isRefreshing = false
     }
 

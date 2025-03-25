@@ -116,10 +116,10 @@ class LenzViewModel : ViewModel() {
 //  -----------------------------------------------------------------
 
     init {
-        getAllRiders()
-        getGroupOrders()
         getAdminDetails()
         getShopsList()
+        getGroupOrders()
+        getAllRiders()
         getShiftingCharges()
         getFittingCharges()
     }
@@ -477,6 +477,7 @@ class LenzViewModel : ViewModel() {
         }
     }
 
+    //
     suspend fun getTrackingOtp(
         groupOrderId: String?,
         orderKey: String?,

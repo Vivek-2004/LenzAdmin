@@ -62,7 +62,7 @@ fun MyApp(
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        delay(7000)
+        delay(10000)
         isLoading = false
     }
 

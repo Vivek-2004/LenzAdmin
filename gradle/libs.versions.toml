@@ -14,7 +14,7 @@ materialIconsExtended = "1.7.8"
 navigationCompose = "2.8.9"
 retrofit = "2.9.0"
 converterGson = "2.9.0"
-firebaseCrashlytics = "19.4.1"
+firebaseCrashlytics = "19.4.2"
 googleGmsGoogleServices = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
 

@@ -29,14 +29,18 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -77,11 +81,14 @@ private val AmberBusy = Color(0xFFFFA000)
 private val AmberBackgroundBusy = Color(0xFFFFF8E1)
 private val AmberTextBusy = Color(0xFFE65100)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Riders(
     navController: NavController,
     lenzViewModel: LenzViewModel
 ) {
+    val pullToRefreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
     val backgroundGradient = remember {
         Brush.verticalGradient(
             colors = listOf(
@@ -92,7 +99,19 @@ fun Riders(
         )
     }
 
-    Box(
+    LaunchedEffect(isRefreshing) {
+        if (!isRefreshing) return@LaunchedEffect
+        lenzViewModel.getAllRiders()
+        delay(1200)
+        isRefreshing = false
+    }
+
+    PullToRefreshBox(
+        state = pullToRefreshState,
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+        },
         modifier = Modifier
             .fillMaxSize()
             .background(brush = backgroundGradient)
