@@ -58,10 +58,11 @@ fun ShopOrdersHolder(
     val listState = rememberLazyListState()
     val scrollBarWidth = 5.dp
     var updateGroupOrders by remember { mutableStateOf(false) }
-    val shopOrdersList: List<GroupOrder> = lenzViewModel.groupOrders.filter { it.userId == shopId && it.trackingStatus != "Order Completed" }
+    val shopOrdersList: List<GroupOrder> =
+        lenzViewModel.groupOrders.filter { it.userId == shopId && it.trackingStatus != "Order Completed" }
 
     LaunchedEffect(updateGroupOrders) {
-        if(!updateGroupOrders) return@LaunchedEffect
+        if (!updateGroupOrders) return@LaunchedEffect
         try {
             withContext(Dispatchers.IO) {
                 lenzViewModel.getGroupOrders()
@@ -73,7 +74,9 @@ fun ShopOrdersHolder(
 
     if (shopOrdersList.isEmpty()) {
         Column(
-            modifier = Modifier.fillMaxSize().background(color = colorScheme.bgColor),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = colorScheme.bgColor),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -87,9 +90,11 @@ fun ShopOrdersHolder(
                     textAlign = TextAlign.Center
                 )
                 Row(
-                    modifier = Modifier.wrapContentSize().clickable {
-                        lenzViewModel.getGroupOrders()
-                    },
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .clickable {
+                            lenzViewModel.getGroupOrders()
+                        },
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
@@ -105,7 +110,8 @@ fun ShopOrdersHolder(
         LazyColumn(
             state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .background(color = Color.LightGray)
                 .drawBehind {
                     val elementHeight = this.size.height / listState.layoutInfo.totalItemsCount
@@ -116,7 +122,8 @@ fun ShopOrdersHolder(
                         topLeft = Offset(this.size.width - scrollBarWidth.toPx(), offset),
                         size = Size(scrollBarWidth.toPx(), scrollbarHeight)
                     )
-                }.padding(start = 9.dp, end = scrollBarWidth + 9.dp)
+                }
+                .padding(start = 9.dp, end = scrollBarWidth + 9.dp)
         ) {
             itemsIndexed(shopOrdersList.reversed()) { index, item ->
                 Spacer(modifier = Modifier.height(9.dp))
@@ -130,7 +137,7 @@ fun ShopOrdersHolder(
                     orderDate = item.createdAt.formDate(),
                     paymentStatus = formatPaymentStatus(item.paymentStatus),
                     orderStatus = item.trackingStatus,
-                    modifier = Modifier.clickable{
+                    modifier = Modifier.clickable {
                         navController.navigate(NavigationDestination.SingleOrderItemHolder.name + "/${item.id}")
                     }
                 )

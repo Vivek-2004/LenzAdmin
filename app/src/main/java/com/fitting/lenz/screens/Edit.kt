@@ -32,7 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,14 +48,6 @@ fun Edit(
     colorScheme: ColorSchemeModel,
     navController: NavController
 ) {
-    val gradientBackground = Brush.verticalGradient(
-        colors = listOf(
-            colorScheme.bgColor,
-            colorScheme.bgColor.copy(alpha = 0.8f),
-            colorScheme.bgColor.copy(alpha = 0.7f)
-        )
-    )
-
     val titleVisibleState = remember { MutableTransitionState(false) }
     val buttonsVisibleState = remember { MutableTransitionState(false) }
 
@@ -68,7 +60,7 @@ fun Edit(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(brush = gradientBackground)
+            .background(Color.LightGray)
     ) {
         Column(
             modifier = Modifier

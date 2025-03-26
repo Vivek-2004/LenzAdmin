@@ -31,15 +31,17 @@ import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -65,10 +67,10 @@ import com.fitting.lenz.formDate
 import com.fitting.lenz.models.Address
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.roundToTwoDecimalPlaces
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.delay
 import kotlin.math.round
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ShopDetails(
@@ -76,23 +78,22 @@ fun ShopDetails(
     colorScheme: ColorSchemeModel,
     shopId: String
 ) {
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.IO) {
-            lenzViewModel.getShopsList()
-        }
-    }
+    val pullToRefreshState = rememberPullToRefreshState()
+    val scrollState = rememberScrollState()
     val context = LocalContext.current
+
+    var isRefreshing by remember { mutableStateOf(false) }
     var updateDistance by remember { mutableStateOf(false) }
     var updateCredit by remember { mutableStateOf(false) }
-
     var showDistanceDialog by remember { mutableStateOf(false) }
     var showCreditPlusDialog by remember { mutableStateOf(false) }
     var showCreditMinusDialog by remember { mutableStateOf(false) }
 
-    val shop by remember { mutableStateOf(lenzViewModel.shopsList.find { shopId == it._id }!!) }
-    var creditBalance by remember { mutableDoubleStateOf(shop.creditBalance.roundToTwoDecimalPlaces()) }
+    val shop = lenzViewModel.shopsList.find { it._id == shopId }!!
 
-    var distance by remember { mutableStateOf(shop.distance.toString()) }
+    var creditBalance = shop.creditBalance.roundToTwoDecimalPlaces()
+    var distance = shop.distance.toString()
+
     var tempDistance by remember { mutableStateOf("") }
 
     var amountPaid by remember { mutableStateOf("0") }
@@ -100,15 +101,20 @@ fun ShopDetails(
 
     var errorMessage by remember { mutableStateOf("") }
 
+    LaunchedEffect(isRefreshing) {
+        if (!isRefreshing) return@LaunchedEffect
+        lenzViewModel.getShopsList()
+        delay(1000)
+        isRefreshing = false
+    }
+
     LaunchedEffect(updateDistance) {
         if (!updateDistance) return@LaunchedEffect
         try {
-            withContext(Dispatchers.IO) {
-                lenzViewModel.editShopDistance(
-                    shopId = shop.userId,
-                    newDistance = round(distance.toDouble()).toInt()
-                )
-            }
+            lenzViewModel.editShopDistance(
+                shopId = shop.userId,
+                newDistance = round(distance.toDouble()).toInt()
+            )
         } finally {
             lenzViewModel.getShopsList()
             updateDistance = false
@@ -118,12 +124,10 @@ fun ShopDetails(
     LaunchedEffect(updateCredit) {
         if (!updateCredit) return@LaunchedEffect
         try {
-            withContext(Dispatchers.IO) {
-                lenzViewModel.editShopCredit(
-                    shopId = shop.userId,
-                    newBalance = creditBalance
-                )
-            }
+            lenzViewModel.editShopCredit(
+                shopId = shop.userId,
+                newBalance = creditBalance
+            )
         } finally {
             lenzViewModel.getShopsList()
             updateCredit = false
@@ -341,57 +345,70 @@ fun ShopDetails(
         )
     }
 
-    Column(
+    PullToRefreshBox(
+        state = pullToRefreshState,
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+        },
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorScheme.bgColor)
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .background(Color.LightGray)
     ) {
-        // Shop Header with Name and Creation Date
-        ShopHeader(shop.shopName, shop.createdAt.formDate(), colorScheme.compColor)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(16.dp)
+        ) {
+            ShopHeader(
+                shopName = shop.shopName,
+                creationDate = shop.createdAt.formDate(),
+                textColor = colorScheme.compColor
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-        // Contact Information Card
-        ContactInfoCard(
-            shop.name,
-            shop.userId.toString(),
-            shop.phone,
-            shop.alternatePhone,
-            shop.email,
-            colorScheme.compColor
-        )
+            // Contact Information Card
+            ContactInfoCard(
+                shop.name,
+                shop.userId.toString(),
+                shop.phone,
+                shop.alternatePhone,
+                shop.email,
+                colorScheme.compColor
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Distance Information Card with Edit Button
-        DistanceCard(
-            distance = distance,
-            colorScheme = colorScheme,
-            onEditClick = { showDistanceDialog = true }
-        )
+            // Distance Information Card with Edit Button
+            DistanceCard(
+                distance = distance,
+                colorScheme = colorScheme,
+                onEditClick = { showDistanceDialog = true }
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Credit Balance Card with Add/Subtract buttons
-        CreditBalanceCard(
-            creditBalance = creditBalance,
-            colorScheme = colorScheme,
-            onMinusClick = {
-                if (creditBalance == 0.0) {
-                    Toast.makeText(context, "No Pending Payments", Toast.LENGTH_SHORT).show()
-                } else {
-                    showCreditMinusDialog = true
-                }
-            },
-            onPlusClick = { showCreditPlusDialog = true }
-        )
+            // Credit Balance Card with Add/Subtract buttons
+            CreditBalanceCard(
+                creditBalance = creditBalance,
+                colorScheme = colorScheme,
+                onMinusClick = {
+                    if (creditBalance == 0.0) {
+                        Toast.makeText(context, "No Pending Payments", Toast.LENGTH_SHORT).show()
+                    } else {
+                        showCreditMinusDialog = true
+                    }
+                },
+                onPlusClick = { showCreditPlusDialog = true }
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Address Information Card
-        AddressCard(shop.address, colorScheme.compColor)
+            // Address Information Card
+            AddressCard(shop.address, colorScheme.compColor)
+        }
     }
 }
 

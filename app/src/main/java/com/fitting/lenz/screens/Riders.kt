@@ -102,7 +102,7 @@ fun Riders(
     LaunchedEffect(isRefreshing) {
         if (!isRefreshing) return@LaunchedEffect
         lenzViewModel.getAllRiders()
-        delay(1200)
+        delay(1000)
         isRefreshing = false
     }
 

@@ -50,7 +50,7 @@ fun Shops(
 
     LaunchedEffect(isLoading) {
         if (!isLoading) return@LaunchedEffect
-        lenzViewModel.getGroupOrders()
+        lenzViewModel.getShopsList()
         isLoading = false
     }
 

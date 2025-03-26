@@ -83,14 +83,6 @@ fun FittingEdit(
 
     var fittingUpdateConfirmation by lenzViewModel::fittingUpdateConfirmation
 
-    val contentBackground = remember {
-        Brush.verticalGradient(
-            colors = listOf(
-                colorScheme.bgColor, colorScheme.bgColor.copy(alpha = 0.95f)
-            )
-        )
-    }
-
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false }, title = {
@@ -160,7 +152,7 @@ fun FittingEdit(
         onRefresh = { isRefreshing = true },
         modifier = Modifier
             .fillMaxSize()
-            .background(brush = contentBackground)
+            .background(Color.Gray)
     ) {
         Column(
             modifier = Modifier
