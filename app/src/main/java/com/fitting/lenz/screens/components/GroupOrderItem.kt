@@ -82,9 +82,10 @@ fun GroupOrderItem(
         ) {
             Text(
                 text = "#$orderId",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Gray
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray,
+                letterSpacing = 0.7.sp
             )
 
             Row(

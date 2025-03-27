@@ -1,4 +1,4 @@
-package com.fitting.lenz
+package com.fitting.lenz.auth
 
 import android.content.SharedPreferences
 import android.os.Build
@@ -39,6 +39,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fitting.lenz.LenzViewModel
+import com.fitting.lenz.R
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.navigation.MyApp
 import kotlinx.coroutines.Dispatchers

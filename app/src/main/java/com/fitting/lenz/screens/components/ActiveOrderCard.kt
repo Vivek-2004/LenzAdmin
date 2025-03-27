@@ -1,8 +1,8 @@
 package com.fitting.lenz.screens.components
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,11 +18,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Pin
-import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,18 +30,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.fitting.lenz.models.ActiveOrdersData
 import java.util.Locale
 
 @Composable
-fun ActiveOrderCard(order: ActiveOrdersData) {
-    val uriHandler = LocalUriHandler.current
+fun ActiveOrderCard(
+    order: ActiveOrdersData
+) {
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier
@@ -56,23 +58,35 @@ fun ActiveOrderCard(order: ActiveOrdersData) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(18.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        text = "#${order.orderKey}",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                Text(
+                    text = "#${order.orderKey}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 17.sp
+                )
 
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(
+                            when (order.trackingStatus) {
+                                "Delivery Accepted" -> Color(0xFF4CAF50).copy(alpha = 0.2f)
+                                else -> Color(0xFFB0054B).copy(alpha = 0.2f)
+                            }
+                        )
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(
                             imageVector = Icons.Default.AccessTime,
                             contentDescription = null,
@@ -81,53 +95,30 @@ fun ActiveOrderCard(order: ActiveOrdersData) {
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Pickup Order",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = order.trackingStatus,
+                            color = when (order.trackingStatus) {
+                                "Delivery Accepted" -> Color(0xFF1B5E20)
+                                else -> Color(0xFFB0054B)
+                            },
+                            fontSize = 10.sp,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold
                         )
                     }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(
-                            when (order.trackingStatus) {
-                                "Order Picked Up" -> Color(0xFF4CAF50).copy(alpha = 0.2f)
-                                "In Transit" -> Color(0xFF2196F3).copy(alpha = 0.2f)
-                                "Pending" -> Color(0xFFFFC107).copy(alpha = 0.2f)
-                                else -> MaterialTheme.colorScheme.primaryContainer
-                            }
-                        )
-                        .padding(horizontal = 12.dp, vertical = 6.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = order.trackingStatus,
-                        color = when (order.trackingStatus) {
-                            "Order Picked Up" -> Color(0xFF1B5E20)
-                            "In Transit" -> Color(0xFF0D47A1)
-                            "Pending" -> Color(0xFF795548)
-                            else -> MaterialTheme.colorScheme.onPrimaryContainer
-                        },
-                        fontSize = 10.sp,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Medium
-                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // OTP Section with 4 blocks
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "OTP Code",
+                    text = "One Time Code",
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -137,8 +128,7 @@ fun ActiveOrderCard(order: ActiveOrdersData) {
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Display each digit in a separate block
-                    order.otpCode.take(4).forEachIndexed { index, digit ->
+                    order.otpCode.forEachIndexed { index, digit ->
                         Box(
                             modifier = Modifier
                                 .size(50.dp)
@@ -168,48 +158,64 @@ fun ActiveOrderCard(order: ActiveOrdersData) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Info section with call button
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Shop Info
-                InfoRowCompact(
-                    icon = Icons.Default.Store,
-                    title = "Shop",
-                    value = order.shopName,
-                    modifier = Modifier.weight(1f)
-                )
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
 
-                // Call Button
-                Box(
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Column {
+                        Text(
+                            text = "Delivery Person",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        Text(
+                            text = order.deliveryPersonName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+
+                IconButton(
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                            data = "tel:+91${order.deliveryPersonPhone}".toUri()
+                        }
+                        context.startActivity(intent)
+                    },
                     modifier = Modifier
-                        .size(42.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF4CAF50))
-                        .clickable {
-                            uriHandler.openUri("tel:${order.deliveryPersonPhone}")
-                        },
-                    contentAlignment = Alignment.Center
+                        .background(Color.LightGray),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Call,
-                        contentDescription = "Call ${order.deliveryPersonName}",
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp)
+                        contentDescription = null,
+                        tint = Color(0xFF4CAF50),
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Delivery Person Info
-            InfoRowCompact(
-                icon = Icons.Default.Pin,
-                title = "Delivery Person",
-                value = order.deliveryPersonName
-            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -219,7 +225,7 @@ fun ActiveOrderCard(order: ActiveOrdersData) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Group Order IDs",
+                    text = "Group Order ID(s)",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
@@ -232,81 +238,34 @@ fun ActiveOrderCard(order: ActiveOrdersData) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "${order.groupOrderIds.size}",
+                        text = "${order.groupOrderIds.size} Group(s)",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 12.sp
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Group order IDs with improved styling
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-                    .padding(8.dp)
+                    .padding(6.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 order.groupOrderIds.forEach { id ->
                     Text(
-                        text = "• ${id.takeLast(5).uppercase(Locale.getDefault())}",
+                        text = "•${id.takeLast(5).uppercase(Locale.getDefault())}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 2.dp),
-                        fontSize = 15.sp
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 13.5.sp
                     )
                 }
             }
-
-        }
-    }
-}
-
-@Composable
-private fun InfoRowCompact(
-    icon: ImageVector,
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(18.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
         }
     }
 }

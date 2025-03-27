@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,6 +50,13 @@ fun ActiveOrders(
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
+    var showLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(showLoading) {
+        if (!showLoading) return@LaunchedEffect
+        delay(1300)
+        showLoading = false
+    }
 
     LaunchedEffect(!isLoading) {
         if (!isLoading) return@LaunchedEffect
@@ -75,6 +83,7 @@ fun ActiveOrders(
             .background(Color.LightGray)
     ) {
         if (orders.isEmpty()) {
+            showLoading = true
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -88,34 +97,38 @@ fun ActiveOrders(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.ShoppingCart,
-                        contentDescription = "No Orders",
-                        modifier = Modifier
-                            .size(140.dp)
-                            .alpha(0.6f),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    if (showLoading) {
+                        CircularProgressIndicator()
+                    } else {
+                        Icon(
+                            imageVector = Icons.Outlined.ShoppingCart,
+                            contentDescription = "No Orders",
+                            modifier = Modifier
+                                .size(140.dp)
+                                .alpha(0.6f),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = "No Active Orders",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp
-                    )
+                        Text(
+                            text = "No Active Orders",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp
+                        )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = "Pull down to refresh.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                        textAlign = TextAlign.Center,
-                        fontSize = 12.sp
-                    )
+                        Text(
+                            text = "Pull down to refresh.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             }
         } else {

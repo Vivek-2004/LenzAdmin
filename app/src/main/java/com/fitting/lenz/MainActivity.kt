@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fitting.lenz.auth.AdminLogin
 import com.fitting.lenz.models.ColorSchemeModel
 import com.fitting.lenz.navigation.MyApp
 import com.fitting.lenz.ui.theme.LenzTheme
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         installSplashScreen()
 
-        val sharedPref = getSharedPreferences("LenzAdmin", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("LenzAdminApp", Context.MODE_PRIVATE)
         val prefEditor = sharedPref.edit()
 
         if (!sharedPref.contains("isLoggedIn")) {

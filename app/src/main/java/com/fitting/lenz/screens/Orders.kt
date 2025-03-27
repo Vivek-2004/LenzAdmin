@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,18 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Pin
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -78,6 +75,10 @@ fun Orders(
     lenzViewModel: LenzViewModel,
     navController: NavController
 ) {
+    LaunchedEffect(Unit) {
+        lenzViewModel.getGroupOrders()
+    }
+
     val orderStates = listOf(
         "All Orders",
         "Order Placed For Pickup",
@@ -90,6 +91,7 @@ fun Orders(
         "Out For Delivery",
         "Order Completed"
     )
+
     val context = LocalContext.current
     val pullToRefreshState = rememberPullToRefreshState()
     val scrollState = rememberScrollState()
@@ -234,7 +236,7 @@ fun Orders(
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("Enter amount") },
-                        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp)
                     )
 
                     if (errorMessage.isNotEmpty()) {
@@ -290,7 +292,7 @@ fun Orders(
                 }
             },
             containerColor = Color.White,
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp)
         )
     }
 
@@ -353,18 +355,18 @@ fun Orders(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F5F5))
+                    .background(Color.LightGray)
             ) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
+                        .wrapContentSize()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     elevation = CardDefaults.cardElevation(8.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = colorScheme.bgColor
                     ),
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp)
                 ) {
                     Row(
                         modifier = Modifier
@@ -395,44 +397,34 @@ fun Orders(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
+                            .background(Color.LightGray)
+                            .verticalScroll(scrollState)
                             .padding(16.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = "No $statusSelectedItem",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.Gray
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
+                        Box(
                             modifier = Modifier
-                                .wrapContentSize()
-                                .clickable {
-                                    lenzViewModel.getGroupOrders()
-                                }
-                                .padding(8.dp)
                                 .background(
-                                    color = colorScheme.bgColor.copy(alpha = 0.1f),
-                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp)
+                                    color = Color(0xFFE9ECEF),
+                                    shape = RoundedCornerShape(24.dp)
                                 )
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                contentDescription = "Refresh",
-                                tint = colorScheme.compColor
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                "Refresh",
-                                color = colorScheme.compColor,
-                                fontWeight = FontWeight.Medium
+                                text = "No Orders Yet!",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Black
                             )
                         }
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = "Pull Down to Refresh",
+                            color = Color.DarkGray,
+                            fontSize = 12.sp
+                        )
                     }
                 } else {
                     GroupOrderItemHolder(
@@ -555,7 +547,7 @@ fun Orders(
                                     statusSelectedItem = orderStateItem
                                     Toast.makeText(
                                         context,
-                                        "Filter Status: $statusSelectedItem",
+                                        "Filter Result: $statusSelectedItem",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }

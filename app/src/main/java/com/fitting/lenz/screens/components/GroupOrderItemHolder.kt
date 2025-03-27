@@ -121,7 +121,7 @@ fun GroupOrderItemHolder(
                     GroupOrderItem(
                         isItemSelected = selected,
                         colorScheme = colorScheme,
-                        orderId = item.id,
+                        orderId = item.id.takeLast(5).uppercase(),
                         shopName = lenzViewModel.shopsList.firstOrNull { shop -> shop._id == item.userId }?.shopName
                             ?: "Unknown Shop",
                         orderValue = item.finalAmount,

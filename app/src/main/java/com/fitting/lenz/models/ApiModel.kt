@@ -257,7 +257,6 @@ data class ActiveOrdersData(
     val orderKey: String,
     val trackingStatus: String,
     val otpCode: String,
-    val shopName: String,
     val deliveryPersonName: String,
     val deliveryPersonPhone: String,
     val groupOrderIds: List<String>

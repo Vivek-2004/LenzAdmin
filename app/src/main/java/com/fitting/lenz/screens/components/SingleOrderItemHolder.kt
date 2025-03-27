@@ -194,16 +194,18 @@ fun SingleOrderItemHolder(
                 ) {
                     Surface(
                         modifier = Modifier
-                            .align(Alignment.End),
+                            .align(Alignment.Start),
                         shape = RoundedCornerShape(16.dp),
                         color = statusCodeColor.copy(alpha = 0.1f)
                     ) {
                         Text(
-                            text = "#$groupOrderId",
-                            fontSize = 12.sp,
+                            text = "#${groupOrderId.takeLast(5)}",
                             color = statusCodeColor,
                             fontStyle = FontStyle.Italic,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.7.sp
                         )
                     }
 
