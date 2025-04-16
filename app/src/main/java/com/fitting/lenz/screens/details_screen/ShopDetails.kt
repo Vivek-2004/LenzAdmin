@@ -34,6 +34,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -42,6 +43,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -74,13 +76,15 @@ import kotlin.math.round
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ShopDetails(
+    shopId: String,
     lenzViewModel: LenzViewModel,
-    colorScheme: ColorSchemeModel,
-    shopId: String
+    colorScheme: ColorSchemeModel
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+
+    val shop = lenzViewModel.shopsList.find { it._id == shopId }!!
 
     var isRefreshing by remember { mutableStateOf(false) }
     var updateDistance by remember { mutableStateOf(false) }
@@ -88,23 +92,17 @@ fun ShopDetails(
     var showDistanceDialog by remember { mutableStateOf(false) }
     var showCreditPlusDialog by remember { mutableStateOf(false) }
     var showCreditMinusDialog by remember { mutableStateOf(false) }
-
-    val shop = lenzViewModel.shopsList.find { it._id == shopId }!!
-
-    var creditBalance = shop.creditBalance.roundToTwoDecimalPlaces()
-    var distance = shop.distance.toString()
-
+    var errorMessage by remember { mutableStateOf("") }
     var tempDistance by remember { mutableStateOf("") }
 
+    var creditBalance by remember { mutableDoubleStateOf(shop.creditBalance.roundToTwoDecimalPlaces()) }
     var amountPaid by remember { mutableStateOf("0") }
     var tempAmountPaid by remember { mutableStateOf("") }
-
-    var errorMessage by remember { mutableStateOf("") }
 
     LaunchedEffect(isRefreshing) {
         if (!isRefreshing) return@LaunchedEffect
         lenzViewModel.getShopsList()
-        delay(1000)
+        delay(800)
         isRefreshing = false
     }
 
@@ -113,10 +111,12 @@ fun ShopDetails(
         try {
             lenzViewModel.editShopDistance(
                 shopId = shop.userId,
-                newDistance = round(distance.toDouble()).toInt()
+                newDistance = round(tempDistance.toDouble()).toInt()
             )
+            delay(700)
         } finally {
             lenzViewModel.getShopsList()
+            tempDistance = ""
             updateDistance = false
         }
     }
@@ -128,6 +128,7 @@ fun ShopDetails(
                 shopId = shop.userId,
                 newBalance = creditBalance
             )
+            delay(700)
         } finally {
             lenzViewModel.getShopsList()
             updateCredit = false
@@ -145,7 +146,7 @@ fun ShopDetails(
             text = {
                 Column {
                     Text(
-                        text = "Current Distance: $distance km",
+                        text = "Current Distance: ${shop.distance} km",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -172,20 +173,24 @@ fun ShopDetails(
                 }
             },
             confirmButton = {
-                TextButton(onClick = {
-                    if (tempDistance.isEmpty() || tempDistance.toIntOrNull() == null || tempDistance.toInt() < 1 || tempDistance.toInt() > 10) {
-                        errorMessage = "Enter Distance Between 1 and 10 kms"
-                        tempDistance = ""
-                    } else {
-                        distance = tempDistance
-                        tempDistance = ""
-                        updateDistance = true
-                        showDistanceDialog = false
-                        errorMessage = ""
-                        Toast.makeText(context, "Distance Updated Successfully", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }) {
+                TextButton(
+                    enabled = tempDistance.isNotEmpty(),
+                    onClick = {
+                        if (tempDistance.toIntOrNull() == null || tempDistance.toInt() < 1 || tempDistance.toInt() > 10) {
+                            errorMessage = "Enter Distance Between 1 and 10 kms"
+                            tempDistance = ""
+                        } else {
+                            updateDistance = true
+                            showDistanceDialog = false
+                            errorMessage = ""
+                            Toast.makeText(
+                                context,
+                                "Distance Updated Successfully",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    }) {
                     Text(text = "Update", fontSize = 14.sp)
                 }
             },
@@ -383,7 +388,7 @@ fun ShopDetails(
 
             // Distance Information Card with Edit Button
             DistanceCard(
-                distance = distance,
+                distance = shop.distance,
                 colorScheme = colorScheme,
                 onEditClick = { showDistanceDialog = true }
             )
@@ -406,14 +411,17 @@ fun ShopDetails(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Address Information Card
             AddressCard(shop.address, colorScheme.compColor)
         }
     }
 }
 
 @Composable
-fun ShopHeader(shopName: String, creationDate: String, textColor: Color) {
+fun ShopHeader(
+    shopName: String,
+    creationDate: String,
+    textColor: Color
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -423,7 +431,9 @@ fun ShopHeader(shopName: String, creationDate: String, textColor: Color) {
             color = textColor,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            fontSize = 32.sp
+            fontSize = 30.sp,
+            lineHeight = 33.sp,
+            style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -521,7 +531,7 @@ fun ContactInfoCard(
             InfoRow(
                 icon = Icons.Rounded.Phone,
                 iconTint = textColor,
-                title = "Primary :",
+                title = "Primary:",
                 value = phone.takeLast(10),
                 textColor = textColor
             )
@@ -610,7 +620,7 @@ fun InfoRow(
 
 @Composable
 fun DistanceCard(
-    distance: String,
+    distance: Int,
     colorScheme: ColorSchemeModel,
     onEditClick: () -> Unit
 ) {
@@ -866,7 +876,6 @@ fun AddressField(label: String, value: String, textColor: Color) {
             fontWeight = FontWeight.Medium,
             color = textColor.copy(alpha = 0.6f)
         )
-
         Text(
             text = value,
             fontSize = 16.sp,

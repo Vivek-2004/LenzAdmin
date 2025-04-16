@@ -53,7 +53,7 @@ fun ShopItem(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 14.dp, vertical = 6.dp)
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(20.dp),
@@ -76,21 +76,22 @@ fun ShopItem(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
+                    .padding(14.dp)
             ) {
                 // Header with shop name and plan
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Shop icon with circle background
                     Box(
                         modifier = Modifier
-                            .size(40.dp)
+                            .size(38.dp)
+                            .weight(0.25f)
                             .background(
                                 color = colorScheme.compColor.copy(alpha = 0.15f),
                                 shape = CircleShape
-                            ), contentAlignment = Alignment.Center
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Store,
@@ -100,34 +101,35 @@ fun ShopItem(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(12.dp))
-
                     Text(
+                        modifier = Modifier
+                            .weight(1.25f)
+                            .padding(start = 8.dp, end = 4.dp),
                         text = shop.shopName,
                         color = colorScheme.compColor,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        maxLines = 1,
+                        fontSize = 19.sp,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleMedium
                     )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
+                    Box(
+                        modifier = Modifier.weight(0.4f),
+                        contentAlignment = Alignment.Center
                     ) {
                         Surface(
-                            shape = RoundedCornerShape(12.dp), color = Color.DarkGray
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color.DarkGray
                         ) {
                             Text(
                                 text = shop.plan,
                                 color = Color.White,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                             )
                         }
                     }
-
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -249,7 +251,6 @@ fun ShopItem(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-
                             Text(
                                 text = "Order History",
                                 fontWeight = FontWeight.Medium,

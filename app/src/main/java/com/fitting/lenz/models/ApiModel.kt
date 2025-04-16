@@ -51,6 +51,7 @@ data class GetAdminResponse(
 
 data class ShopDetails(
     val _id: String,
+    val userId: Int,
     val name: String,
     val email: String,
     val phone: String,
@@ -58,7 +59,6 @@ data class ShopDetails(
     val password: String,
     val shopName: String,
     val plan: String,
-    val userId: Long,
     val createdAt: String,
     val updatedAt: String,
     val __v: Int,

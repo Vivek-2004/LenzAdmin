@@ -56,7 +56,10 @@ fun OrderDetails(
 
     val scrollState = rememberScrollState()
     val paymentStatus = formatPaymentStatus(orderDetails.paymentStatus)
-    val shopName = lenzViewModel.shopsList.filter { orderDetails.userId == it._id }[0].shopName
+    val shopName = lenzViewModel.shopsList
+        .firstOrNull { orderDetails.userId == it._id }
+        ?.shopName ?: "Unknown Shop"
+
 
     Box(
         modifier = Modifier

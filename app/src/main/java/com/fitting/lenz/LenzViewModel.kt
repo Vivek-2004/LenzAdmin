@@ -23,7 +23,6 @@ import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.ShopDistance
 import com.fitting.lenz.models.SingleDouble
-import com.fitting.lenz.models.TrackingOtpReqBody
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -456,28 +455,6 @@ class LenzViewModel : ViewModel() {
         }
     }
 
-    fun editShopDistance(shopId: Long, newDistance: Int) {
-        viewModelScope.launch {
-            _lenzService.editShopDistance(
-                shopId = shopId,
-                newDistance = ShopDistance(
-                    newDistance = newDistance
-                )
-            )
-        }
-    }
-
-    fun editShopCredit(shopId: Long, newBalance: Double) {
-        viewModelScope.launch {
-            _lenzService.editCreditBalance(
-                shopId = shopId,
-                newBalance = CreditAmount(
-                    newCreditAmt = newBalance
-                )
-            )
-        }
-    }
-
     fun callForPickup(
         requestBody: Set<String>,
         delAmount: Double
@@ -495,26 +472,31 @@ class LenzViewModel : ViewModel() {
         }
     }
 
-    //
-    suspend fun getTrackingOtp(
-        groupOrderId: String?,
-        orderKey: String?,
-        purpose: String
-    ): String {
-        return try {
-            val key = if (groupOrderId.isNullOrEmpty()) orderKey else groupOrderId
-            val requestBody = TrackingOtpReqBody(
-                groupOrderId = key,
-                orderKey = key,
-                purpose = purpose
-            )
-
-            val response = _lenzService.getTrackingOtp(otpRequestBody = requestBody)
-            response.otpCode
-        } catch (e: Exception) {
-            "* * * *"
+    fun editShopDistance(shopId: Int, newDistance: Int) {
+        viewModelScope.launch {
+            try {
+                _lenzService.editShopDistance(
+                    shopId = shopId,
+                    newDistance = ShopDistance(
+                        newDistance = newDistance
+                    )
+                )
+            } catch (_: Exception) {
+            }
         }
     }
 
-
+    fun editShopCredit(shopId: Int, newBalance: Double) {
+        try {
+            viewModelScope.launch {
+                _lenzService.editCreditBalance(
+                    shopId = shopId,
+                    newBalance = CreditAmount(
+                        newCreditAmt = newBalance
+                    )
+                )
+            }
+        } catch (_: Exception) {
+        }
+    }
 }

@@ -14,8 +14,6 @@ import com.fitting.lenz.models.ShiftingChargesResponse
 import com.fitting.lenz.models.ShiftingChargesUpdated
 import com.fitting.lenz.models.ShopDetails
 import com.fitting.lenz.models.ShopDistance
-import com.fitting.lenz.models.TrackingOtpReqBody
-import com.fitting.lenz.models.TrackingOtpResponse
 import com.fitting.lenz.models.UpdatedFittingChargesData
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -91,13 +89,13 @@ interface ApiService {
 
     @PUT("shops/{shopId}/edit-distance")
     suspend fun editShopDistance(
-        @Path("shopId") shopId: Long,
+        @Path("shopId") shopId: Int,
         @Body newDistance: ShopDistance
     )
 
     @PUT("shops/{shopId}/edit-credit-bal")
     suspend fun editCreditBalance(
-        @Path("shopId") shopId: Long,
+        @Path("shopId") shopId: Int,
         @Body newBalance: CreditAmount
     )
 
@@ -105,11 +103,6 @@ interface ApiService {
     suspend fun callForPickup(
         @Body groupOrderIds: CallForPickupRequest
     ): Response<ResponseBody>
-
-    @POST("otp/request-tracking-otp")
-    suspend fun getTrackingOtp(
-        @Body otpRequestBody: TrackingOtpReqBody
-    ): TrackingOtpResponse
 
     @GET("riders")
     suspend fun getAllRiders(): List<RiderDetails>

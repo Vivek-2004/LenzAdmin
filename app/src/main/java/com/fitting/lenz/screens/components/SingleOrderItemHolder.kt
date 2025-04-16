@@ -75,7 +75,13 @@ fun SingleOrderItemHolder(
 ) {
     val listState = rememberLazyListState()
     val scrollBarWidth = 4.dp
-    val singleGroupOrder: GroupOrder = lenzViewModel.groupOrders.filter { it.id == groupOrderId }[0]
+
+    val singleGroupOrder: GroupOrder = lenzViewModel.groupOrders.first { it.id == groupOrderId }
+
+    val shopName = lenzViewModel.shopsList
+        .firstOrNull { singleGroupOrder.userId == it._id }
+        ?.shopName ?: "Unknown Shop"
+
     var trackingStatus by remember { mutableStateOf(singleGroupOrder.trackingStatus) }
     var updateGroupOrders by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
@@ -208,9 +214,7 @@ fun SingleOrderItemHolder(
                             letterSpacing = 0.7.sp
                         )
                     }
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
@@ -223,7 +227,7 @@ fun SingleOrderItemHolder(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = lenzViewModel.shopsList.filter { singleGroupOrder.userId == it._id }[0].shopName,
+                            text = shopName,
                             fontSize = 18.sp,
                             color = Color.Black,
                             fontWeight = FontWeight.Bold

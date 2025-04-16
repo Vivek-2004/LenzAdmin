@@ -138,7 +138,7 @@ fun Orders(
     LaunchedEffect(isRefreshing) {
         if (!isRefreshing) return@LaunchedEffect
         lenzViewModel.getGroupOrders()
-        delay(2000L)
+        delay(900)
         isRefreshing = false
     }
 
