@@ -43,8 +43,8 @@ import com.fitting.lenz.screens.components.ShopOrdersHolder
 import com.fitting.lenz.screens.components.SingleOrderItemHolder
 import com.fitting.lenz.screens.details_screen.ActiveOrders
 import com.fitting.lenz.screens.details_screen.FittingEdit
-import com.fitting.lenz.screens.details_screen.History
 import com.fitting.lenz.screens.details_screen.OrderDetails
+import com.fitting.lenz.screens.details_screen.OrderHistory
 import com.fitting.lenz.screens.details_screen.RiderDetails
 import com.fitting.lenz.screens.details_screen.ShiftingEdit
 import com.fitting.lenz.screens.details_screen.ShopDetails
@@ -203,7 +203,7 @@ fun MyApp(
                 }
 
                 composable(NavigationDestination.History.name + "/{shopId}") { backStackEntry ->
-                    History(
+                    OrderHistory(
                         colorScheme = colorScheme,
                         lenzViewModel = lenzViewModelInstance,
                         navController = navController,

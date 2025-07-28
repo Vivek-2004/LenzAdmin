@@ -13,7 +13,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 fun formatPaymentStatus(status: String): String {
-    return if(status == "completed") "Paid"
+    return if (status == "completed") "Paid"
     else "Unpaid"
 }
 
@@ -38,8 +38,8 @@ fun String.toIST(): String {
 
 fun String.findShopName(shopsList: List<ShopDetails>): String {
     var shopName = "N/A"
-    for(shop in shopsList) {
-        if(shop._id == this) {
+    for (shop in shopsList) {
+        if (shop._id == this) {
             shopName = shop.name
         }
     }

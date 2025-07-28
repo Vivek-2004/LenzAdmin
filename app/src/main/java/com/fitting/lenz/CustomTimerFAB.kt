@@ -58,7 +58,9 @@ fun CustomTimerFAB(
     }
 
     Box(
-        modifier = modifier.size(100.dp).padding(16.dp)
+        modifier = modifier
+            .size(100.dp)
+            .padding(16.dp)
     ) {
         Canvas(
             modifier = Modifier
@@ -75,7 +77,7 @@ fun CustomTimerFAB(
         }
 
         FloatingActionButton(
-            onClick = {  },
+            onClick = { },
             shape = CircleShape,
             modifier = Modifier
                 .align(Alignment.Center)
@@ -102,7 +104,11 @@ fun CustomTimerFAB(
                                     isTimerRunning = false
                                     currentSeconds = countdownSeconds
                                     if (pressDuration < tapThreshold) {
-                                        Toast.makeText(context, "Press and Hold for 3 Seconds to Confirm", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Press and Hold for 3 Seconds to Confirm",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 }
                             }

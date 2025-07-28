@@ -56,7 +56,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun History(
+fun OrderHistory(
     lenzViewModel: LenzViewModel,
     colorScheme: ColorSchemeModel,
     navController: NavController,

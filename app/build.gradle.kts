@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.fitting.lenz"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.fitting.lenz"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 3
         versionName = "1.3"
 
@@ -43,7 +43,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
